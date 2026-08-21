@@ -17,30 +17,30 @@
     }
     h1 {
       font-size: 28px;
-      color: #111;
+      color: #111111;
     }
     p {
-      color: #555;
+      color: #555555;
       font-size: 16px;
     }
     .auth-box {
       max-width: 350px;
       margin: 30px auto;
       padding: 30px;
-      background: white;
+      background: #ffffff;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .auth-box h2 {
       font-size: 20px;
       margin-bottom: 20px;
-      color: #333;
+      color: #333333;
     }
     .auth-box input {
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
-      border: 1px solid #ccc;
+      border: 1px solid #cccccc;
       border-radius: 8px;
       font-size: 16px;
       box-sizing: border-box;
@@ -56,20 +56,21 @@
       font-weight: bold;
     }
     #signUpBtn {
-      background-color: #111;
-      color: white;
+      background-color: #111111;
+      color: #ffffff;
     }
     #loginBtn {
-      background-color: #555;
-      color: white;
+      background-color: #555555;
+      color: #ffffff;
     }
     #logoutBtn {
-      background-color: #ddd;
-      color: #333;
+      background-color: #dddddd;
+      color: #333333;
     }
   </style>
 </head>
 <body>
+
   <img src="1787225529289.png" alt="Venzi Logo">
   <h1>Hello, my website is live!</h1>
   <p>Welcome to my site.</p>
@@ -86,7 +87,13 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDQmh4yBGXeOiAIn-pKANxl3BR2H-jQPHE",
@@ -102,7 +109,7 @@
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
 
-    window.signUp = function() {
+    window.signUp = function () {
       const email = document.getElementById('emailInput').value;
       const password = document.getElementById('passwordInput').value;
       createUserWithEmailAndPassword(auth, email, password)
@@ -112,9 +119,9 @@
         .catch((error) => {
           document.getElementById('statusText').innerText = "Error: " + error.message;
         });
-    }
+    };
 
-    window.logIn = function() {
+    window.logIn = function () {
       const email = document.getElementById('emailInput').value;
       const password = document.getElementById('passwordInput').value;
       signInWithEmailAndPassword(auth, email, password)
@@ -124,13 +131,13 @@
         .catch((error) => {
           document.getElementById('statusText').innerText = "Error: " + error.message;
         });
-    }
+    };
 
-    window.logOut = function() {
+    window.logOut = function () {
       signOut(auth).then(() => {
         document.getElementById('statusText').innerText = "Logged out. Please Sign Up or Login";
       });
-    }
+    };
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -138,7 +145,6 @@
       }
     });
   </script>
+
 </body>
 </html>
-
-
