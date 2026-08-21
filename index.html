@@ -3,23 +3,84 @@
 <head>
   <title>Venzi</title>
   <meta name="google-site-verification" content="BrJRvivgpr_8AxU4f-Jh0SHmfgNWrTGkIKxXS4fp-_Q" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    img {
+      width: 200px;
+      margin-top: 20px;
+    }
+    h1 {
+      font-size: 28px;
+      color: #111;
+    }
+    p {
+      color: #555;
+      font-size: 16px;
+    }
+    .auth-box {
+      max-width: 350px;
+      margin: 30px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .auth-box h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .auth-box input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    .auth-box button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #signUpBtn {
+      background-color: #111;
+      color: white;
+    }
+    #loginBtn {
+      background-color: #555;
+      color: white;
+    }
+    #logoutBtn {
+      background-color: #ddd;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-  <img src="1787225529289.png" alt="Venzi Logo" width="200">
+  <img src="1787225529289.png" alt="Venzi Logo">
   <h1>Hello, my website is live!</h1>
   <p>Welcome to my site.</p>
 
-  <hr>
-  <h2 id="statusText">Please Sign Up or Login</h2>
-
-  <div>
+  <div class="auth-box">
+    <h2 id="statusText">Please Sign Up or Login</h2>
     <input type="email" id="emailInput" placeholder="Enter email">
-    <br><br>
     <input type="password" id="passwordInput" placeholder="Enter password">
-    <br><br>
-    <button onclick="signUp()">Sign Up</button>
-    <button onclick="logIn()">Login</button>
-    <button onclick="logOut()">Logout</button>
+    <button id="signUpBtn" onclick="signUp()">Sign Up</button>
+    <button id="loginBtn" onclick="logIn()">Login</button>
+    <button id="logoutBtn" onclick="logOut()">Logout</button>
   </div>
 
   <script type="module">
@@ -46,7 +107,7 @@
       const password = document.getElementById('passwordInput').value;
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          document.getElementById('statusText').innerText = "Account created! Welcome " + userCredential.user.email;
+          document.getElementById('statusText').innerText = "Welcome " + userCredential.user.email;
         })
         .catch((error) => {
           document.getElementById('statusText').innerText = "Error: " + error.message;
