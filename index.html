@@ -2,16 +2,30 @@
 <html>
 <head>
   <title>Venzi</title>
-  <meta name="google-site-verification" content="YAHAN_AAPKA_LAMBA_CODE_HOGA">
+  <meta name="google-site-verification" content="BrJRvivgpr_8AxU4f-Jh0SHmfgNWrTGkIKxXS4fp-_Q" />
 </head>
 <body>
-  <img src="1787225529289.png" alt="Venzi Logo">
+  <img src="1787225529289.png" alt="Venzi Logo" width="200">
   <h1>Hello, my website is live!</h1>
   <p>Welcome to my site.</p>
 
+  <hr>
+  <h2 id="statusText">Please Sign Up or Login</h2>
+
+  <div>
+    <input type="email" id="emailInput" placeholder="Enter email">
+    <br><br>
+    <input type="password" id="passwordInput" placeholder="Enter password">
+    <br><br>
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="logIn()">Login</button>
+    <button onclick="logOut()">Logout</button>
+  </div>
+
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDQmh4yBGXeOiAIn-pKANxl3BR2H-jQPHE",
@@ -25,8 +39,44 @@
 
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
-  </script>
+    const auth = getAuth(app);
 
+    window.signUp = function() {
+      const email = document.getElementById('emailInput').value;
+      const password = document.getElementById('passwordInput').value;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          document.getElementById('statusText').innerText = "Account created! Welcome " + userCredential.user.email;
+        })
+        .catch((error) => {
+          document.getElementById('statusText').innerText = "Error: " + error.message;
+        });
+    }
+
+    window.logIn = function() {
+      const email = document.getElementById('emailInput').value;
+      const password = document.getElementById('passwordInput').value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          document.getElementById('statusText').innerText = "Logged in as " + userCredential.user.email;
+        })
+        .catch((error) => {
+          document.getElementById('statusText').innerText = "Error: " + error.message;
+        });
+    }
+
+    window.logOut = function() {
+      signOut(auth).then(() => {
+        document.getElementById('statusText').innerText = "Logged out. Please Sign Up or Login";
+      });
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById('statusText').innerText = "Logged in as " + user.email;
+      }
+    });
+  </script>
 </body>
 </html>
 
