@@ -50,6 +50,7 @@
     .private { background: #fdeaea; color: #b00020; }
     .owner-tag { background: #eee; color: #333; }
     .group-btn { width: 100%; border: 0; border-radius: 9px; padding: 11px; margin-top: 10px; font-weight: bold; background: #111; color: white; }
+    .leave-btn { width: 100%; border: 0; border-radius: 9px; padding: 11px; margin-top: 6px; font-weight: bold; background: #d93025; color: white; }
     .pending-btn { background: #eee; color: #777; cursor: default; }
     .label { display: block; font-size: 12px; font-weight: bold; color: #666; margin: 12px 0 6px; }
     textarea.input { min-height: 100px; resize: vertical; }
@@ -306,7 +307,7 @@
     document.getElementById("homePage").classList.remove("hidden");
   };
 
-  /* AUTH EVENT LISTENERS (Fixed element bindings) */
+  /* AUTH EVENT LISTENERS */
   document.getElementById("signupBtn").addEventListener("click", async () => {
     const email = document.getElementById("emailInput").value.trim();
     const password = document.getElementById("passwordInput").value;
@@ -459,13 +460,21 @@
             });
             reqs += "</div>";
           }
+          
+          // Leave group button (Owner cannot leave directly, they have to delete group)
+          let leaveBtnHtml = "";
+          if (!isOwner) {
+            leaveBtnHtml = `<button class="leave-btn" onclick="exitGroup('${g.id}')">Leave Group</button>`;
+          }
+
           card.innerHTML = `<span class="tag ${g.isPublic ? "public" : "private"}">${g.isPublic ? "🌍 PUBLIC" : "🔒 PRIVATE"}</span>
             ${isOwner ? `<span class="tag owner-tag">👑 OWNER</span>` : ""}
             <h3>${escapeHTML(g.name)}</h3>
             <p>${escapeHTML(g.description || "No description")}</p>
             <p>${g.members ? g.members.length : 0} members</p>
             ${reqs}
-            <button class="group-btn" onclick="openGroupPage('${g.id}')">Open Group</button>`;
+            <button class="group-btn" onclick="openGroupPage('${g.id}')">Open Group</button>
+            ${leaveBtnHtml}`;
           container.appendChild(card);
         }
       });
@@ -480,6 +489,35 @@
       else await updateDoc(doc(db, "groups", groupId), { pendingJoinRequests: arrayRemove(reqObj) });
       await showMyGroups();
     } catch (error) { alert("Error: " + error.message); }
+  };
+
+  /* EXIT / LEAVE GROUP FUNCTION */
+  window.exitGroup = async function(groupId) {
+    if (!currentUser) return;
+    if (!confirm("Kya aap sach mein is group ko chodna chahte hain?")) return;
+
+    try {
+      const groupRef = doc(db, "groups", groupId);
+      const groupSnap = await getDoc(groupRef);
+      
+      if (!groupSnap.exists()) return alert("Group nahi mila.");
+      const data = groupSnap.data();
+
+      if (data.ownerId === currentUser.uid) {
+        alert("Group owner group chod nahi sakta. Pehle group delete karein.");
+        return;
+      }
+
+      await updateDoc(groupRef, {
+        members: arrayRemove(currentUser.uid),
+        memberEmails: arrayRemove(currentUser.email)
+      });
+
+      alert("Aapne group chod diya hai.");
+      showMyGroups();
+    } catch (error) {
+      alert("Group chodne mein error aayi: " + error.message);
+    }
   };
 
   /* VAULT SYSTEM */
