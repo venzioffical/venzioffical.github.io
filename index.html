@@ -122,8 +122,8 @@
     <div id="authStatus" class="status"></div>
     <input id="emailInput" class="input" type="email" placeholder="Email">
     <input id="passwordInput" class="input" type="password" placeholder="Password">
-    <button class="primary-btn" onclick="logIn()">Log In</button>
-    <button class="secondary-btn" onclick="signUp()">Create New Account</button>
+    <button class="primary-btn" id="loginBtn">Log In</button>
+    <button class="secondary-btn" id="signupBtn">Create New Account</button>
   </div>
 </div>
 
@@ -148,7 +148,7 @@
         <button class="primary-btn" onclick="showCreateGroup()">＋ Create Group</button>
         <button class="secondary-btn" onclick="showJoinGroup()">🔍 Browse Groups</button>
         <button class="secondary-btn" onclick="showMyGroups()">👥 My Groups</button>
-        <button class="secondary-btn" onclick="logOut()">Logout</button>
+        <button class="secondary-btn" id="logoutBtn">Logout</button>
       </div>
     </section>
 
@@ -195,14 +195,12 @@
       <p class="page-subtitle">Your private folder. Upload documents to share in chats later.</p>
       
       <label class="vault-upload-btn">
-        <input type="file" id="vaultFileInput" class="hidden" onchange="uploadToVault(event)">
+        <input type="file" id="vaultFileInput" class="hidden">
         ⬆️ Upload File to Vault
       </label>
       <div id="vaultUploadStatus" class="status"></div>
 
-      <div id="vaultFilesContainer">
-        <!-- Vault files will appear here -->
-      </div>
+      <div id="vaultFilesContainer"></div>
     </section>
 
   </main>
@@ -259,27 +257,20 @@
   <div class="modal-card">
     <h3>Select from Vault</h3>
     <p>Choose a file to send to this group.</p>
-    <div id="vaultPickerContainer" style="text-align: left; margin-bottom: 15px;">
-      <!-- Files to pick will appear here -->
-    </div>
+    <div id="vaultPickerContainer" style="text-align: left; margin-bottom: 15px;"></div>
     <button class="secondary-btn" onclick="closeVaultPicker()">Cancel</button>
   </div>
 </div>
 
 <script type="module">
   /* =========================
-     FIREBASE IMPORTS
+     FIREBASE IMPORTS (Fixed v10.8.0)
   ========================= */
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  
-  // NEW IMPORT FOR STORAGE (VAULT)
-  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-  /* =========================
-     FIREBASE CONFIG
-  ========================= */
   const firebaseConfig = {
     apiKey: "AIzaSyDQmh4yBGXeOiAIn-pKANxl3BR2H-jQPHE",
     authDomain: "venzi-community.firebaseapp.com",
@@ -290,27 +281,18 @@
     measurementId: "G-352E4PXB3B"
   };
 
-  /* =========================
-     INITIALIZE
-  ========================= */
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-  const storage = getStorage(app); // Initialize Storage
+  const storage = getStorage(app);
 
-  /* =========================
-     VARIABLES
-  ========================= */
   let currentUser = null;
   let allGroupsCache = [];
   let currentGroupId = null;
   let currentGroupData = null;
   let chatUnsubscribe = null;
-  let myVaultFiles = []; // To cache vault files
+  let myVaultFiles = [];
 
-  /* =========================
-     PAGE NAVIGATION
-  ========================= */
   function hideAllPages() {
     document.getElementById("homePage").classList.add("hidden");
     document.getElementById("createPage").classList.add("hidden");
@@ -324,10 +306,8 @@
     document.getElementById("homePage").classList.remove("hidden");
   };
 
-  /* =========================
-     AUTH
-  ========================= */
-  window.signUp = async function() {
+  /* AUTH EVENT LISTENERS (Fixed element bindings) */
+  document.getElementById("signupBtn").addEventListener("click", async () => {
     const email = document.getElementById("emailInput").value.trim();
     const password = document.getElementById("passwordInput").value;
     const status = document.getElementById("authStatus");
@@ -340,9 +320,9 @@
       await createUserWithEmailAndPassword(auth, email, password);
       status.innerText = "";
     } catch (error) { status.style.color = "#d93025"; status.innerText = error.message; }
-  };
+  });
 
-  window.logIn = async function() {
+  document.getElementById("loginBtn").addEventListener("click", async () => {
     const email = document.getElementById("emailInput").value.trim();
     const password = document.getElementById("passwordInput").value;
     const status = document.getElementById("authStatus");
@@ -353,16 +333,13 @@
       await signInWithEmailAndPassword(auth, email, password);
       status.innerText = "";
     } catch (error) { status.style.color = "#d93025"; status.innerText = "Incorrect email or password."; }
-  };
+  });
 
-  window.logOut = async function() {
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
     if (chatUnsubscribe) { chatUnsubscribe(); chatUnsubscribe = null; }
     await signOut(auth);
-  };
+  });
 
-  /* =========================
-     CREATE GROUP
-  ========================= */
   window.showCreateGroup = function() {
     hideAllPages();
     document.getElementById("createPage").classList.remove("hidden");
@@ -398,9 +375,6 @@
     } catch (error) { status.style.color = "#d93025"; status.innerText = "Error: " + error.message; }
   };
 
-  /* =========================
-     BROWSE GROUPS
-  ========================= */
   window.showJoinGroup = async function() {
     hideAllPages();
     document.getElementById("browsePage").classList.remove("hidden");
@@ -456,9 +430,6 @@
     } catch (error) { alert("Unable to send request: " + error.message); }
   };
 
-  /* =========================
-     MY GROUPS
-  ========================= */
   window.showMyGroups = async function() {
     hideAllPages();
     document.getElementById("myGroupsPage").classList.remove("hidden");
@@ -511,17 +482,14 @@
     } catch (error) { alert("Error: " + error.message); }
   };
 
-
-  /* =========================
-     VAULT SYSTEM (NEW)
-  ========================= */
+  /* VAULT SYSTEM */
   window.showVault = function() {
     hideAllPages();
     document.getElementById("vaultPage").classList.remove("hidden");
     loadVaultFiles();
   };
 
-  window.uploadToVault = async function(event) {
+  document.getElementById("vaultFileInput").addEventListener("change", async (event) => {
     const file = event.target.files[0];
     if (!file || !currentUser) return;
 
@@ -530,12 +498,10 @@
     status.innerText = "Uploading " + file.name + "... Please wait.";
 
     try {
-      // 1. Upload to Storage
       const fileRef = ref(storage, `users/${currentUser.uid}/vault/${Date.now()}_${file.name}`);
       await uploadBytes(fileRef, file);
       const downloadURL = await getDownloadURL(fileRef);
 
-      // 2. Save metadata to Firestore
       await addDoc(collection(db, "users", currentUser.uid, "vault"), {
         fileName: file.name,
         fileType: file.type,
@@ -545,16 +511,13 @@
 
       status.style.color = "#087b2f";
       status.innerText = "Uploaded successfully!";
-      event.target.value = ''; // clear input
-      
-      loadVaultFiles(); // Refresh list
-
+      event.target.value = '';
+      loadVaultFiles();
     } catch (error) {
       status.style.color = "#d93025";
       status.innerText = "Upload failed: " + error.message;
-      console.error(error);
     }
-  };
+  });
 
   async function loadVaultFiles() {
     if (!currentUser) return;
@@ -597,9 +560,6 @@
     }
   }
 
-  /* =========================
-     VAULT TO CHAT SHARE (NEW)
-  ========================= */
   window.openVaultPicker = async function() {
     document.getElementById("vaultPickerModal").classList.remove("hidden");
     const container = document.getElementById("vaultPickerContainer");
@@ -658,10 +618,6 @@
     }
   };
 
-
-  /* =========================
-     OPEN GROUP & REAL-TIME CHAT
-  ========================= */
   window.openGroupPage = async function(groupId) {
     if (!currentUser) return;
     currentGroupId = groupId;
@@ -739,10 +695,6 @@
     } catch (error) { alert("Error: " + error.message); input.value = text; }
   };
 
-
-  /* =========================
-     GROUP MENU & DELETE
-  ========================= */
   window.showGroupMenu = function() {
     if (!currentGroupData || !currentUser) return;
     if (currentGroupData.ownerId !== currentUser.uid) return alert("Only the group owner can delete this group.");
@@ -770,15 +722,9 @@
     document.getElementById("groupPage").classList.add("hidden");
   };
 
-  /* =========================
-     HELPERS
-  ========================= */
   function escapeHTML(value) { return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
   function escapeAttribute(value) { return String(value||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'"); }
 
-  /* =========================
-     AUTH STATE
-  ========================= */
   onAuthStateChanged(auth, user => {
     currentUser = user;
     const authPage = document.getElementById("authPage");
@@ -795,7 +741,6 @@
       document.getElementById("groupPage").classList.add("hidden");
     }
   });
-
 </script>
 </body>
 </html>
