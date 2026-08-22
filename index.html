@@ -1,2169 +1,2087 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Venzi</title>
-<meta name="google-site-verification" content="BrJRvivgpr_8AxU4f-Jh0SHmfgNWrTGkIKxXS4fp-_Q">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Venzi - Connect, create groups and chat with your community.">
+  <title>Venzi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;width:100%;min-height:100%;font-family:Arial,sans-serif;background:#fafafa;color:#111}
-body{min-height:100vh}
-button,input,textarea{font-family:Arial,sans-serif}
-button{cursor:pointer}
-.hidden{display:none!important}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-.auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:#fafafa}
-.auth-card{width:100%;max-width:390px;background:#fff;border:1px solid #ddd;padding:32px 28px;border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.08);text-align:center}
-.logo{width:105px;max-width:100%;margin:0 auto 18px;display:block}
-.auth-card h1{margin:0 0 8px;font-size:30px}
-.subtitle{margin:0 0 25px;color:#777;font-size:14px}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      color: #111;
+    }
 
-.input{width:100%;padding:14px;margin-bottom:12px;border:1px solid #ddd;border-radius:10px;outline:none;font-size:15px;background:#fafafa}
-.input:focus{border-color:#111;background:#fff}
+    .topbar {
+      height: 60px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
 
-.primary-btn,.secondary-btn,.danger-btn{width:100%;padding:14px;border:0;border-radius:10px;font-size:15px;font-weight:bold;margin-bottom:10px}
-.primary-btn{background:#111;color:#fff}
-.secondary-btn{background:#eee;color:#111}
-.danger-btn{background:#d93025;color:#fff}
+    .logoText {
+      font-size: 24px;
+      font-weight: bold;
+    }
 
-.status{min-height:20px;font-size:13px;color:#d93025;margin:8px 0 12px}
+    .topIcon {
+      font-size: 25px;
+    }
 
-.app{min-height:100vh;background:#fafafa}
-.topbar{height:62px;background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:sticky;top:0;z-index:50}
-.topbar-title{font-size:23px;font-weight:bold}
-.topbar-user{font-size:12px;color:#777;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .page {
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
+      padding-bottom: 80px;
+    }
 
-.content{width:100%;max-width:650px;margin:0 auto;padding:18px;padding-bottom:90px}
-.page-title{font-size:25px;margin:5px 0 4px}
-.page-subtitle{color:#777;font-size:14px;margin:0 0 20px}
+    .box {
+      background: #fff;
+      padding: 22px;
+      margin: 20px 12px;
+      border-radius: 16px;
+      border: 1px solid #e5e5e5;
+    }
 
-.menu-card,.form-card,.group-card{background:#fff;border:1px solid #ddd;border-radius:16px;padding:22px;margin-bottom:15px}
-.welcome{font-size:18px;font-weight:bold;margin-bottom:5px}
-.welcome-email{font-size:13px;color:#777;word-break:break-all;margin-bottom:20px}
+    h1, h2, h3 {
+      margin-top: 0;
+    }
 
-.search{width:100%;padding:14px;border:1px solid #ddd;border-radius:12px;margin-bottom:15px;outline:none;font-size:15px;background:#fff}
-.group-card h3{margin:7px 0 5px;font-size:18px}
-.group-card p{margin:5px 0;color:#666;font-size:13px;line-height:1.45}
+    .center {
+      text-align: center;
+    }
 
-.tag{display:inline-block;padding:5px 9px;border-radius:20px;font-size:10px;font-weight:bold;margin-right:4px}
-.public{background:#e8f7ed;color:#087b2f}
-.private{background:#fdeaea;color:#b00020}
-.owner-tag{background:#eee;color:#333}
+    input,
+    textarea {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+    }
 
-.group-btn,.leave-btn{width:100%;border:0;border-radius:9px;padding:11px;margin-top:10px;font-weight:bold}
-.group-btn{background:#111;color:white}
-.leave-btn{background:#d93025;color:white}
-.pending-btn{background:#eee;color:#777;cursor:default}
+    input:focus,
+    textarea:focus {
+      border-color: #111;
+    }
 
-.label{display:block;font-size:12px;font-weight:bold;color:#666;margin:12px 0 6px}
-textarea.input{min-height:100px;resize:vertical}
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
 
-.visibility{display:flex;gap:10px;margin-bottom:10px}
-.visibility label{flex:1;padding:13px;border:1px solid #ddd;border-radius:10px;text-align:center;font-size:13px;cursor:pointer}
-.visibility input{display:none}
-.visibility label:has(input:checked){border-color:#111;background:#f3f3f3;font-weight:bold}
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
 
-.vault-upload-btn{background:#087b2f;color:white;display:inline-block;text-align:center;padding:14px;border-radius:10px;font-weight:bold;cursor:pointer;width:100%;margin-bottom:15px}
+    .blackBtn {
+      background: #111;
+      color: white;
+    }
 
-.vault-item{display:flex;align-items:center;padding:12px;border:1px solid #eee;border-radius:10px;margin-bottom:10px;background:#fff}
-.vault-item-icon{width:40px;height:40px;background:#eee;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-right:12px;flex-shrink:0;overflow:hidden}
-.vault-item-icon img{width:100%;height:100%;object-fit:cover}
-.vault-item-info{flex:1;min-width:0}
-.vault-item-title{font-size:14px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vault-item-date{font-size:11px;color:#888;margin-top:3px}
-.vault-send-btn{background:#111;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:bold}
-.small-danger{border:0;background:#d93025;color:#fff;padding:6px 9px;border-radius:6px;font-size:11px;margin-left:6px}
+    .grayBtn {
+      background: #666;
+      color: white;
+    }
 
-.group-page{position:fixed;inset:0;z-index:100;background:#fff;display:flex;flex-direction:column}
-.chat-header{height:64px;border-bottom:1px solid #ddd;display:flex;align-items:center;gap:12px;padding:0 15px;flex-shrink:0}
-.back-icon,.chat-header-menu{border:0;background:transparent;font-size:25px;padding:5px}
-.chat-header-info{flex:1;min-width:0}
-.chat-header-name{font-weight:bold;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chat-header-members{color:#888;font-size:11px;margin-top:2px}
+    .lightBtn {
+      background: #e5e5e5;
+      color: #111;
+    }
 
-.members-area{padding:8px 15px;border-bottom:1px solid #eee;overflow-x:auto;white-space:nowrap;flex-shrink:0}
-.member-chip{display:inline-block;background:#f0f0f0;padding:6px 10px;border-radius:20px;font-size:11px;margin-right:5px}
+    .deleteBtn {
+      background: #d90429;
+      color: white;
+    }
 
-.chat-messages{flex:1;overflow-y:auto;padding:15px;background:#fafafa}
-.message{display:flex;margin-bottom:12px;flex-direction:column}
-.message.mine{align-items:flex-end}
-.message-bubble{max-width:78%;background:#e9e9e9;padding:9px 12px;border-radius:17px;font-size:14px;line-height:1.35;word-break:break-word}
-.message.mine .message-bubble{background:#111;color:#fff}
-.message-sender{font-size:10px;color:#888;margin-bottom:3px}
-.message.mine .message-sender{display:none}
-.chat-img-attachment{max-width:100%;border-radius:10px;margin-top:5px;display:block}
-.chat-file-attachment{display:inline-block;margin-top:5px;text-decoration:none;color:inherit;font-size:12px;font-weight:bold}
+    .hidden {
+      display: none !important;
+    }
 
-.chat-input-area{display:flex;align-items:center;gap:8px;padding:9px;border-top:1px solid #ddd;background:#fff;flex-shrink:0}
-.attach-btn{border:0;background:transparent;font-size:22px;padding:5px;color:#555}
-.chat-input{flex:1;border:1px solid #ddd;border-radius:22px;padding:12px 15px;outline:none;font-size:14px}
-.send-btn{width:45px;height:45px;border-radius:50%;border:0;background:#111;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center}
+    .status {
+      text-align: center;
+      min-height: 20px;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
 
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:300}
-.modal-card{width:100%;max-width:400px;background:white;border-radius:16px;padding:22px;text-align:center;max-height:85vh;overflow-y:auto}
-.modal-card h3{margin-top:0}
-.modal-card p{color:#666;font-size:13px;line-height:1.5}
+    .groupCard {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
 
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:64px;background:#fff;border-top:1px solid #ddd;display:flex;justify-content:space-around;align-items:center;z-index:80}
-.nav-btn{border:0;background:transparent;color:#555;font-size:11px;text-align:center;padding:7px 15px}
-.nav-icon{display:block;font-size:21px;margin-bottom:2px}
+    .groupCard h3 {
+      margin: 8px 0 5px;
+      font-size: 19px;
+    }
 
-@media(min-width:700px){
-.bottom-nav{max-width:650px;left:50%;transform:translateX(-50%);border-left:1px solid #ddd;border-right:1px solid #ddd}
-}
-</style>
+    .groupCard p {
+      color: #666;
+      margin: 5px 0;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    .public {
+      background: #e5f8eb;
+      color: #087f23;
+    }
+
+    .private {
+      background: #ffe5e8;
+      color: #c1121f;
+    }
+
+    .owner {
+      background: #eee;
+      color: #333;
+    }
+
+    .bottomNav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 65px;
+      background: #fff;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .navItem {
+      text-align: center;
+      font-size: 12px;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .navIcon {
+      display: block;
+      font-size: 23px;
+      margin-bottom: 2px;
+    }
+
+    .members {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 20px;
+    }
+
+    .member {
+      background: #eee;
+      padding: 7px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    /* CHAT */
+
+    .chatPage {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chatHeader {
+      height: 60px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 12px;
+      background: #fff;
+    }
+
+    .backChat {
+      font-size: 25px;
+      cursor: pointer;
+    }
+
+    .chatTitle {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .chatMessages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+      background: #fafafa;
+    }
+
+    .message {
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message.mine {
+      align-items: flex-end;
+    }
+
+    .message.other {
+      align-items: flex-start;
+    }
+
+    .sender {
+      font-size: 10px;
+      color: #888;
+      margin-bottom: 3px;
+    }
+
+    .bubble {
+      max-width: 78%;
+      padding: 10px 13px;
+      border-radius: 18px;
+      background: #e5e5e5;
+      word-wrap: break-word;
+    }
+
+    .mine .bubble {
+      background: #111;
+      color: white;
+    }
+
+    .chatInputArea {
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      display: flex;
+      gap: 8px;
+      background: white;
+    }
+
+    .chatInputArea input {
+      margin: 0;
+      flex: 1;
+      border-radius: 22px;
+    }
+
+    .sendBtn {
+      width: auto;
+      padding: 12px 18px;
+      border-radius: 22px;
+      margin: 0;
+      background: #111;
+      color: white;
+    }
+
+    .requestRow {
+      border-top: 1px solid #eee;
+      padding: 10px 0;
+    }
+
+    .requestButtons {
+      display: flex;
+      gap: 6px;
+      margin-top: 7px;
+    }
+
+    .requestButtons button {
+      margin: 0;
+      padding: 8px;
+    }
+
+    .accept {
+      background: #0a7d2c;
+      color: white;
+    }
+
+    .reject {
+      background: #d90429;
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="authPage" class="auth-page">
-<div class="auth-card">
-<img src="1787225529289.png" class="logo" alt="Venzi" onerror="this.style.display='none'">
-<h1>Venzi</h1>
-<p class="subtitle">Connect with your groups</p>
-<div id="authStatus" class="status"></div>
-
-<input id="emailInput" class="input" type="email" placeholder="Email">
-<input id="passwordInput" class="input" type="password" placeholder="Password">
-
-<button class="primary-btn" id="loginBtn">Log In</button>
-<button class="secondary-btn" id="signupBtn">Create New Account</button>
-</div>
+<div class="topbar">
+  <div class="logoText">Venzi</div>
+  <div class="topIcon">💬</div>
 </div>
 
-<div id="app" class="app hidden">
+<div class="page">
 
-<header class="topbar">
-<div class="topbar-title">Venzi</div>
-<div id="topUser" class="topbar-user"></div>
-</header>
+  <!-- LOGIN -->
+  <div class="box center" id="authBox">
+    <h2>Welcome to Venzi</h2>
+    <p>Login or create your account</p>
 
-<main class="content">
+    <div class="status" id="authStatus"></div>
 
-<section id="homePage">
-<h1 class="page-title">Home</h1>
-<p class="page-subtitle">Manage your groups and conversations.</p>
+    <input type="email" id="emailInput" placeholder="Email">
+    <input type="password" id="passwordInput" placeholder="Password">
 
-<div class="menu-card">
-<div class="welcome">Welcome 👋</div>
-<div id="welcomeEmail" class="welcome-email"></div>
+    <button class="blackBtn" onclick="signUp()">Create Account</button>
+    <button class="grayBtn" onclick="logIn()">Login</button>
+  </div>
 
-<button class="primary-btn" onclick="showCreateGroup()">＋ Create Group</button>
-<button class="secondary-btn" onclick="showJoinGroup()">🔍 Browse Groups</button>
-<button class="secondary-btn" onclick="showMyGroups()">👥 My Groups</button>
-<button class="secondary-btn" id="logoutBtn">Logout</button>
+
+  <!-- HOME -->
+  <div class="box center hidden" id="homeBox">
+    <h2 id="welcomeText">Welcome</h2>
+    <p>What would you like to do?</p>
+
+    <button class="blackBtn" onclick="showCreateGroup()">
+      ➕ Create Group
+    </button>
+
+    <button class="grayBtn" onclick="showJoinGroup()">
+      🔍 Browse / Join Groups
+    </button>
+
+    <button class="lightBtn" onclick="showMyGroups()">
+      👥 My Groups
+    </button>
+
+    <button class="lightBtn" onclick="logOut()">
+      Logout
+    </button>
+  </div>
+
+
+  <!-- CREATE GROUP -->
+  <div class="box hidden" id="createGroupBox">
+    <h2>Create Group</h2>
+
+    <div class="status" id="createStatus"></div>
+
+    <input
+      type="text"
+      id="groupName"
+      placeholder="Group name"
+    >
+
+    <textarea
+      id="groupDescription"
+      placeholder="Group description"
+    ></textarea>
+
+    <p><b>Visibility</b></p>
+
+    <label>
+      <input
+        type="radio"
+        name="visibility"
+        value="public"
+        checked
+      >
+      🌍 Public
+    </label>
+
+    <br><br>
+
+    <label>
+      <input
+        type="radio"
+        name="visibility"
+        value="private"
+      >
+      🔒 Private
+    </label>
+
+    <br><br>
+
+    <input
+      type="text"
+      id="invites"
+      placeholder="Invite emails (optional)"
+    >
+
+    <button class="blackBtn" onclick="createGroup()">
+      Create Group
+    </button>
+
+    <button class="lightBtn" onclick="goHome()">
+      Back
+    </button>
+  </div>
+
+
+  <!-- BROWSE GROUPS -->
+  <div class="box hidden" id="browseBox">
+    <h2>Browse Groups</h2>
+
+    <div class="status" id="browseStatus"></div>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search groups..."
+      oninput="renderGroups()"
+    >
+
+    <div id="groupsContainer"></div>
+
+    <button class="lightBtn" onclick="goHome()">
+      Back
+    </button>
+  </div>
+
+
+  <!-- MY GROUPS -->
+  <div class="box hidden" id="myGroupsBox">
+    <h2>My Groups</h2>
+
+    <div class="status" id="myGroupsStatus"></div>
+
+    <div id="myGroupsContainer"></div>
+
+    <button class="lightBtn" onclick="goHome()">
+      Back
+    </button>
+  </div>
+
+
+  <!-- GROUP INFO -->
+  <div class="box hidden" id="groupInfoBox">
+
+    <span id="groupTag" class="tag"></span>
+
+    <h2 id="groupTitle"></h2>
+
+    <p id="groupDescriptionText"></p>
+
+    <h3>👥 Members</h3>
+
+    <div class="members" id="membersContainer"></div>
+
+    <button class="blackBtn" onclick="openChat()">
+      💬 Open Chat
+    </button>
+
+    <button class="lightBtn" onclick="showMyGroups()">
+      Back
+    </button>
+
+  </div>
+
 </div>
-</section>
 
-<section id="createPage" class="hidden">
-<h1 class="page-title">Create Group</h1>
-<p class="page-subtitle">Create your own community.</p>
 
-<div class="form-card">
-<div id="createStatus" class="status"></div>
+<!-- BOTTOM NAV -->
+<div class="bottomNav hidden" id="bottomNav">
 
-<label class="label">Group Name</label>
-<input id="groupNameInput" class="input" type="text" placeholder="e.g. Study Buddies">
+  <div class="navItem" onclick="goHome()">
+    <span class="navIcon">⌂</span>
+    Home
+  </div>
 
-<label class="label">Description</label>
-<textarea id="groupDescInput" class="input" placeholder="What is this group about?"></textarea>
+  <div class="navItem" onclick="showJoinGroup()">
+    <span class="navIcon">🔍</span>
+    Groups
+  </div>
 
-<label class="label">Visibility</label>
+  <div class="navItem" onclick="showCreateGroup()">
+    <span class="navIcon">＋</span>
+    Create
+  </div>
 
-<div class="visibility">
-<label><input type="radio" name="visibility" value="public" checked> 🌍 Public</label>
-<label><input type="radio" name="visibility" value="private"> 🔒 Private</label>
-</div>
-
-<label class="label">Invite members (optional)</label>
-<input id="groupInvitesInput" class="input" type="text" placeholder="friend@email.com">
-
-<button class="primary-btn" onclick="submitCreateGroup()">Create Group</button>
-<button class="secondary-btn" onclick="goHome()">Cancel</button>
-</div>
-</section>
-
-<section id="browsePage" class="hidden">
-<h1 class="page-title">Browse Groups</h1>
-<p class="page-subtitle">Find public communities to join.</p>
-
-<input id="searchGroupInput" class="search" type="text" placeholder="Search groups..." oninput="renderGroupList">
-
-<div id="groupListContainer"></div>
-</section>
-
-<section id="myGroupsPage" class="hidden">
-<h1 class="page-title">My Groups</h1>
-<p class="page-subtitle">Groups you are a member of.</p>
-<div id="myGroupsContainer"></div>
-</section>
-
-<section id="vaultPage" class="hidden">
-<h1 class="page-title">My Vault</h1>
-<p class="page-subtitle">Private to your account. Files are not listed for other users.</p>
-
-<label class="vault-upload-btn">
-<input type="file" id="vaultFileInput" class="hidden">
-⬆️ Upload File to Vault
-</label>
-
-<div id="vaultUploadStatus" class="status"></div>
-<div id="vaultFilesContainer"></div>
-</section>
-
-</main>
-
-<nav class="bottom-nav">
-<button class="nav-btn" onclick="goHome()">
-<span class="nav-icon">⌂</span>Home
-</button>
-
-<button class="nav-btn" onclick="showJoinGroup()">
-<span class="nav-icon">🔍</span>Explore
-</button>
-
-<button class="nav-btn" onclick="showMyGroups()">
-<span class="nav-icon">👥</span>Groups
-</button>
-
-<button class="nav-btn" onclick="showVault()">
-<span class="nav-icon">📁</span>Vault
-</button>
-</nav>
+  <div class="navItem" onclick="showMyGroups()">
+    <span class="navIcon">☺</span>
+    My Groups
+  </div>
 
 </div>
 
-<div id="groupPage" class="group-page hidden">
 
-<header class="chat-header">
+<!-- FULL SCREEN CHAT -->
+<div class="chatPage hidden" id="chatPage">
 
-<button class="back-icon" onclick="closeGroupPage()">←</button>
+  <div class="chatHeader">
 
-<div class="chat-header-info">
-<div id="groupPageName" class="chat-header-name">Group</div>
-<div id="groupPageMembersCount" class="chat-header-members">0 members</div>
-</div>
+    <div class="backChat" onclick="closeChat()">
+      ←
+    </div>
 
-<button class="chat-header-menu" onclick="showGroupMenu()">⋮</button>
+    <div class="chatTitle" id="chatTitle">
+      Group Chat
+    </div>
 
-</header>
+  </div>
 
-<div id="groupPageMembers" class="members-area"></div>
+  <div class="chatMessages" id="chatMessages"></div>
 
-<div id="chatMessages" class="chat-messages"></div>
+  <div class="chatInputArea">
 
-<div class="chat-input-area">
+    <input
+      type="text"
+      id="chatInput"
+      placeholder="Message..."
+      onkeydown="if(event.key === 'Enter') sendMessage()"
+    >
 
-<button class="attach-btn" onclick="openVaultPicker()">📎</button>
+    <button
+      class="sendBtn"
+      onclick="sendMessage()"
+    >
+      Send
+    </button>
 
-<input id="chatInput"
-class="chat-input"
-type="text"
-placeholder="Message..."
-onkeydown="if(event.key==='Enter')sendChatMessage()">
-
-<button class="send-btn" onclick="sendChatMessage()">➤</button>
-
-</div>
-</div>
-
-<div id="deleteModal" class="modal hidden">
-<div class="modal-card">
-<h3>Delete Group?</h3>
-<p>This permanently deletes the group and its chat messages.</p>
-
-<button class="danger-btn" onclick="confirmDeleteGroup()">Delete Group</button>
-<button class="secondary-btn" onclick="closeDeleteModal()">Cancel</button>
-</div>
-</div>
-
-<div id="vaultPickerModal" class="modal hidden">
-<div class="modal-card">
-
-<h3>Select from Vault</h3>
-<p>Choose a private Vault file to share with this group.</p>
-
-<div id="vaultPickerContainer" style="text-align:left;margin-bottom:15px"></div>
-
-<button class="secondary-btn" onclick="closeVaultPicker()">Cancel</button>
+  </div>
 
 </div>
-</div>
+
 
 <script type="module">
 
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-import{
-getAuth,
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword,
-signOut,
-onAuthStateChanged
-}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-import{
-getFirestore,
-collection,
-addDoc,
-getDocs,
-doc,
-getDoc,
-updateDoc,
-deleteDoc,
-arrayUnion,
-arrayRemove,
-serverTimestamp,
-query,
-where,
-orderBy,
-onSnapshot
-}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-import{
-getStorage,
-ref,
-uploadBytes,
-getDownloadURL,
-deleteObject
-}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-
-
-const firebaseConfig={
-apiKey:"AIzaSyDQmh4yBGXeOiAIn-pKANxl3BR2H-jQPHE",
-authDomain:"venzi-community.firebaseapp.com",
-projectId:"venzi-community",
-storageBucket:"venzi-community.firebasestorage.app",
-messagingSenderId:"1008790056674",
-appId:"1:1008790056674:web:22fa088270df6a5be938bb",
-measurementId:"G-352E4PXB3B"
-};
-
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-const storage=getStorage(app);
-
-let currentUser=null;
-let allGroupsCache=[];
-let currentGroupId=null;
-let currentGroupData=null;
-let chatUnsubscribe=null;
-let myVaultFiles=[];
-
-
-function hideAllPages(){
-["homePage","createPage","browsePage","myGroupsPage","vaultPage"]
-.forEach(id=>document.getElementById(id).classList.add("hidden"));
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
 }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-window.goHome=()=>{
-hideAllPages();
-document.getElementById("homePage").classList.remove("hidden");
-};
-
-
-document.getElementById("signupBtn").onclick=async()=>{
-
-const email=document.getElementById("emailInput").value.trim().toLowerCase();
-const password=document.getElementById("passwordInput").value;
-const status=document.getElementById("authStatus");
-
-if(!email||!password)
-return status.innerText="Please enter email and password.";
-
-if(password.length<6)
-return status.innerText="Password must be at least 6 characters.";
-
-status.style.color="#777";
-status.innerText="Creating account...";
-
-try{
-
-await createUserWithEmailAndPassword(auth,email,password);
-status.innerText="";
-
-}catch(e){
-
-status.style.color="#d93025";
-status.innerText=e.message;
-
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  getDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
+  arrayUnion,
+  arrayRemove,
+  serverTimestamp,
+  query,
+  orderBy,
+  onSnapshot
 }
-};
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 
-document.getElementById("loginBtn").onclick=async()=>{
+/* FIREBASE */
 
-const email=document.getElementById("emailInput").value.trim().toLowerCase();
-const password=document.getElementById("passwordInput").value;
-const status=document.getElementById("authStatus");
+const firebaseConfig = {
 
-if(!email||!password)
-return status.innerText="Please enter email and password.";
+  apiKey: "AIzaSyDQmh4yBGXeOiAIn-pKANxl3BR2H-jQPHE",
 
-status.style.color="#777";
-status.innerText="Logging in...";
+  authDomain:
+    "venzi-community.firebaseapp.com",
 
-try{
+  projectId:
+    "venzi-community",
 
-await signInWithEmailAndPassword(auth,email,password);
-status.innerText="";
+  storageBucket:
+    "venzi-community.firebasestorage.app",
 
-}catch(e){
+  messagingSenderId:
+    "1008790056674",
 
-status.style.color="#d93025";
-status.innerText="Incorrect email or password.";
-
-}
-};
-
-
-document.getElementById("logoutBtn").onclick=async()=>{
-
-if(chatUnsubscribe)
-chatUnsubscribe();
-
-await signOut(auth);
+  appId:
+    "1:1008790056674:web:22fa088270df6a5be938bb"
 
 };
 
 
-window.showCreateGroup=()=>{
+const app = initializeApp(firebaseConfig);
 
-hideAllPages();
+const auth = getAuth(app);
 
-document.getElementById("createPage").classList.remove("hidden");
+const db = getFirestore(app);
 
-document.getElementById("createStatus").innerText="";
 
-};
+let currentUser = null;
 
+let currentGroupId = null;
 
-window.submitCreateGroup=async()=>{
+let currentGroupData = null;
 
-if(!currentUser)return;
+let chatUnsubscribe = null;
 
-const status=document.getElementById("createStatus");
+let allGroups = [];
 
-const name=document.getElementById("groupNameInput").value.trim();
 
-const description=document.getElementById("groupDescInput").value.trim();
+/* PAGE CONTROL */
 
-const visibility=document.querySelector('input[name="visibility"]:checked').value;
+function hideAllBoxes() {
 
-const invites=document.getElementById("groupInvitesInput").value.trim();
+  const boxes = [
+    "authBox",
+    "homeBox",
+    "createGroupBox",
+    "browseBox",
+    "myGroupsBox",
+    "groupInfoBox"
+  ];
 
-if(!name)
-return status.innerText="Please enter a group name.";
+  boxes.forEach(id => {
 
-const invitedEmails=invites
-?invites.split(",").map(e=>e.trim().toLowerCase()).filter(Boolean)
-:[];
+    document
+      .getElementById(id)
+      .classList
+      .add("hidden");
 
-status.style.color="#777";
-status.innerText="Creating group...";
-
-try{
-
-await addDoc(collection(db,"groups"),{
-
-name,
-description,
-isPublic:visibility==="public",
-
-ownerId:currentUser.uid,
-ownerEmail:currentUser.email,
-
-members:[currentUser.uid],
-memberEmails:[currentUser.email],
-
-invitedEmails,
-pendingJoinRequests:[],
-
-createdAt:serverTimestamp()
-
-});
-
-status.style.color="#087b2f";
-status.innerText="Group created successfully!";
-
-setTimeout(()=>{
-
-document.getElementById("groupNameInput").value="";
-document.getElementById("groupDescInput").value="";
-document.getElementById("groupInvitesInput").value="";
-
-goHome();
-
-},700);
-
-}catch(e){
-
-status.style.color="#d93025";
-status.innerText="Error: "+e.message;
-
-}
-
-};
-
-
-window.showJoinGroup=async()=>{
-
-hideAllPages();
-
-document.getElementById("browsePage").classList.remove("hidden");
-
-document.getElementById("searchGroupInput").value="";
-
-const c=document.getElementById("groupListContainer");
-
-c.innerHTML="<p>Loading public groups...</p>";
-
-try{
-
-const snap=await getDocs(
-query(
-collection(db,"groups"),
-where("isPublic","==",true),
-orderBy("name")
-)
-);
-
-allGroupsCache=snap.docs.map(d=>({
-id:d.id,
-...d.data()
-}));
-
-renderGroupList();
-
-}catch(e){
-
-c.innerHTML=
-`<p style="color:#d93025">
-Could not load groups. If this is the first time, Firebase may ask for an index.
-${escapeHTML(e.message)}
-</p>`;
-
-}
-
-};
-
-
-window.renderGroupList=()=>{
-
-const c=document.getElementById("groupListContainer");
-
-const s=document.getElementById("searchGroupInput")
-.value.trim().toLowerCase();
-
-c.innerHTML="";
-
-const filtered=allGroupsCache.filter(
-g=>(g.name||"").toLowerCase().includes(s)
-);
-
-if(!filtered.length)
-return c.innerHTML="<p style='color:#888'>No public groups found.</p>";
-
-filtered.forEach(g=>{
-
-const member=
-Array.isArray(g.members)&&
-g.members.includes(currentUser.uid);
-
-const hasReq=
-Array.isArray(g.pendingJoinRequests)&&
-g.pendingJoinRequests.some(r=>r.uid===currentUser.uid);
-
-const card=document.createElement("div");
-
-card.className="group-card";
-
-let button=
-member
-?`<button class="group-btn" onclick="openGroupPage('${g.id}')">Open Group</button>`
-:hasReq
-?`<button class="group-btn pending-btn" disabled>Request Pending</button>`
-:`<button class="group-btn" onclick="joinPublicGroup('${g.id}')">Join Group</button>`;
-
-card.innerHTML=`
-
-<span class="tag public">🌍 PUBLIC</span>
-
-<h3>${escapeHTML(g.name)}</h3>
-
-<p>${escapeHTML(g.description||"No description")}</p>
-
-<p>${g.members?.length||0} members</p>
-
-${button}
-
-`;
-
-c.appendChild(card);
-
-});
-
-};
-
-
-window.joinPublicGroup=async id=>{
-
-try{
-
-await updateDoc(
-doc(db,"groups",id),
-{
-members:arrayUnion(currentUser.uid),
-memberEmails:arrayUnion(currentUser.email)
-}
-);
-
-await showJoinGroup();
-
-}catch(e){
-
-alert("Unable to join: "+e.message);
-
-}
-
-};
-
-
-window.requestJoinGroup=async id=>{
-
-try{
-
-await updateDoc(
-doc(db,"groups",id),
-{
-pendingJoinRequests:
-arrayUnion({
-uid:currentUser.uid,
-email:currentUser.email
-})
-}
-);
-
-await showMyGroups();
-
-}catch(e){
-
-alert("Unable to send request: "+e.message);
-
-}
-
-};
-
-
-window.showMyGroups=async()=>{
-
-hideAllPages();
-
-document.getElementById("myGroupsPage").classList.remove("hidden");
-
-const c=document.getElementById("myGroupsContainer");
-
-c.innerHTML="<p>Loading...</p>";
-
-try{
-
-const snap=await getDocs(
-query(
-collection(db,"groups"),
-where("members","array-contains",currentUser.uid),
-orderBy("name")
-)
-);
-
-c.innerHTML="";
-
-let count=0;
-
-snap.forEach(d=>{
-
-const g={
-id:d.id,
-...d.data()
-};
-
-count++;
-
-const owner=g.ownerId===currentUser.uid;
-
-const card=document.createElement("div");
-
-card.className="group-card";
-
-let reqs="";
-
-if(owner&&g.pendingJoinRequests?.length){
-
-reqs=`
-<div style="margin-top:12px">
-<b style="font-size:13px">Join Requests</b>
-`;
-
-g.pendingJoinRequests.forEach(r=>{
-
-reqs+=`
-
-<div style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:9px 0;
-border-bottom:1px solid #eee;
-font-size:12px">
-
-<span>${escapeHTML(r.email)}</span>
-
-<span>
-
-<button
-style="border:0;background:#087b2f;color:white;padding:6px 8px;border-radius:6px"
-onclick="respondToRequest(
-'${g.id}',
-'${escapeAttribute(r.uid)}',
-'${escapeAttribute(r.email)}',
-true
-)">
-Accept
-</button>
-
-<button
-style="border:0;background:#d93025;color:white;padding:6px 8px;border-radius:6px;margin-left:4px"
-onclick="respondToRequest(
-'${g.id}',
-'${escapeAttribute(r.uid)}',
-'${escapeAttribute(r.email)}',
-false
-)">
-Reject
-</button>
-
-</span>
-
-</div>
-
-`;
-
-});
-
-reqs+="</div>";
+  });
 
 }
 
 
-/*
-==================================================
-IMPORTANT CHANGE
-==================================================
+function showBox(id) {
 
-Owner ke liye bhi Leave Group button show hoga.
-==================================================
-*/
+  hideAllBoxes();
 
-const leave=
-`<button
-class="leave-btn"
-onclick="exitGroup('${g.id}')">
-Leave Group
-</button>`;
+  document
+    .getElementById(id)
+    .classList
+    .remove("hidden");
+
+}
 
 
-card.innerHTML=`
+/* AUTH */
 
-<span class="tag ${g.isPublic?"public":"private"}">
-${g.isPublic?"🌍 PUBLIC":"🔒 PRIVATE"}
-</span>
+window.signUp = async function() {
 
-${owner?'<span class="tag owner-tag">👑 OWNER</span>':""}
+  const email =
+    document
+      .getElementById("emailInput")
+      .value
+      .trim();
 
-<h3>${escapeHTML(g.name)}</h3>
+  const password =
+    document
+      .getElementById("passwordInput")
+      .value;
 
-<p>${escapeHTML(g.description||"No description")}</p>
+  const status =
+    document.getElementById("authStatus");
 
-<p>${g.members?.length||0} members</p>
+  if (!email || !password) {
 
-${reqs}
+    status.innerText =
+      "Email and password required.";
 
-<button
-class="group-btn"
-onclick="openGroupPage('${g.id}')">
-Open Group
-</button>
+    return;
+  }
 
-${leave}
+  try {
 
-`;
+    await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-c.appendChild(card);
+    status.innerText =
+      "Account created!";
+
+  } catch(error) {
+
+    status.innerText =
+      error.message;
+
+  }
+
+};
+
+
+window.logIn = async function() {
+
+  const email =
+    document
+      .getElementById("emailInput")
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById("passwordInput")
+      .value;
+
+  const status =
+    document.getElementById("authStatus");
+
+  try {
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+  } catch(error) {
+
+    status.innerText =
+      error.message;
+
+  }
+
+};
+
+
+window.logOut = function() {
+
+  signOut(auth);
+
+};
+
+
+onAuthStateChanged(auth, user => {
+
+  currentUser = user;
+
+  if (user) {
+
+    showBox("homeBox");
+
+    document
+      .getElementById("welcomeText")
+      .innerText =
+      "Welcome, " + user.email;
+
+    document
+      .getElementById("bottomNav")
+      .classList
+      .remove("hidden");
+
+  } else {
+
+    showBox("authBox");
+
+    document
+      .getElementById("bottomNav")
+      .classList
+      .add("hidden");
+
+  }
 
 });
 
 
-if(!count)
-c.innerHTML=
-"<p style='color:#888'>You haven't joined any groups yet.</p>";
+/* HOME */
 
-}catch(e){
+window.goHome = function() {
 
-c.innerHTML=
-`<p style="color:#d93025">
-Error: ${escapeHTML(e.message)}
-</p>`;
-
-}
+  showBox("homeBox");
 
 };
 
 
-window.respondToRequest=async(id,uid,email,accept)=>{
+/* CREATE GROUP */
 
-try{
+window.showCreateGroup = function() {
 
-const r={uid,email};
-
-if(accept)
-
-await updateDoc(
-doc(db,"groups",id),
-{
-members:arrayUnion(uid),
-memberEmails:arrayUnion(email),
-pendingJoinRequests:arrayRemove(r)
-}
-);
-
-else
-
-await updateDoc(
-doc(db,"groups",id),
-{
-pendingJoinRequests:arrayRemove(r)
-}
-);
-
-await showMyGroups();
-
-}catch(e){
-
-alert("Error: "+e.message);
-
-}
+  showBox("createGroupBox");
 
 };
 
 
-/*
-==========================================================
-NEW EXIT GROUP SYSTEM
-==========================================================
+window.createGroup = async function() {
 
-1. Normal member:
-   - simply leaves group.
+  const name =
+    document
+      .getElementById("groupName")
+      .value
+      .trim();
 
-2. Owner with other members:
-   - owner leaves.
-   - first remaining member becomes owner.
+  const description =
+    document
+      .getElementById("groupDescription")
+      .value
+      .trim();
 
-3. Owner is the only member:
-   - group is deleted.
-   - group chat messages are deleted.
-   - chat attachment files are deleted when possible.
-==========================================================
-*/
+  const visibility =
+    document
+      .querySelector(
+        'input[name="visibility"]:checked'
+      )
+      .value;
 
-window.exitGroup=async id=>{
+  const invitesRaw =
+    document
+      .getElementById("invites")
+      .value
+      .trim();
 
-if(!currentUser)
-return;
+  const status =
+    document.getElementById("createStatus");
 
-if(!confirm(
-"Kya aap sach mein is group ko chodna chahte hain?"
-))
-return;
 
-try{
+  if (!name) {
 
-const groupRef=doc(db,"groups",id);
+    status.innerText =
+      "Please enter group name.";
 
-const snap=await getDoc(groupRef);
+    return;
 
-if(!snap.exists()){
+  }
 
-alert("Group nahi mila.");
 
-return;
+  const invitedEmails =
+    invitesRaw
+      ? invitesRaw
+          .split(",")
+          .map(x => x.trim().toLowerCase())
+          .filter(Boolean)
+      : [];
 
-}
 
-const group=snap.data();
+  try {
 
-const members=
-Array.isArray(group.members)
-?[...group.members]
-:[];
+    await addDoc(
+      collection(db, "groups"),
+      {
 
-const memberEmails=
-Array.isArray(group.memberEmails)
-?[...group.memberEmails]
-:[];
+        name: name,
 
-const isOwner=
-group.ownerId===currentUser.uid;
+        description: description,
 
+        isPublic:
+          visibility === "public",
 
-/*
-------------------------------------------
-CURRENT USER REMOVE
-------------------------------------------
-*/
+        ownerId:
+          currentUser.uid,
 
-const remainingMembers=
-members.filter(
-uid=>uid!==currentUser.uid
-);
+        ownerEmail:
+          currentUser.email,
 
-const remainingEmails=
-memberEmails.filter(
-email=>
-String(email).toLowerCase() !==
-String(currentUser.email||"").toLowerCase()
-);
+        members: [
+          currentUser.uid
+        ],
 
+        memberEmails: [
+          currentUser.email
+        ],
 
-/*
-==========================================
-CASE 1
-OWNER AKELA HAI
-==========================================
-*/
+        invitedEmails:
+          invitedEmails,
 
-if(
-isOwner &&
-remainingMembers.length===0
-){
+        pendingJoinRequests: [],
 
-if(!confirm(
-"Aap is group ke owner hain aur group mein koi aur member nahi hai.\n\n"+
-"Exit karne par ye group permanently delete ho jayega.\n\n"+
-"Kya aap continue karna chahte hain?"
-))
-return;
+        createdAt:
+          serverTimestamp()
 
+      }
+    );
 
-/*
-Delete all chat messages
-*/
 
-const messagesSnap=
-await getDocs(
-collection(
-db,
-"groups",
-id,
-"messages"
-)
-);
+    status.style.color =
+      "#087f23";
 
+    status.innerText =
+      "Group created successfully!";
 
-for(
-const messageDoc of messagesSnap.docs
-){
 
-const message=
-messageDoc.data();
+    setTimeout(() => {
 
+      goHome();
 
-/*
-Delete chat attachment
-*/
+    }, 1000);
 
-if(message.storagePath){
 
-try{
+  } catch(error) {
 
-await deleteObject(
-ref(storage,message.storagePath)
-);
+    status.style.color =
+      "#d90429";
 
-}catch(_){}
+    status.innerText =
+      error.message;
 
-}
-
-
-/*
-Delete message
-*/
-
-await deleteDoc(messageDoc.ref);
-
-}
-
-
-/*
-Delete group
-*/
-
-await deleteDoc(groupRef);
-
-
-/*
-Close group page if open
-*/
-
-if(currentGroupId===id){
-
-closeGroupPage();
-
-}
-
-
-alert(
-"Group exit kar diya gaya aur group delete ho gaya."
-);
-
-await showMyGroups();
-
-return;
-
-}
-
-
-/*
-==========================================
-CASE 2
-OWNER EXIT + OTHER MEMBERS EXIST
-==========================================
-*/
-
-if(
-isOwner &&
-remainingMembers.length>0
-){
-
-/*
-First remaining member becomes owner
-*/
-
-const newOwnerId=
-remainingMembers[0];
-
-const newOwnerEmail=
-remainingEmails[0]||"";
-
-
-await updateDoc(
-groupRef,
-{
-
-members:remainingMembers,
-
-memberEmails:remainingEmails,
-
-ownerId:newOwnerId,
-
-ownerEmail:newOwnerEmail
-
-}
-);
-
-
-/*
-If current group is open,
-close it because current user left.
-*/
-
-if(currentGroupId===id){
-
-closeGroupPage();
-
-}
-
-
-alert(
-"Aap group se exit ho gaye.\n\n"+
-"Group ka ownership automatically ek existing member ko de diya gaya hai."
-);
-
-await showMyGroups();
-
-return;
-
-}
-
-
-/*
-==========================================
-CASE 3
-NORMAL MEMBER EXIT
-==========================================
-*/
-
-await updateDoc(
-groupRef,
-{
-
-members:
-arrayRemove(currentUser.uid),
-
-memberEmails:
-arrayRemove(currentUser.email)
-
-}
-);
-
-
-if(currentGroupId===id){
-
-closeGroupPage();
-
-}
-
-
-alert(
-"Aap group se successfully exit ho gaye."
-);
-
-await showMyGroups();
-
-
-}catch(e){
-
-console.error(e);
-
-alert(
-"Group exit karne mein error: "+e.message
-);
-
-}
+  }
 
 };
 
 
-window.showVault=()=>{
+/* BROWSE GROUPS */
 
-hideAllPages();
+window.showJoinGroup = async function() {
 
-document.getElementById("vaultPage")
-.classList.remove("hidden");
+  showBox("browseBox");
 
-loadVaultFiles();
+  const status =
+    document.getElementById("browseStatus");
 
-};
-
-
-document.getElementById("vaultFileInput").onchange=
-async ev=>{
-
-const file=ev.target.files[0];
-
-if(!file||!currentUser)
-return;
-
-const status=
-document.getElementById("vaultUploadStatus");
-
-const max=
-20*1024*1024;
-
-const allowed=[
-"image/",
-"application/pdf",
-"text/",
-"application/msword",
-"application/vnd.openxmlformats-officedocument",
-"application/vnd.ms-excel",
-"application/vnd.openxmlformats-officedocument.spreadsheetml"
-];
+  status.innerText =
+    "Loading groups...";
 
 
-if(file.size>max){
+  try {
 
-status.innerText=
-"Maximum file size is 20 MB.";
+    const snapshot =
+      await getDocs(
+        collection(db, "groups")
+      );
 
-ev.target.value="";
+    allGroups = [];
 
-return;
+    snapshot.forEach(d => {
 
-}
+      allGroups.push({
+        id: d.id,
+        ...d.data()
+      });
 
-
-if(
-!allowed.some(x=>file.type.startsWith(x))
-){
-
-status.innerText=
-"This file type is not allowed.";
-
-ev.target.value="";
-
-return;
-
-}
+    });
 
 
-status.style.color="#777";
+    status.innerText = "";
 
-status.innerText="Uploading...";
-
-
-try{
-
-const id=
-crypto.randomUUID();
-
-const path=
-`users/${currentUser.uid}/vault/${id}_${safeFileName(file.name)}`;
-
-const fr=
-ref(storage,path);
+    renderGroups();
 
 
-await uploadBytes(
-fr,
-file,
-{
-contentType:
-file.type||
-"application/octet-stream"
-}
-);
+  } catch(error) {
 
+    status.innerText =
+      error.message;
 
-await addDoc(
-collection(
-db,
-"users",
-currentUser.uid,
-"vault"
-),
-{
-
-fileName:file.name,
-
-fileType:
-file.type||
-"application/octet-stream",
-
-storagePath:path,
-
-size:file.size,
-
-uploadedAt:
-serverTimestamp()
-
-}
-);
-
-
-status.style.color="#087b2f";
-
-status.innerText=
-"Uploaded successfully!";
-
-ev.target.value="";
-
-loadVaultFiles();
-
-
-}catch(e){
-
-status.style.color="#d93025";
-
-status.innerText=
-"Upload failed: "+e.message;
-
-}
+  }
 
 };
 
 
-async function loadVaultFiles(){
+window.renderGroups = function() {
 
-if(!currentUser)
-return;
+  const container =
+    document.getElementById(
+      "groupsContainer"
+    );
 
-const c=
-document.getElementById("vaultFilesContainer");
-
-c.innerHTML=
-"<p>Loading your private vault...</p>";
-
-
-try{
-
-const snap=
-await getDocs(
-query(
-collection(
-db,
-"users",
-currentUser.uid,
-"vault"
-),
-orderBy("uploadedAt","desc")
-)
-);
+  const search =
+    document
+      .getElementById("searchInput")
+      .value
+      .trim()
+      .toLowerCase();
 
 
-myVaultFiles=
-snap.docs.map(
-d=>({
-id:d.id,
-...d.data()
-})
-);
+  container.innerHTML = "";
 
 
-c.innerHTML="";
+  const filtered =
+    allGroups.filter(g =>
+      (g.name || "")
+        .toLowerCase()
+        .includes(search)
+    );
 
 
-if(!myVaultFiles.length){
+  if (!filtered.length) {
 
-c.innerHTML=
-"<p style='color:#888'>Your vault is empty.</p>";
+    container.innerHTML =
+      "<p>No groups found.</p>";
 
-return;
+    return;
 
-}
-
-
-myVaultFiles.forEach(f=>{
-
-const d=
-document.createElement("div");
-
-d.className="vault-item";
-
-d.innerHTML=`
-
-<div class="vault-item-icon">
-${f.fileType?.startsWith("image/")
-?"🖼️"
-:"📄"}
-</div>
-
-<div class="vault-item-info">
-
-<div class="vault-item-title">
-${escapeHTML(f.fileName)}
-</div>
-
-<div class="vault-item-date">
-${formatSize(f.size)}
-</div>
-
-</div>
-
-<button
-class="vault-send-btn"
-onclick="openFileFromVault('${f.id}')">
-View
-</button>
-
-<button
-class="small-danger"
-onclick="deleteVaultFile('${f.id}')">
-Delete
-</button>
-
-`;
-
-c.appendChild(d);
-
-});
+  }
 
 
-}catch(e){
+  filtered.forEach(g => {
 
-c.innerHTML=
-`<p style="color:red">
-Error: ${escapeHTML(e.message)}
-</p>`;
-
-}
-
-}
+    const isMember =
+      (g.members || [])
+        .includes(currentUser.uid);
 
 
-window.openFileFromVault=async id=>{
+    const hasRequest =
+      (g.pendingJoinRequests || [])
+        .some(r =>
+          r.uid === currentUser.uid
+        );
 
-try{
 
-const s=
-await getDoc(
-doc(
-db,
-"users",
-currentUser.uid,
-"vault",
-id
-)
-);
+    const card =
+      document.createElement("div");
 
-if(!s.exists())
-return alert("File not found.");
+    card.className =
+      "groupCard";
 
-const u=
-await getDownloadURL(
-ref(storage,s.data().storagePath)
-);
 
-window.open(
-u,
-"_blank",
-"noopener"
-);
+    const tagClass =
+      g.isPublic
+        ? "public"
+        : "private";
 
-}catch(e){
 
-alert(
-"Could not open file: "+e.message
-);
+    let button = "";
 
-}
+
+    if (isMember) {
+
+      button = `
+        <button
+          class="blackBtn"
+          onclick="openGroup('${g.id}')"
+        >
+          Open Group
+        </button>
+      `;
+
+    } else if (!g.isPublic && hasRequest) {
+
+      button = `
+        <button
+          class="lightBtn"
+          disabled
+        >
+          Request Pending
+        </button>
+      `;
+
+    } else if (g.isPublic) {
+
+      button = `
+        <button
+          class="blackBtn"
+          onclick="joinGroup('${g.id}')"
+        >
+          Join
+        </button>
+      `;
+
+    } else {
+
+      button = `
+        <button
+          class="blackBtn"
+          onclick="requestJoin('${g.id}')"
+        >
+          Request to Join
+        </button>
+      `;
+
+    }
+
+
+    card.innerHTML = `
+
+      <span class="tag ${tagClass}">
+        ${g.isPublic ? "🌍 PUBLIC" : "🔒 PRIVATE"}
+      </span>
+
+      <h3>${escapeHTML(g.name)}</h3>
+
+      <p>
+        ${escapeHTML(
+          g.description || "No description"
+        )}
+      </p>
+
+      <p>
+        ${(g.members || []).length}
+        members
+      </p>
+
+      ${button}
+
+    `;
+
+
+    container.appendChild(card);
+
+  });
 
 };
 
 
-window.deleteVaultFile=async id=>{
+/* JOIN PUBLIC */
 
-if(!confirm(
-"Delete this Vault file permanently?"
-))
-return;
+window.joinGroup = async function(groupId) {
 
-try{
+  try {
 
-const r=
-doc(
-db,
-"users",
-currentUser.uid,
-"vault",
-id
-);
+    await updateDoc(
+      doc(db, "groups", groupId),
+      {
 
-const s=
-await getDoc(r);
+        members:
+          arrayUnion(currentUser.uid),
 
-if(!s.exists())
-return;
+        memberEmails:
+          arrayUnion(currentUser.email)
 
-const p=
-s.data().storagePath;
+      }
+    );
 
-await deleteDoc(r);
 
-try{
+    showJoinGroup();
 
-await deleteObject(
-ref(storage,p)
-);
+  } catch(error) {
 
-}catch(_){}
+    alert(
+      "Error joining group: " +
+      error.message
+    );
 
-await loadVaultFiles();
-
-}catch(e){
-
-alert(
-"Delete failed: "+e.message
-);
-
-}
+  }
 
 };
 
 
-window.openVaultPicker=async()=>{
+/* REQUEST PRIVATE */
 
-document.getElementById(
-"vaultPickerModal"
-).classList.remove("hidden");
+window.requestJoin = async function(groupId) {
 
-const c=
-document.getElementById(
-"vaultPickerContainer"
-);
+  try {
 
-c.innerHTML="Loading...";
+    await updateDoc(
+      doc(db, "groups", groupId),
+      {
 
+        pendingJoinRequests:
+          arrayUnion({
 
-try{
+            uid:
+              currentUser.uid,
 
-const snap=
-await getDocs(
-query(
-collection(
-db,
-"users",
-currentUser.uid,
-"vault"
-),
-orderBy("uploadedAt","desc")
-)
-);
+            email:
+              currentUser.email
+
+          })
+
+      }
+    );
 
 
-c.innerHTML="";
+    showJoinGroup();
 
+  } catch(error) {
 
-if(snap.empty){
+    alert(
+      "Error: " +
+      error.message
+    );
 
-return c.innerHTML=
-"<p style='color:#888'>Your vault is empty.</p>";
-
-}
-
-
-snap.forEach(d=>{
-
-const f=d.data();
-
-const div=
-document.createElement("div");
-
-div.className="vault-item";
-
-div.innerHTML=`
-
-<div class="vault-item-icon">
-${f.fileType?.startsWith("image/")
-?"🖼️"
-:"📄"}
-</div>
-
-<div class="vault-item-info">
-
-<div class="vault-item-title">
-${escapeHTML(f.fileName)}
-</div>
-
-</div>
-
-<button
-class="vault-send-btn"
-onclick="sendVaultFileToChat('${d.id}')">
-Send
-</button>
-
-`;
-
-c.appendChild(div);
-
-});
-
-
-}catch(e){
-
-c.innerHTML=
-"Error loading vault.";
-
-}
+  }
 
 };
 
 
-window.closeVaultPicker=()=>
-document.getElementById(
-"vaultPickerModal"
-).classList.add("hidden");
+/* MY GROUPS */
+
+window.showMyGroups = async function() {
+
+  showBox("myGroupsBox");
+
+  const container =
+    document.getElementById(
+      "myGroupsContainer"
+    );
+
+  const status =
+    document.getElementById(
+      "myGroupsStatus"
+    );
+
+  container.innerHTML = "";
+
+  status.innerText =
+    "Loading...";
 
 
-window.sendVaultFileToChat=async vaultId=>{
+  try {
 
-if(!currentGroupId||!currentUser)
-return;
-
-try{
-
-const vs=
-await getDoc(
-doc(
-db,
-"users",
-currentUser.uid,
-"vault",
-vaultId
-)
-);
-
-if(!vs.exists())
-return alert("Vault file not found.");
-
-const f=vs.data();
-
-const src=
-ref(storage,f.storagePath);
-
-const blob=
-await(
-await fetch(
-await getDownloadURL(src)
-)
-).blob();
+    const snapshot =
+      await getDocs(
+        collection(db, "groups")
+      );
 
 
-const sharedPath=
-`groups/${currentGroupId}/shared/${crypto.randomUUID()}_${safeFileName(f.fileName)}`;
-
-const dest=
-ref(storage,sharedPath);
+    const groups = [];
 
 
-await uploadBytes(
-dest,
-blob,
-{
-contentType:f.fileType
-}
-);
+    snapshot.forEach(d => {
+
+      const data = d.data();
+
+      if (
+        (data.members || [])
+          .includes(currentUser.uid)
+      ) {
+
+        groups.push({
+          id: d.id,
+          ...data
+        });
+
+      }
+
+    });
 
 
-await addDoc(
-collection(
-db,
-"groups",
-currentGroupId,
-"messages"
-),
-{
-
-text:
-`Shared a file from Vault: ${f.fileName}`,
-
-storagePath:sharedPath,
-
-fileName:f.fileName,
-
-fileType:f.fileType,
-
-senderId:currentUser.uid,
-
-senderEmail:currentUser.email,
-
-createdAt:serverTimestamp()
-
-}
-);
+    status.innerText = "";
 
 
-closeVaultPicker();
+    if (!groups.length) {
+
+      container.innerHTML =
+        "<p>No groups yet.</p>";
+
+      return;
+
+    }
 
 
-}catch(e){
+    groups.forEach(g => {
 
-alert(
-"Failed to share file: "+e.message
-);
+      const card =
+        document.createElement("div");
 
-}
+      card.className =
+        "groupCard";
+
+
+      const isOwner =
+        g.ownerId === currentUser.uid;
+
+
+      let requestsHTML = "";
+
+
+      if (
+        isOwner &&
+        (g.pendingJoinRequests || []).length
+      ) {
+
+        requestsHTML =
+          "<h4>Join Requests</h4>";
+
+
+        g.pendingJoinRequests
+          .forEach(r => {
+
+            requestsHTML += `
+
+              <div class="requestRow">
+
+                <div>
+                  ${escapeHTML(r.email)}
+                </div>
+
+                <div class="requestButtons">
+
+                  <button
+                    class="accept"
+                    onclick="
+                      acceptRequest(
+                        '${g.id}',
+                        '${r.uid}',
+                        '${escapeJS(r.email)}'
+                      )
+                    "
+                  >
+                    Accept
+                  </button>
+
+                  <button
+                    class="reject"
+                    onclick="
+                      rejectRequest(
+                        '${g.id}',
+                        '${r.uid}',
+                        '${escapeJS(r.email)}'
+                      )
+                    "
+                  >
+                    Reject
+                  </button>
+
+                </div>
+
+              </div>
+
+            `;
+
+          });
+
+      }
+
+
+      card.innerHTML = `
+
+        <span class="tag ${
+          g.isPublic
+            ? "public"
+            : "private"
+        }">
+
+          ${
+            g.isPublic
+              ? "🌍 PUBLIC"
+              : "🔒 PRIVATE"
+          }
+
+        </span>
+
+        ${
+          isOwner
+            ? `
+              <span class="tag owner">
+                👑 OWNER
+              </span>
+            `
+            : ""
+        }
+
+        <h3>
+          ${escapeHTML(g.name)}
+        </h3>
+
+        <p>
+          ${escapeHTML(
+            g.description || "No description"
+          )}
+        </p>
+
+        <p>
+          ${(g.members || []).length}
+          members
+        </p>
+
+        ${requestsHTML}
+
+        <button
+          class="blackBtn"
+          onclick="openGroup('${g.id}')"
+        >
+          Open Group
+        </button>
+
+        ${
+          isOwner
+            ? `
+              <button
+                class="deleteBtn"
+                onclick="
+                  deleteGroup(
+                    '${g.id}',
+                    '${escapeJS(g.name)}'
+                  )
+                "
+              >
+                🗑 Delete Group
+              </button>
+            `
+            : ""
+        }
+
+      `;
+
+
+      container.appendChild(card);
+
+    });
+
+
+  } catch(error) {
+
+    status.innerText =
+      error.message;
+
+  }
 
 };
 
 
-window.openGroupPage=async id=>{
+/* ACCEPT REQUEST */
 
-if(!currentUser)
-return;
+window.acceptRequest =
+async function(groupId, uid, email) {
 
-currentGroupId=id;
+  try {
 
-document.getElementById(
-"groupPage"
-).classList.remove("hidden");
-
-document.getElementById(
-"groupPageName"
-).innerText="Loading...";
+    const groupRef =
+      doc(db, "groups", groupId);
 
 
-try{
-
-const s=
-await getDoc(
-doc(db,"groups",id)
-);
-
-if(!s.exists()){
-
-alert("Group not found.");
-
-return closeGroupPage();
-
-}
+    const snap =
+      await getDoc(groupRef);
 
 
-const d=s.data();
+    if (!snap.exists()) {
+
+      alert("Group does not exist.");
+
+      return;
+
+    }
 
 
-if(!d.members?.includes(currentUser.uid)){
+    if (
+      snap.data().ownerId !==
+      currentUser.uid
+    ) {
 
-alert("You are not a member.");
+      alert(
+        "Only the group owner can accept requests."
+      );
 
-return closeGroupPage();
+      return;
 
-}
-
-
-currentGroupData={
-id,
-...d
-};
-
-
-document.getElementById(
-"groupPageName"
-).innerText=d.name;
+    }
 
 
-document.getElementById(
-"groupPageMembersCount"
-).innerText=
-`${d.members.length} members`;
+    await updateDoc(
+      groupRef,
+      {
+
+        members:
+          arrayUnion(uid),
+
+        memberEmails:
+          arrayUnion(email),
+
+        pendingJoinRequests:
+          arrayRemove({
+            uid: uid,
+            email: email
+          })
+
+      }
+    );
 
 
-const mc=
-document.getElementById(
-"groupPageMembers"
-);
-
-mc.innerHTML="";
+    showMyGroups();
 
 
-(d.memberEmails||[]).forEach(e=>{
+  } catch(error) {
 
-const x=
-document.createElement("span");
+    alert(
+      "Error: " +
+      error.message
+    );
 
-x.className="member-chip";
-
-x.innerText=
-e===d.ownerEmail
-?e+" 👑"
-:e;
-
-mc.appendChild(x);
-
-});
-
-
-listenToChat(id);
-
-
-}catch(e){
-
-alert(
-"Error: "+e.message
-);
-
-closeGroupPage();
-
-}
+  }
 
 };
 
 
-function listenToChat(id){
+/* REJECT REQUEST */
 
-if(chatUnsubscribe)
-chatUnsubscribe();
+window.rejectRequest =
+async function(groupId, uid, email) {
 
+  try {
 
-const q=
-query(
-collection(
-db,
-"groups",
-id,
-"messages"
-),
-orderBy("createdAt","asc")
-);
+    const groupRef =
+      doc(db, "groups", groupId);
 
 
-chatUnsubscribe=
-onSnapshot(
-q,
-async snap=>{
-
-const c=
-document.getElementById(
-"chatMessages"
-);
-
-c.innerHTML="";
+    const snap =
+      await getDoc(groupRef);
 
 
-for(
-const d of snap.docs
-){
+    if (!snap.exists()) {
 
-const m=d.data();
+      alert("Group does not exist.");
 
-const mine=
-m.senderId===currentUser.uid;
+      return;
 
-const w=
-document.createElement("div");
-
-w.className=
-"message"+
-(mine?" mine":"");
-
-let a="";
+    }
 
 
-if(m.storagePath){
+    if (
+      snap.data().ownerId !==
+      currentUser.uid
+    ) {
 
-try{
+      alert(
+        "Only the group owner can reject requests."
+      );
 
-const u=
-await getDownloadURL(
-ref(storage,m.storagePath)
-);
+      return;
 
-
-a=
-m.fileType?.startsWith("image/")
-?
-
-`<img
-src="${u}"
-class="chat-img-attachment"
-alt="Image">`
-
-:
-
-`<a
-href="${u}"
-target="_blank"
-rel="noopener"
-class="chat-file-attachment">
-📄 ${escapeHTML(m.fileName)}
-</a>`;
-
-}catch(_){}
-
-}
+    }
 
 
-w.innerHTML=`
+    await updateDoc(
+      groupRef,
+      {
 
-<div class="message-sender">
-${escapeHTML(m.senderEmail||"Unknown")}
-</div>
+        pendingJoinRequests:
+          arrayRemove({
+            uid: uid,
+            email: email
+          })
 
-<div class="message-bubble">
-
-${m.text?escapeHTML(m.text):""}
-
-${a}
-
-</div>
-
-`;
-
-c.appendChild(w);
-
-}
+      }
+    );
 
 
-c.scrollTop=
-c.scrollHeight;
-
-}
-);
-
-}
+    showMyGroups();
 
 
-window.sendChatMessage=async()=>{
+  } catch(error) {
 
-const i=
-document.getElementById("chatInput");
+    alert(
+      "Error: " +
+      error.message
+    );
 
-const t=i.value.trim();
-
-if(
-!t||
-!currentGroupId||
-!currentUser
-)
-return;
-
-i.value="";
-
-
-try{
-
-await addDoc(
-collection(
-db,
-"groups",
-currentGroupId,
-"messages"
-),
-{
-
-text:t,
-
-senderId:
-currentUser.uid,
-
-senderEmail:
-currentUser.email,
-
-createdAt:
-serverTimestamp()
-
-}
-);
-
-
-}catch(e){
-
-alert(
-"Error: "+e.message
-);
-
-i.value=t;
-
-}
+  }
 
 };
 
 
-window.showGroupMenu=()=>{
+/* OPEN GROUP */
 
-if(
-currentGroupData?.ownerId!==
-currentUser?.uid
-)
+window.openGroup = async function(groupId) {
 
-return alert(
-"Only the group owner can delete this group."
-);
+  try {
 
-document.getElementById(
-"deleteModal"
-).classList.remove("hidden");
-
-};
+    const groupRef =
+      doc(db, "groups", groupId);
 
 
-window.closeDeleteModal=()=>
-document.getElementById(
-"deleteModal"
-).classList.add("hidden");
+    const snap =
+      await getDoc(groupRef);
 
 
-window.confirmDeleteGroup=async()=>{
+    if (!snap.exists()) {
 
-if(
-!currentGroupData||
-currentGroupData.ownerId!==
-currentUser.uid
-)
-return;
+      alert("Group not found.");
 
-const b=
-document.querySelector(
-"#deleteModal .danger-btn"
-);
+      return;
 
-b.disabled=true;
-
-b.innerText="Deleting...";
+    }
 
 
-try{
-
-const msgs=
-await getDocs(
-collection(
-db,
-"groups",
-currentGroupId,
-"messages"
-)
-);
+    const data =
+      snap.data();
 
 
-for(
-const m of msgs.docs
-){
+    if (
+      !(data.members || [])
+        .includes(currentUser.uid)
+    ) {
 
-const x=m.data();
+      alert(
+        "You are not a member of this group."
+      );
 
+      return;
 
-if(x.storagePath){
-
-try{
-
-await deleteObject(
-ref(storage,x.storagePath)
-);
-
-}catch(_){}
-
-}
+    }
 
 
-await deleteDoc(m.ref);
+    currentGroupId =
+      groupId;
 
-}
-
-
-await deleteDoc(
-doc(
-db,
-"groups",
-currentGroupId
-)
-);
+    currentGroupData =
+      data;
 
 
-closeDeleteModal();
-
-closeGroupPage();
-
-await showMyGroups();
+    showBox("groupInfoBox");
 
 
-}catch(e){
-
-alert(
-"Delete failed: "+e.message
-);
-
-b.disabled=false;
-
-b.innerText=
-"Delete Group";
-
-}
-
-};
+    document
+      .getElementById("groupTitle")
+      .innerText =
+      data.name;
 
 
-window.closeGroupPage=()=>{
+    document
+      .getElementById(
+        "groupDescriptionText"
+      )
+      .innerText =
+      data.description ||
+      "No description";
 
-if(chatUnsubscribe)
-chatUnsubscribe();
 
-chatUnsubscribe=null;
+    const tag =
+      document.getElementById(
+        "groupTag"
+      );
 
-currentGroupId=null;
 
-currentGroupData=null;
+    tag.className =
+      "tag " +
+      (
+        data.isPublic
+          ? "public"
+          : "private"
+      );
 
-document.getElementById(
-"groupPage"
-).classList.add("hidden");
+
+    tag.innerText =
+      data.isPublic
+        ? "🌍 PUBLIC"
+        : "🔒 PRIVATE";
+
+
+    const members =
+      document.getElementById(
+        "membersContainer"
+      );
+
+
+    members.innerHTML = "";
+
+
+    (data.memberEmails || [])
+      .forEach(email => {
+
+        const span =
+          document.createElement(
+            "span"
+          );
+
+        span.className =
+          "member";
+
+        span.innerText =
+          email === data.ownerEmail
+            ? email + " 👑"
+            : email;
+
+        members.appendChild(span);
+
+      });
+
+
+  } catch(error) {
+
+    alert(
+      "Error opening group: " +
+      error.message
+    );
+
+  }
 
 };
 
 
-function escapeHTML(v){
+/* CHAT */
 
-return String(v??"")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
+window.openChat = function() {
+
+  if (!currentGroupId) return;
+
+
+  document
+    .getElementById("chatTitle")
+    .innerText =
+    currentGroupData.name;
+
+
+  document
+    .getElementById("chatPage")
+    .classList
+    .remove("hidden");
+
+
+  listenToChat(
+    currentGroupId
+  );
+
+};
+
+
+function listenToChat(groupId) {
+
+  if (chatUnsubscribe) {
+
+    chatUnsubscribe();
+
+    chatUnsubscribe = null;
+
+  }
+
+
+  const q =
+    query(
+      collection(
+        db,
+        "groups",
+        groupId,
+        "messages"
+      ),
+      orderBy(
+        "createdAt",
+        "asc"
+      )
+    );
+
+
+  chatUnsubscribe =
+    onSnapshot(
+      q,
+      snapshot => {
+
+        const container =
+          document.getElementById(
+            "chatMessages"
+          );
+
+
+        container.innerHTML = "";
+
+
+        snapshot.forEach(d => {
+
+          const msg =
+            d.data();
+
+
+          const div =
+            document.createElement(
+              "div"
+            );
+
+
+          const mine =
+            msg.senderId ===
+            currentUser.uid;
+
+
+          div.className =
+            "message " +
+            (
+              mine
+                ? "mine"
+                : "other"
+            );
+
+
+          div.innerHTML = `
+
+            <div class="sender">
+              ${
+                mine
+                  ? "You"
+                  : escapeHTML(
+                      msg.senderEmail ||
+                      "Unknown"
+                    )
+              }
+            </div>
+
+            <div class="bubble">
+              ${escapeHTML(
+                msg.text || ""
+              )}
+            </div>
+
+          `;
+
+
+          container.appendChild(div);
+
+        });
+
+
+        container.scrollTop =
+          container.scrollHeight;
+
+      }
+    );
 
 }
 
 
-function escapeAttribute(v){
+window.sendMessage =
+async function() {
 
-return String(v??"")
-.replace(/\\/g,"\\\\")
-.replace(/'/g,"\\'");
+  const input =
+    document.getElementById(
+      "chatInput"
+    );
+
+
+  const text =
+    input.value.trim();
+
+
+  if (
+    !text ||
+    !currentGroupId
+  ) return;
+
+
+  input.value = "";
+
+
+  try {
+
+    await addDoc(
+      collection(
+        db,
+        "groups",
+        currentGroupId,
+        "messages"
+      ),
+      {
+
+        text: text,
+
+        senderId:
+          currentUser.uid,
+
+        senderEmail:
+          currentUser.email,
+
+        createdAt:
+          serverTimestamp()
+
+      }
+    );
+
+
+  } catch(error) {
+
+    alert(
+      "Error sending message: " +
+      error.message
+    );
+
+  }
+
+};
+
+
+window.closeChat = function() {
+
+  if (chatUnsubscribe) {
+
+    chatUnsubscribe();
+
+    chatUnsubscribe = null;
+
+  }
+
+
+  document
+    .getElementById("chatPage")
+    .classList
+    .add("hidden");
+
+};
+
+
+/* =========================================
+   DELETE GROUP
+   ========================================= */
+
+window.deleteGroup =
+async function(groupId, groupName) {
+
+  const confirmDelete =
+    confirm(
+      "Delete \"" +
+      groupName +
+      "\"?\n\n" +
+      "This will delete the group and all its chat messages."
+    );
+
+
+  if (!confirmDelete) {
+
+    return;
+
+  }
+
+
+  try {
+
+    const groupRef =
+      doc(
+        db,
+        "groups",
+        groupId
+      );
+
+
+    /* FIRST: CHECK GROUP */
+
+    const groupSnap =
+      await getDoc(groupRef);
+
+
+    if (!groupSnap.exists()) {
+
+      alert(
+        "Group already deleted."
+      );
+
+      showMyGroups();
+
+      return;
+
+    }
+
+
+    const groupData =
+      groupSnap.data();
+
+
+    /* ONLY OWNER */
+
+    if (
+      groupData.ownerId !==
+      currentUser.uid
+    ) {
+
+      alert(
+        "Only the group owner can delete this group."
+      );
+
+      return;
+
+    }
+
+
+    /* DELETE ALL CHAT MESSAGES */
+
+    const messagesRef =
+      collection(
+        db,
+        "groups",
+        groupId,
+        "messages"
+      );
+
+
+    const messagesSnap =
+      await getDocs(messagesRef);
+
+
+    const deleteMessages = [];
+
+
+    messagesSnap.forEach(messageDoc => {
+
+      deleteMessages.push(
+        deleteDoc(messageDoc.ref)
+      );
+
+    });
+
+
+    await Promise.all(
+      deleteMessages
+    );
+
+
+    /* DELETE GROUP */
+
+    await deleteDoc(
+      groupRef
+    );
+
+
+    /* CLOSE CHAT IF OPEN */
+
+    if (
+      currentGroupId ===
+      groupId
+    ) {
+
+      currentGroupId =
+        null;
+
+      currentGroupData =
+        null;
+
+      if (chatUnsubscribe) {
+
+        chatUnsubscribe();
+
+        chatUnsubscribe = null;
+
+      }
+
+      document
+        .getElementById("chatPage")
+        .classList
+        .add("hidden");
+
+    }
+
+
+    alert(
+      "Group and its chat were deleted successfully."
+    );
+
+
+    showMyGroups();
+
+
+  } catch(error) {
+
+    console.error(
+      "Delete group error:",
+      error
+    );
+
+
+    alert(
+      "Error deleting group: " +
+      error.message
+    );
+
+  }
+
+};
+
+
+/* SECURITY HELPERS */
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
 }
 
 
-function safeFileName(v){
+function escapeJS(value) {
 
-return String(v||"file")
-.replace(/[^\w.\-() ]/g,"_")
-.slice(0,120);
-
-}
-
-
-function formatSize(n){
-
-if(!n)
-return"";
-
-if(n<1024)
-return n+" B";
-
-if(n<1048576)
-return(n/1024).toFixed(1)+" KB";
-
-return(n/1048576).toFixed(1)+" MB";
+  return String(value)
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r");
 
 }
-
-
-onAuthStateChanged(
-auth,
-user=>{
-
-currentUser=user;
-
-const a=
-document.getElementById("authPage");
-
-const ap=
-document.getElementById("app");
-
-
-if(user){
-
-a.classList.add("hidden");
-
-ap.classList.remove("hidden");
-
-document.getElementById(
-"welcomeEmail"
-).innerText=user.email;
-
-document.getElementById(
-"topUser"
-).innerText=user.email;
-
-goHome();
-
-
-}else{
-
-a.classList.remove("hidden");
-
-ap.classList.add("hidden");
-
-document.getElementById(
-"groupPage"
-).classList.add("hidden");
-
-}
-
-});
 
 </script>
 
 </body>
-  </html>
+   </html>
