@@ -36,7 +36,7 @@
       margin-bottom: 20px;
       color: #333333;
     }
-    .box input {
+    .box input, .box textarea {
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
@@ -44,6 +44,11 @@
       border-radius: 8px;
       font-size: 16px;
       box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    .box textarea {
+      resize: vertical;
+      min-height: 70px;
     }
     .box button {
       width: 100%;
@@ -75,6 +80,52 @@
       background-color: #555555;
       color: #ffffff;
     }
+    .visibility-choice {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .visibility-choice label {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #dddddd;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #333333;
+    }
+    .visibility-choice input {
+      display: none;
+      width: auto;
+      margin: 0;
+    }
+    .visibility-choice input:checked + span {
+      font-weight: bold;
+    }
+    .visibility-choice label:has(input:checked) {
+      border-color: #111111;
+      background: #f0f0f0;
+    }
+    #submitCreateGroupBtn {
+      background-color: #111111;
+      color: #ffffff;
+    }
+    #backFromCreateBtn {
+      background-color: #dddddd;
+      color: #333333;
+    }
+    #createGroupStatus {
+      font-size: 14px;
+      color: #b00020;
+      margin-bottom: 10px;
+      min-height: 18px;
+    }
+    .field-label {
+      text-align: left;
+      font-size: 13px;
+      color: #777777;
+      margin: -8px 0 6px 2px;
+    }
     .hidden {
       display: none;
     }
@@ -104,6 +155,30 @@
     <button id="logoutBtn" onclick="logOut()">Logout</button>
   </div>
 
+  <!-- CREATE GROUP FORM -->
+  <div class="box hidden" id="createGroupBox">
+    <h2>Create a Group</h2>
+    <p id="createGroupStatus"></p>
+
+    <div class="field-label">Group name</div>
+    <input type="text" id="groupNameInput" placeholder="e.g. Study Buddies">
+
+    <div class="field-label">Description</div>
+    <textarea id="groupDescInput" placeholder="What is this group about?"></textarea>
+
+    <div class="field-label">Visibility</div>
+    <div class="visibility-choice">
+      <label><input type="radio" name="visibility" value="public" checked><span>🌍 Public</span></label>
+      <label><input type="radio" name="visibility" value="private"><span>🔒 Private</span></label>
+    </div>
+
+    <div class="field-label">Invite members (comma-separated emails, optional)</div>
+    <input type="text" id="groupInvitesInput" placeholder="friend1@email.com, friend2@email.com">
+
+    <button id="submitCreateGroupBtn" onclick="submitCreateGroup()">Create Group</button>
+    <button id="backFromCreateBtn" onclick="backToGroupChoice()">Back</button>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
@@ -114,6 +189,12 @@
       signOut,
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDQmh4yBGXeOiAIn-pKANxl3BR2H-jQPHE",
@@ -128,6 +209,9 @@
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
 
     window.signUp = function () {
       const email = document.getElementById('emailInput').value;
@@ -151,8 +235,71 @@
       signOut(auth);
     };
 
+    // ---- Create Group flow ----
+
     window.showCreateGroup = function () {
-      alert("Create Group page - coming in next step!");
+      document.getElementById('groupChoiceBox').classList.add('hidden');
+      document.getElementById('createGroupBox').classList.remove('hidden');
+      document.getElementById('createGroupStatus').innerText = "";
+    };
+
+    window.backToGroupChoice = function () {
+      document.getElementById('createGroupBox').classList.add('hidden');
+      document.getElementById('groupChoiceBox').classList.remove('hidden');
+      document.getElementById('groupNameInput').value = "";
+      document.getElementById('groupDescInput').value = "";
+      document.getElementById('groupInvitesInput').value = "";
+      document.querySelector('input[name="visibility"][value="public"]').checked = true;
+    };
+
+    window.submitCreateGroup = async function () {
+      const statusEl = document.getElementById('createGroupStatus');
+      const name = document.getElementById('groupNameInput').value.trim();
+      const description = document.getElementById('groupDescInput').value.trim();
+      const visibility = document.querySelector('input[name="visibility"]:checked').value;
+      const invitesRaw = document.getElementById('groupInvitesInput').value.trim();
+
+      if (!currentUser) {
+        statusEl.innerText = "You must be logged in.";
+        return;
+      }
+      if (!name) {
+        statusEl.innerText = "Please enter a group name.";
+        return;
+      }
+
+      const invitedEmails = invitesRaw
+        ? invitesRaw.split(',').map(e => e.trim().toLowerCase()).filter(e => e.length > 0)
+        : [];
+
+      statusEl.style.color = "#555555";
+      statusEl.innerText = "Creating group...";
+
+      try {
+        const docRef = await addDoc(collection(db, "groups"), {
+          name: name,
+          description: description,
+          isPublic: visibility === "public",
+          ownerId: currentUser.uid,
+          ownerEmail: currentUser.email,
+          members: [currentUser.uid],
+          memberEmails: [currentUser.email],
+          invitedEmails: invitedEmails,
+          pendingJoinRequests: [],
+          createdAt: serverTimestamp()
+        });
+
+        statusEl.style.color = "#0a7d2c";
+        statusEl.innerText = "Group created! ID: " + docRef.id;
+
+        setTimeout(() => {
+          window.backToGroupChoice();
+        }, 1200);
+
+      } catch (error) {
+        statusEl.style.color = "#b00020";
+        statusEl.innerText = "Error: " + error.message;
+      }
     };
 
     window.showJoinGroup = function () {
@@ -162,15 +309,20 @@
     onAuthStateChanged(auth, (user) => {
       const authBox = document.getElementById('authBox');
       const groupChoiceBox = document.getElementById('groupChoiceBox');
+      const createGroupBox = document.getElementById('createGroupBox');
       const welcomeText = document.getElementById('welcomeText');
+
+      currentUser = user;
 
       if (user) {
         authBox.classList.add('hidden');
         groupChoiceBox.classList.remove('hidden');
+        createGroupBox.classList.add('hidden');
         welcomeText.innerText = "Welcome, " + user.email;
       } else {
         authBox.classList.remove('hidden');
         groupChoiceBox.classList.add('hidden');
+        createGroupBox.classList.add('hidden');
       }
     });
   </script>
