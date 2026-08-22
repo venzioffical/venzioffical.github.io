@@ -20,6 +20,7 @@
     .btn { background: #007aff; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px; font-size: 14px; }
     .btn-danger { background: #ff3b30; }
     .btn-secondary { background: #e5e5ea; color: #000; }
+    input, textarea { width: 100%; padding: 12px; border: 1px solid #e5e5ea; border-radius: 10px; margin-top: 10px; font-size: 14px; outline: none; }
     
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 1px solid #e5e5ea; display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.03); }
     .nav-item { display: flex; flex-direction: column; align-items: center; color: #8e8e93; text-decoration: none; font-size: 10px; cursor: pointer; border: none; background: none; }
@@ -49,18 +50,27 @@
   <div class="container">
     <!-- Home Page -->
     <div id="pageHome" class="page active">
-      <div class="card">
+      <div class="card" id="authCard">
         <h2>Welcome 👋</h2>
-        <p style="color: #8e8e93; margin-top: 5px;">Manage your groups and conversations.</p>
-        <button class="btn" onclick="switchPage('Groups', document.querySelectorAll('.nav-item')[2])">My Groups</button>
+        <p style="color: #8e8e93; margin-top: 5px;">Sign in to manage your groups and Vault.</p>
+        <div id="authForm">
+          <input type="email" id="emailInput" placeholder="Email">
+          <input type="password" id="passInput" placeholder="Password">
+          <button class="btn" id="loginBtn">Login / Sign Up</button>
+        </div>
+      </div>
+      <div class="card" id="welcomeCard" style="display:none;">
+        <h2>Welcome to Venzi 🚀</h2>
+        <p style="color: #8e8e93; margin-top: 5px;">You are successfully logged in.</p>
+        <button class="btn btn-danger" id="logoutBtn">Logout</button>
       </div>
     </div>
 
     <!-- Explore Page -->
     <div id="pageExplore" class="page">
       <div class="card">
-        <h2>Explore</h2>
-        <p style="color: #8e8e93; margin-top: 5px;">Discover public groups and content.</p>
+        <h2>Explore Groups</h2>
+        <p style="color: #8e8e93; margin-top: 5px;">Discover communities.</p>
       </div>
     </div>
 
@@ -68,7 +78,7 @@
     <div id="pageGroups" class="page">
       <div class="card">
         <h2>My Groups</h2>
-        <p style="color: #8e8e93; margin-top: 5px;">Your active group chats will appear here.</p>
+        <p style="color: #8e8e93; margin-top: 5px;">Your active conversations.</p>
       </div>
     </div>
 
@@ -109,7 +119,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
@@ -129,11 +139,38 @@
       if (user) {
         currentUser = user;
         document.getElementById("userEmail").innerText = user.email;
+        document.getElementById("authCard").style.display = "none";
+        document.getElementById("welcomeCard").style.display = "block";
         loadVaultFiles();
       } else {
         currentUser = null;
         document.getElementById("userEmail").innerText = "Guest";
+        document.getElementById("authCard").style.display = "block";
+        document.getElementById("welcomeCard").style.display = "none";
+        document.getElementById("vaultFilesContainer").innerHTML = "<p style='text-align:center; color:#888;'>Please login to view vault.</p>";
       }
+    });
+
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const email = document.getElementById("emailInput").value;
+      const pass = document.getElementById("passInput").value;
+      if (!email || !pass) {
+        alert("Please fill email and password");
+        return;
+      }
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+      } catch (err) {
+        try {
+          await createUserWithEmailAndPassword(auth, email, pass);
+        } catch (regErr) {
+          alert("Error: " + regErr.message);
+        }
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth);
     });
 
     window.switchPage = function(pageName, el) {
