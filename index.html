@@ -23,7 +23,7 @@
       color: #555555;
       font-size: 16px;
     }
-    .auth-box {
+    .box {
       max-width: 350px;
       margin: 30px auto;
       padding: 30px;
@@ -31,12 +31,12 @@
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    .auth-box h2 {
+    .box h2 {
       font-size: 20px;
       margin-bottom: 20px;
       color: #333333;
     }
-    .auth-box input {
+    .box input {
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
@@ -45,9 +45,9 @@
       font-size: 16px;
       box-sizing: border-box;
     }
-    .auth-box button {
+    .box button {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       margin-bottom: 10px;
       border: none;
       border-radius: 8px;
@@ -67,6 +67,17 @@
       background-color: #dddddd;
       color: #333333;
     }
+    #createGroupBtn {
+      background-color: #111111;
+      color: #ffffff;
+    }
+    #joinGroupBtn {
+      background-color: #555555;
+      color: #ffffff;
+    }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -75,12 +86,21 @@
   <h1>Hello, my website is live!</h1>
   <p>Welcome to my site.</p>
 
-  <div class="auth-box">
+  <!-- LOGIN / SIGNUP BOX -->
+  <div class="box" id="authBox">
     <h2 id="statusText">Please Sign Up or Login</h2>
     <input type="email" id="emailInput" placeholder="Enter email">
     <input type="password" id="passwordInput" placeholder="Enter password">
     <button id="signUpBtn" onclick="signUp()">Sign Up</button>
     <button id="loginBtn" onclick="logIn()">Login</button>
+  </div>
+
+  <!-- AFTER LOGIN: CREATE / JOIN GROUP BOX -->
+  <div class="box hidden" id="groupChoiceBox">
+    <h2 id="welcomeText">Welcome!</h2>
+    <p>What would you like to do?</p>
+    <button id="createGroupBtn" onclick="showCreateGroup()">Create Group</button>
+    <button id="joinGroupBtn" onclick="showJoinGroup()">Join Group</button>
     <button id="logoutBtn" onclick="logOut()">Logout</button>
   </div>
 
@@ -113,9 +133,6 @@
       const email = document.getElementById('emailInput').value;
       const password = document.getElementById('passwordInput').value;
       createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          document.getElementById('statusText').innerText = "Welcome " + userCredential.user.email;
-        })
         .catch((error) => {
           document.getElementById('statusText').innerText = "Error: " + error.message;
         });
@@ -125,23 +142,35 @@
       const email = document.getElementById('emailInput').value;
       const password = document.getElementById('passwordInput').value;
       signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          document.getElementById('statusText').innerText = "Logged in as " + userCredential.user.email;
-        })
         .catch((error) => {
           document.getElementById('statusText').innerText = "Error: " + error.message;
         });
     };
 
     window.logOut = function () {
-      signOut(auth).then(() => {
-        document.getElementById('statusText').innerText = "Logged out. Please Sign Up or Login";
-      });
+      signOut(auth);
+    };
+
+    window.showCreateGroup = function () {
+      alert("Create Group page - coming in next step!");
+    };
+
+    window.showJoinGroup = function () {
+      alert("Join Group page - coming in next step!");
     };
 
     onAuthStateChanged(auth, (user) => {
+      const authBox = document.getElementById('authBox');
+      const groupChoiceBox = document.getElementById('groupChoiceBox');
+      const welcomeText = document.getElementById('welcomeText');
+
       if (user) {
-        document.getElementById('statusText').innerText = "Logged in as " + user.email;
+        authBox.classList.add('hidden');
+        groupChoiceBox.classList.remove('hidden');
+        welcomeText.innerText = "Welcome, " + user.email;
+      } else {
+        authBox.classList.remove('hidden');
+        groupChoiceBox.classList.add('hidden');
       }
     });
   </script>
