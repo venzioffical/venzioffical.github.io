@@ -1,637 +1,506 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Venzi</title>
-  <meta name="google-site-verification" content="BrJRvivgpr_8AxU4f-Jh0SHmfgNWrTGkIKxXS4fp-_Q" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 20px;
-    }
-    img { width: 200px; margin-top: 20px; }
-    h1 { font-size: 28px; color: #111111; }
-    p { color: #555555; font-size: 16px; }
-    .box {
-      max-width: 420px;
-      margin: 30px auto;
-      padding: 30px;
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      text-align: left;
-    }
-    .box h2 { font-size: 20px; margin-bottom: 20px; color: #333333; text-align: center; }
-    .box input, .box textarea {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 1px solid #cccccc;
-      border-radius: 8px;
-      font-size: 16px;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-    .box textarea { resize: vertical; min-height: 70px; }
-    .box button {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 10px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    #signUpBtn { background-color: #111111; color: #ffffff; }
-    #loginBtn { background-color: #555555; color: #ffffff; }
-    #logoutBtn { background-color: #dddddd; color: #333333; }
-    #createGroupBtn { background-color: #111111; color: #ffffff; }
-    #joinGroupBtn { background-color: #555555; color: #ffffff; }
-    #myGroupsBtn { background-color: #777777; color: #ffffff; }
-    .visibility-choice { display: flex; gap: 10px; margin-bottom: 15px; }
-    .visibility-choice label {
-      flex: 1; padding: 10px; border: 2px solid #dddddd; border-radius: 8px;
-      cursor: pointer; font-size: 14px; color: #333333; text-align: center;
-    }
-    .visibility-choice input { display: none; }
-    .visibility-choice label:has(input:checked) {
-      border-color: #111111; background: #f0f0f0; font-weight: bold;
-    }
-    #submitCreateGroupBtn { background-color: #111111; color: #ffffff; }
-    .backBtn { background-color: #dddddd; color: #333333; }
-    .statusMsg { font-size: 14px; color: #b00020; margin-bottom: 10px; min-height: 18px; }
-    .field-label { font-size: 13px; color: #777777; margin: -8px 0 6px 2px; }
-    .hidden { display: none; }
-    #searchGroupInput { margin-bottom: 15px; }
-    .groupCard {
-      border: 1px solid #e0e0e0; border-radius: 10px; padding: 14px; margin-bottom: 12px;
-    }
-    .groupCard.clickable { cursor: pointer; }
-    .groupCard h3 { margin: 0 0 4px 0; font-size: 17px; color: #111111; }
-    .groupCard p { margin: 0 0 8px 0; font-size: 14px; }
-    .tag {
-      display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 20px;
-      margin-bottom: 8px; font-weight: bold;
-    }
-    .tag.public { background: #e6f7ec; color: #0a7d2c; }
-    .tag.private { background: #fdeaea; color: #b00020; }
-    .groupCard button {
-      width: 100%; padding: 10px; border: none; border-radius: 8px;
-      font-size: 14px; font-weight: bold; cursor: pointer;
-    }
-    .joinBtn { background-color: #111111; color: #ffffff; }
-    .requestedBtn { background-color: #dddddd; color: #666666; cursor: default; }
-    .memberBtn { background-color: #e6f7ec; color: #0a7d2c; cursor: default; }
-    .openBtn { background-color: #111111; color: #ffffff; }
-    .requestRow {
-      display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid #eee; padding: 8px 0; font-size: 14px;
-    }
-    .requestRow div.actions button {
-      width: auto; padding: 6px 10px; margin: 0 0 0 6px; font-size: 12px; border-radius: 6px;
-    }
-    .acceptBtn { background: #0a7d2c; color: white; }
-    .rejectBtn { background: #b00020; color: white; }
-    .emptyMsg { font-size: 14px; color: #999999; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Venzi</title>
+<meta name="google-site-verification" content="BrJRvivgpr_8AxU4f-Jh0SHmfgNWrTGkIKxXS4fp-_Q" />
 
-    /* Group Page */
-    #groupPageBox { max-width: 480px; }
-    #groupPageHeader { text-align: center; margin-bottom: 10px; }
-    #groupPageHeader h2 { margin-bottom: 4px; }
-    #groupPageDesc { font-size: 13px; color: #777; margin-bottom: 10px; text-align: center; }
-    .membersList {
-      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
-    }
-    .memberChip {
-      background: #f0f0f0; color: #333; font-size: 12px; padding: 5px 10px; border-radius: 20px;
-    }
-    .sectionLabel {
-      font-size: 13px; font-weight: bold; color: #333; margin: 10px 0 8px 0;
-    }
-    #chatMessages {
-      height: 260px;
-      overflow-y: auto;
-      border: 1px solid #e0e0e0;
-      border-radius: 10px;
-      padding: 10px;
-      margin-bottom: 10px;
-      background: #fafafa;
-    }
-    .chatMsg { margin-bottom: 10px; text-align: left; }
-    .chatMsg .sender { font-size: 11px; color: #999; margin-bottom: 2px; }
-    .chatMsg .bubble {
-      display: inline-block; background: #eeeeee; color: #111;
-      padding: 8px 12px; border-radius: 14px; font-size: 14px; max-width: 80%;
-    }
-    .chatMsg.mine .bubble { background: #111111; color: #ffffff; }
-    .chatMsg.mine { text-align: right; }
-    .chatInputRow { display: flex; gap: 8px; }
-    .chatInputRow input {
-      flex: 1; margin-bottom: 0; padding: 12px; border: 1px solid #cccccc;
-      border-radius: 8px; font-size: 15px; box-sizing: border-box;
-    }
-    .chatInputRow button {
-      width: auto; padding: 12px 18px; margin-bottom: 0; background: #111111;
-      color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
-    }
-  </style>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;width:100%;min-height:100%;font-family:Arial,sans-serif;background:#fafafa;color:#111}
+body{overflow-x:hidden}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* App shell */
+.app{width:100%;max-width:650px;min-height:100vh;margin:auto;background:#fff}
+.topbar{height:58px;border-bottom:1px solid #ddd;display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:sticky;top:0;background:#fff;z-index:20}
+.brand{font-size:25px;font-weight:800;letter-spacing:-1px}
+.topIcon{border:0;background:none;font-size:22px;padding:6px}
+.page{min-height:calc(100vh - 58px);padding:18px 16px 85px}
+
+/* Auth */
+.authPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#fff}
+.authCard{width:100%;max-width:390px;text-align:center}
+.logo{width:105px;height:105px;object-fit:contain;border-radius:24px;margin-bottom:16px}
+.authTitle{font-size:34px;font-weight:800;margin:0 0 8px}
+.authSub{color:#777;margin:0 0 28px}
+.authInput{width:100%;height:50px;border:1px solid #ddd;background:#fafafa;border-radius:10px;padding:0 14px;margin-bottom:10px;outline:none}
+.authInput:focus{border-color:#888}
+.primary{width:100%;height:48px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:700;margin-top:4px}
+.secondary{width:100%;height:48px;border:1px solid #ddd;border-radius:10px;background:#fff;color:#111;font-weight:700;margin-top:10px}
+.status{min-height:20px;color:#b00020;font-size:13px;margin:8px 0}
+
+/* Home */
+.welcome{font-size:25px;font-weight:800;margin:6px 0 4px}
+.muted{color:#777;font-size:14px}
+.menuGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.menuBtn{min-height:115px;border:1px solid #e5e5e5;background:#fff;border-radius:16px;padding:18px;text-align:left;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.menuBtn strong{display:block;font-size:16px;margin-top:22px}
+.menuBtn span{font-size:28px}
+.logout{margin-top:20px;width:100%;height:45px;border:0;border-radius:10px;background:#eee;color:#333;font-weight:700}
+
+/* Forms */
+.card{border:1px solid #e5e5e5;border-radius:16px;padding:18px;background:#fff}
+.card h2{text-align:center;margin:0 0 18px}
+.label{font-size:12px;color:#777;margin:10px 0 6px}
+.field{width:100%;border:1px solid #ddd;border-radius:10px;padding:12px;background:#fafafa;outline:none}
+textarea.field{min-height:90px;resize:vertical}
+.visibility{display:flex;gap:8px}
+.visibility label{flex:1;border:1px solid #ddd;border-radius:10px;padding:12px;text-align:center}
+.visibility input{display:none}
+.visibility label:has(input:checked){border-color:#111;background:#f3f3f3;font-weight:700}
+.back{width:100%;height:44px;border:0;border-radius:10px;background:#eee;margin-top:10px;font-weight:700}
+
+/* Groups */
+.search{width:100%;height:46px;border:1px solid #ddd;border-radius:12px;padding:0 13px;margin-bottom:14px;background:#fafafa}
+.group{border:1px solid #e5e5e5;border-radius:14px;padding:15px;margin-bottom:11px}
+.group h3{margin:7px 0 5px;font-size:17px}
+.group p{margin:0 0 9px;color:#777;font-size:13px}
+.tag{display:inline-block;border-radius:20px;padding:4px 8px;font-size:10px;font-weight:800}
+.public{background:#e6f7ec;color:#08772a}
+.private{background:#fdeaea;color:#b00020}
+.groupBtn{width:100%;height:40px;border:0;border-radius:9px;background:#111;color:#fff;font-weight:700}
+.pending{background:#eee;color:#777}
+
+/* Full screen chat */
+#chatPage{position:fixed;inset:0;background:#fff;z-index:100;display:flex;flex-direction:column}
+.chatTop{height:60px;border-bottom:1px solid #ddd;display:flex;align-items:center;gap:10px;padding:0 10px;background:#fff}
+.chatBack{border:0;background:none;font-size:25px;padding:5px}
+.chatTitle{flex:1}
+.chatTitle strong{display:block;font-size:16px}
+.chatTitle small{color:#777}
+.chatMembers{border:0;background:none;font-size:21px}
+.messages{flex:1;overflow-y:auto;padding:15px 12px 10px;background:#fff}
+.msg{display:flex;margin:5px 0}
+.msg.mine{justify-content:flex-end}
+.bubbleWrap{max-width:78%}
+.sender{font-size:10px;color:#999;margin:0 8px 3px}
+.bubble{padding:9px 12px;border-radius:18px;background:#eee;font-size:14px;word-wrap:break-word}
+.mine .bubble{background:#111;color:#fff}
+.chatBottom{border-top:1px solid #ddd;padding:8px 10px;display:flex;gap:7px;background:#fff}
+.attach{width:42px;height:42px;border:0;border-radius:50%;background:#eee;font-size:20px}
+.chatInput{flex:1;height:42px;border:1px solid #ddd;border-radius:21px;padding:0 14px;outline:none}
+.send{width:55px;height:42px;border:0;border-radius:21px;background:#111;color:#fff;font-weight:700}
+
+/* Members */
+.memberOverlay{position:absolute;top:60px;right:10px;width:260px;max-height:60vh;overflow:auto;background:#fff;border:1px solid #ddd;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.15);padding:12px;z-index:10}
+.member{padding:10px 4px;border-bottom:1px solid #eee;font-size:13px}
+
+/* Bottom navigation */
+.bottomNav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:650px;height:62px;border-top:1px solid #ddd;background:#fff;display:flex;z-index:30}
+.navBtn{flex:1;border:0;background:#fff;font-size:21px}
+.navBtn small{display:block;font-size:10px;color:#555;margin-top:2px}
+
+.empty{text-align:center;color:#999;padding:25px 5px;font-size:14px}
+
+@media(min-width:700px){
+ body{background:#f2f2f2}
+ .app{box-shadow:0 0 25px rgba(0,0,0,.06)}
+}
+</style>
 </head>
+
 <body>
 
-  <img src="1787225529289.png" alt="Venzi Logo">
-  <h1>Hello, my website is live!</h1>
-  <p>Welcome to my site.</p>
-
-  <!-- LOGIN / SIGNUP BOX -->
-  <div class="box" id="authBox" style="text-align:center;">
-    <h2 id="statusText">Please Sign Up or Login</h2>
-    <input type="email" id="emailInput" placeholder="Enter email">
-    <input type="password" id="passwordInput" placeholder="Enter password">
-    <button id="signUpBtn" onclick="signUp()">Sign Up</button>
-    <button id="loginBtn" onclick="logIn()">Login</button>
+<!-- AUTH -->
+<section id="authPage" class="authPage">
+  <div class="authCard">
+    <img class="logo" src="1787225529289.png" alt="Venzi">
+    <h1 class="authTitle">Venzi</h1>
+    <p class="authSub">Connect. Chat. Share with your groups.</p>
+    <div id="authStatus" class="status"></div>
+    <input id="emailInput" class="authInput" type="email" placeholder="Email">
+    <input id="passwordInput" class="authInput" type="password" placeholder="Password">
+    <button class="primary" onclick="signUp()">Create account</button>
+    <button class="secondary" onclick="logIn()">Log in</button>
   </div>
+</section>
 
-  <!-- AFTER LOGIN: MAIN MENU -->
-  <div class="box hidden" id="groupChoiceBox" style="text-align:center;">
-    <h2 id="welcomeText">Welcome!</h2>
-    <p>What would you like to do?</p>
-    <button id="createGroupBtn" onclick="showCreateGroup()">Create Group</button>
-    <button id="joinGroupBtn" onclick="showJoinGroup()">Browse / Join Groups</button>
-    <button id="myGroupsBtn" onclick="showMyGroups()">My Groups</button>
-    <button id="logoutBtn" onclick="logOut()">Logout</button>
-  </div>
+<!-- MAIN APP -->
+<section id="app" class="app hidden">
+  <header class="topbar">
+    <div class="brand">Venzi</div>
+    <button class="topIcon" onclick="showMyGroups()">💬</button>
+  </header>
 
-  <!-- CREATE GROUP FORM -->
-  <div class="box hidden" id="createGroupBox">
-    <h2>Create a Group</h2>
-    <p class="statusMsg" id="createGroupStatus"></p>
-    <div class="field-label">Group name</div>
-    <input type="text" id="groupNameInput" placeholder="e.g. Study Buddies">
-    <div class="field-label">Description</div>
-    <textarea id="groupDescInput" placeholder="What is this group about?"></textarea>
-    <div class="field-label">Visibility</div>
-    <div class="visibility-choice">
-      <label><input type="radio" name="visibility" value="public" checked><span>🌍 Public</span></label>
-      <label><input type="radio" name="visibility" value="private"><span>🔒 Private</span></label>
+  <main id="mainPage" class="page"></main>
+
+  <nav class="bottomNav">
+    <button class="navBtn" onclick="showHome()">⌂<small>Home</small></button>
+    <button class="navBtn" onclick="showJoinGroup()">⌕<small>Groups</small></button>
+    <button class="navBtn" onclick="showCreateGroup()">＋<small>Create</small></button>
+    <button class="navBtn" onclick="showMyGroups()">☻<small>My Groups</small></button>
+  </nav>
+</section>
+
+<!-- FULL SCREEN CHAT -->
+<section id="chatPage" class="hidden">
+  <header class="chatTop">
+    <button class="chatBack" onclick="closeGroupPage()">‹</button>
+    <div class="chatTitle">
+      <strong id="chatGroupName">Group</strong>
+      <small id="chatGroupDesc"></small>
     </div>
-    <div class="field-label">Invite members (comma-separated emails, optional)</div>
-    <input type="text" id="groupInvitesInput" placeholder="friend1@email.com, friend2@email.com">
-    <button id="submitCreateGroupBtn" onclick="submitCreateGroup()">Create Group</button>
-    <button class="backBtn" onclick="backToGroupChoice()">Back</button>
+    <button class="chatMembers" onclick="toggleMembers()">👥</button>
+  </header>
+  <div id="memberOverlay" class="memberOverlay hidden"></div>
+  <div id="chatMessages" class="messages"></div>
+  <div class="chatBottom">
+    <button class="attach" onclick="document.getElementById('docInput').click()">📎</button>
+    <input id="docInput" type="file" hidden onchange="documentSelected(this)">
+    <input id="chatInput" class="chatInput" placeholder="Message..." onkeydown="if(event.key==='Enter')sendChatMessage()">
+    <button class="send" onclick="sendChatMessage()">Send</button>
   </div>
+</section>
 
-  <!-- BROWSE / JOIN GROUPS -->
-  <div class="box hidden" id="joinGroupBox">
-    <h2>Browse Groups</h2>
-    <p class="statusMsg" id="joinGroupStatus"></p>
-    <input type="text" id="searchGroupInput" placeholder="Search groups by name..." oninput="renderGroupList()">
-    <div id="groupListContainer"></div>
-    <button class="backBtn" onclick="backToGroupChoice()">Back</button>
-  </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore, collection, addDoc, getDocs, doc, updateDoc,
+  arrayUnion, arrayRemove, serverTimestamp, query, orderBy, onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  <!-- MY GROUPS -->
-  <div class="box hidden" id="myGroupsBox">
-    <h2>My Groups</h2>
-    <p class="statusMsg" id="myGroupsStatus"></p>
-    <div id="myGroupsContainer"></div>
-    <button class="backBtn" onclick="backToGroupChoice()">Back</button>
-  </div>
+const firebaseConfig = {
+  apiKey: "AIzaSyDQmh4yBGXeOiAIn-pKANxl3BR2H-jQPHE",
+  authDomain: "venzi-community.firebaseapp.com",
+  projectId: "venzi-community",
+  storageBucket: "venzi-community.firebasestorage.app",
+  messagingSenderId: "1008790056674",
+  appId: "1:1008790056674:web:22fa088270df6a5be938bb",
+  measurementId: "G-352E4PXB3B"
+};
 
-  <!-- GROUP PAGE (members + chat) -->
-  <div class="box hidden" id="groupPageBox">
-    <div id="groupPageHeader">
-      <span class="tag" id="groupPageTag"></span>
-      <h2 id="groupPageName"></h2>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let allGroups = [];
+let currentGroupId = null;
+let chatUnsubscribe = null;
+
+const main = document.getElementById("mainPage");
+
+function esc(s){
+  return String(s ?? "").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+function showApp(){
+  document.getElementById("authPage").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+}
+
+function showHome(){
+  document.getElementById("chatPage").classList.add("hidden");
+  main.innerHTML = `
+    <h1 class="welcome">Welcome 👋</h1>
+    <p class="muted">${esc(currentUser?.email)}</p>
+    <div class="menuGrid">
+      <button class="menuBtn" onclick="showCreateGroup()"><span>＋</span><strong>Create Group</strong></button>
+      <button class="menuBtn" onclick="showJoinGroup()"><span>🌍</span><strong>Browse Groups</strong></button>
+      <button class="menuBtn" onclick="showMyGroups()"><span>💬</span><strong>My Groups</strong></button>
+      <button class="menuBtn" onclick="showMyDocuments()"><span>📁</span><strong>My Documents</strong></button>
     </div>
-    <p id="groupPageDesc"></p>
+    <button class="logout" onclick="logOut()">Log out</button>
+  `;
+}
 
-    <div class="sectionLabel">👥 Members</div>
-    <div class="membersList" id="groupPageMembers"></div>
+window.signUp = async function(){
+  const email=document.getElementById("emailInput").value.trim();
+  const pass=document.getElementById("passwordInput").value;
+  const status=document.getElementById("authStatus");
+  status.style.color="#b00020";
+  if(!email || !pass){status.textContent="Email and password required.";return;}
+  try{await createUserWithEmailAndPassword(auth,email,pass);}
+  catch(e){status.textContent=e.message;}
+};
 
-    <div class="sectionLabel">💬 Chat</div>
-    <div id="chatMessages"></div>
-    <div class="chatInputRow">
-      <input type="text" id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendChatMessage()">
-      <button onclick="sendChatMessage()">Send</button>
-    </div>
+window.logIn = async function(){
+  const email=document.getElementById("emailInput").value.trim();
+  const pass=document.getElementById("passwordInput").value;
+  const status=document.getElementById("authStatus");
+  status.style.color="#b00020";
+  if(!email || !pass){status.textContent="Email and password required.";return;}
+  try{await signInWithEmailAndPassword(auth,email,pass);}
+  catch(e){status.textContent=e.message;}
+};
 
-    <button class="backBtn" style="margin-top:16px;" onclick="closeGroupPage()">Back</button>
-  </div>
+window.logOut = function(){ signOut(auth); };
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      getDocs,
-      doc,
-      updateDoc,
-      arrayUnion,
-      arrayRemove,
-      serverTimestamp,
-      query,
-      orderBy,
-      onSnapshot
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+window.showCreateGroup = function(){
+  main.innerHTML=`
+    <div class="card">
+      <h2>Create a Group</h2>
+      <div id="createStatus" class="status"></div>
+      <div class="label">Group name</div>
+      <input id="groupName" class="field" placeholder="e.g. Study Buddies">
+      <div class="label">Description</div>
+      <textarea id="groupDesc" class="field" placeholder="What is this group about?"></textarea>
+      <div class="label">Visibility</div>
+      <div class="visibility">
+        <label><input type="radio" name="vis" value="public" checked> 🌍 Public</label>
+        <label><input type="radio" name="vis" value="private"> 🔒 Private</label>
+      </div>
+      <div class="label">Invite emails (optional)</div>
+      <input id="groupInvites" class="field" placeholder="friend@email.com, ...">
+      <button class="primary" onclick="submitCreateGroup()">Create Group</button>
+      <button class="back" onclick="showHome()">Back</button>
+    </div>`;
+};
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDQmh4yBGXeOiAIn-pKANxl3BR2H-jQPHE",
-      authDomain: "venzi-community.firebaseapp.com",
-      projectId: "venzi-community",
-      storageBucket: "venzi-community.firebasestorage.app",
-      messagingSenderId: "1008790056674",
-      appId: "1:1008790056674:web:22fa088270df6a5be938bb",
-      measurementId: "G-352E4PXB3B"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    let currentUser = null;
-    let allGroupsCache = [];
-    let currentGroupId = null;
-    let chatUnsubscribe = null;
-
-    function showBox(id) {
-      ['authBox','groupChoiceBox','createGroupBox','joinGroupBox','myGroupsBox','groupPageBox'].forEach(b => {
-        document.getElementById(b).classList.add('hidden');
-      });
-      document.getElementById(id).classList.remove('hidden');
-    }
-
-    window.signUp = function () {
-      const email = document.getElementById('emailInput').value;
-      const password = document.getElementById('passwordInput').value;
-      createUserWithEmailAndPassword(auth, email, password)
-        .catch((error) => {
-          document.getElementById('statusText').innerText = "Error: " + error.message;
-        });
-    };
-
-    window.logIn = function () {
-      const email = document.getElementById('emailInput').value;
-      const password = document.getElementById('passwordInput').value;
-      signInWithEmailAndPassword(auth, email, password)
-        .catch((error) => {
-          document.getElementById('statusText').innerText = "Error: " + error.message;
-        });
-    };
-
-    window.logOut = function () {
-      signOut(auth);
-    };
-
-    window.backToGroupChoice = function () {
-      showBox('groupChoiceBox');
-      document.getElementById('groupNameInput').value = "";
-      document.getElementById('groupDescInput').value = "";
-      document.getElementById('groupInvitesInput').value = "";
-      document.querySelector('input[name="visibility"][value="public"]').checked = true;
-    };
-
-    // ---- Create Group ----
-
-    window.showCreateGroup = function () {
-      showBox('createGroupBox');
-      document.getElementById('createGroupStatus').innerText = "";
-    };
-
-    window.submitCreateGroup = async function () {
-      const statusEl = document.getElementById('createGroupStatus');
-      const name = document.getElementById('groupNameInput').value.trim();
-      const description = document.getElementById('groupDescInput').value.trim();
-      const visibility = document.querySelector('input[name="visibility"]:checked').value;
-      const invitesRaw = document.getElementById('groupInvitesInput').value.trim();
-
-      if (!currentUser) { statusEl.innerText = "You must be logged in."; return; }
-      if (!name) { statusEl.innerText = "Please enter a group name."; return; }
-
-      const invitedEmails = invitesRaw
-        ? invitesRaw.split(',').map(e => e.trim().toLowerCase()).filter(e => e.length > 0)
-        : [];
-
-      statusEl.style.color = "#555555";
-      statusEl.innerText = "Creating group...";
-
-      try {
-        await addDoc(collection(db, "groups"), {
-          name: name,
-          description: description,
-          isPublic: visibility === "public",
-          ownerId: currentUser.uid,
-          ownerEmail: currentUser.email,
-          members: [currentUser.uid],
-          memberEmails: [currentUser.email],
-          invitedEmails: invitedEmails,
-          pendingJoinRequests: [],
-          createdAt: serverTimestamp()
-        });
-
-        statusEl.style.color = "#0a7d2c";
-        statusEl.innerText = "Group created!";
-        setTimeout(() => { window.backToGroupChoice(); }, 1200);
-      } catch (error) {
-        statusEl.style.color = "#b00020";
-        statusEl.innerText = "Error: " + error.message;
-      }
-    };
-
-    // ---- Browse / Join Groups ----
-
-    window.showJoinGroup = async function () {
-      showBox('joinGroupBox');
-      const statusEl = document.getElementById('joinGroupStatus');
-      statusEl.style.color = "#555555";
-      statusEl.innerText = "Loading groups...";
-      document.getElementById('searchGroupInput').value = "";
-
-      try {
-        const snapshot = await getDocs(collection(db, "groups"));
-        allGroupsCache = [];
-        snapshot.forEach(d => { allGroupsCache.push({ id: d.id, ...d.data() }); });
-        statusEl.innerText = "";
-        renderGroupList();
-      } catch (error) {
-        statusEl.style.color = "#b00020";
-        statusEl.innerText = "Error loading groups: " + error.message;
-      }
-    };
-
-    window.renderGroupList = function () {
-      const container = document.getElementById('groupListContainer');
-      const search = document.getElementById('searchGroupInput').value.trim().toLowerCase();
-      container.innerHTML = "";
-
-      const filtered = allGroupsCache.filter(g => g.name && g.name.toLowerCase().includes(search));
-
-      if (filtered.length === 0) {
-        container.innerHTML = '<p class="emptyMsg">No groups found.</p>';
-        return;
-      }
-
-      filtered.forEach(g => {
-        const isMember = g.members && g.members.includes(currentUser.uid);
-        const hasRequested = g.pendingJoinRequests && g.pendingJoinRequests.some(r => r.uid === currentUser.uid);
-
-        const card = document.createElement('div');
-        card.className = 'groupCard';
-
-        let btnHtml = "";
-        if (isMember) {
-          btnHtml = `<button class="openBtn" onclick="openGroupPage('${g.id}')">Open Group</button>`;
-        } else if (!g.isPublic && hasRequested) {
-          btnHtml = `<button class="requestedBtn" disabled>Request Pending</button>`;
-        } else if (g.isPublic) {
-          btnHtml = `<button class="joinBtn" onclick="joinPublicGroup('${g.id}')">Join</button>`;
-        } else {
-          btnHtml = `<button class="joinBtn" onclick="requestJoinGroup('${g.id}')">Request to Join</button>`;
-        }
-
-        card.innerHTML = `
-          <span class="tag ${g.isPublic ? 'public' : 'private'}">${g.isPublic ? '🌍 PUBLIC' : '🔒 PRIVATE'}</span>
-          <h3>${g.name}</h3>
-          <p>${g.description ? g.description : 'No description'}</p>
-          <p style="font-size:12px;color:#999;">By ${g.ownerEmail || 'unknown'} · ${g.members ? g.members.length : 0} members</p>
-          ${btnHtml}
-        `;
-        container.appendChild(card);
-      });
-    };
-
-    window.joinPublicGroup = async function (groupId) {
-      const statusEl = document.getElementById('joinGroupStatus');
-      try {
-        await updateDoc(doc(db, "groups", groupId), {
-          members: arrayUnion(currentUser.uid),
-          memberEmails: arrayUnion(currentUser.email)
-        });
-        const g = allGroupsCache.find(x => x.id === groupId);
-        if (g) { g.members = g.members || []; g.members.push(currentUser.uid); }
-        renderGroupList();
-      } catch (error) {
-        statusEl.style.color = "#b00020";
-        statusEl.innerText = "Error: " + error.message;
-      }
-    };
-
-    window.requestJoinGroup = async function (groupId) {
-      const statusEl = document.getElementById('joinGroupStatus');
-      try {
-        await updateDoc(doc(db, "groups", groupId), {
-          pendingJoinRequests: arrayUnion({ uid: currentUser.uid, email: currentUser.email })
-        });
-        const g = allGroupsCache.find(x => x.id === groupId);
-        if (g) {
-          g.pendingJoinRequests = g.pendingJoinRequests || [];
-          g.pendingJoinRequests.push({ uid: currentUser.uid, email: currentUser.email });
-        }
-        renderGroupList();
-      } catch (error) {
-        statusEl.style.color = "#b00020";
-        statusEl.innerText = "Error: " + error.message;
-      }
-    };
-
-    // ---- My Groups ----
-
-    window.showMyGroups = async function () {
-      showBox('myGroupsBox');
-      const statusEl = document.getElementById('myGroupsStatus');
-      const container = document.getElementById('myGroupsContainer');
-      statusEl.style.color = "#555555";
-      statusEl.innerText = "Loading...";
-      container.innerHTML = "";
-
-      try {
-        const snapshot = await getDocs(collection(db, "groups"));
-        const myGroups = [];
-        snapshot.forEach(d => {
-          const data = d.data();
-          if (data.members && data.members.includes(currentUser.uid)) {
-            myGroups.push({ id: d.id, ...data });
-          }
-        });
-        statusEl.innerText = "";
-
-        if (myGroups.length === 0) {
-          container.innerHTML = '<p class="emptyMsg">You are not in any groups yet.</p>';
-          return;
-        }
-
-        myGroups.forEach(g => {
-          const card = document.createElement('div');
-          card.className = 'groupCard clickable';
-          card.onclick = (e) => {
-            if (e.target.closest('.actions')) return;
-            openGroupPage(g.id);
-          };
-
-          let requestsHtml = "";
-          const isOwner = g.ownerId === currentUser.uid;
-          if (isOwner && g.pendingJoinRequests && g.pendingJoinRequests.length > 0) {
-            requestsHtml = `<div style="margin-top:10px;" onclick="event.stopPropagation()"><b style="font-size:13px;">Pending requests:</b>`;
-            g.pendingJoinRequests.forEach(r => {
-              requestsHtml += `
-                <div class="requestRow">
-                  <span>${r.email}</span>
-                  <div class="actions">
-                    <button class="acceptBtn" onclick="respondToRequest('${g.id}', '${r.uid}', '${r.email}', true)">Accept</button>
-                    <button class="rejectBtn" onclick="respondToRequest('${g.id}', '${r.uid}', '${r.email}', false)">Reject</button>
-                  </div>
-                </div>`;
-            });
-            requestsHtml += `</div>`;
-          }
-
-          card.innerHTML = `
-            <span class="tag ${g.isPublic ? 'public' : 'private'}">${g.isPublic ? '🌍 PUBLIC' : '🔒 PRIVATE'}</span>
-            ${isOwner ? '<span class="tag" style="background:#eee;color:#333;">👑 OWNER</span>' : ''}
-            <h3>${g.name}</h3>
-            <p>${g.description ? g.description : 'No description'}</p>
-            <p style="font-size:12px;color:#999;">${g.members ? g.members.length : 0} members</p>
-            ${requestsHtml}
-            <p style="font-size:12px;color:#111;text-align:right;margin-top:6px;">Tap to open →</p>
-          `;
-          container.appendChild(card);
-        });
-      } catch (error) {
-        statusEl.style.color = "#b00020";
-        statusEl.innerText = "Error: " + error.message;
-      }
-    };
-
-    window.respondToRequest = async function (groupId, uid, email, accept) {
-      try {
-        const reqObj = { uid: uid, email: email };
-        if (accept) {
-          await updateDoc(doc(db, "groups", groupId), {
-            members: arrayUnion(uid),
-            memberEmails: arrayUnion(email),
-            pendingJoinRequests: arrayRemove(reqObj)
-          });
-        } else {
-          await updateDoc(doc(db, "groups", groupId), {
-            pendingJoinRequests: arrayRemove(reqObj)
-          });
-        }
-        showMyGroups();
-      } catch (error) {
-        document.getElementById('myGroupsStatus').style.color = "#b00020";
-        document.getElementById('myGroupsStatus').innerText = "Error: " + error.message;
-      }
-    };
-
-    // ---- Group Page (members + chat) ----
-
-    window.openGroupPage = async function (groupId) {
-      currentGroupId = groupId;
-      showBox('groupPageBox');
-      document.getElementById('groupPageName').innerText = "Loading...";
-      document.getElementById('groupPageDesc').innerText = "";
-      document.getElementById('groupPageMembers').innerHTML = "";
-      document.getElementById('chatMessages').innerHTML = "";
-
-      try {
-        const snapshot = await getDocs(collection(db, "groups"));
-        let groupData = null;
-        snapshot.forEach(d => { if (d.id === groupId) groupData = d.data(); });
-
-        if (!groupData) {
-          document.getElementById('groupPageName').innerText = "Group not found";
-          return;
-        }
-        if (!groupData.members || !groupData.members.includes(currentUser.uid)) {
-          document.getElementById('groupPageName').innerText = "You are not a member of this group";
-          return;
-        }
-
-        document.getElementById('groupPageName').innerText = groupData.name;
-        document.getElementById('groupPageDesc').innerText = groupData.description || "No description";
-        const tagEl = document.getElementById('groupPageTag');
-        tagEl.className = 'tag ' + (groupData.isPublic ? 'public' : 'private');
-        tagEl.innerText = groupData.isPublic ? '🌍 PUBLIC' : '🔒 PRIVATE';
-
-        const membersEl = document.getElementById('groupPageMembers');
-        (groupData.memberEmails || []).forEach(email => {
-          const chip = document.createElement('span');
-          chip.className = 'memberChip';
-          chip.innerText = email === groupData.ownerEmail ? email + ' 👑' : email;
-          membersEl.appendChild(chip);
-        });
-
-        listenToChat(groupId);
-      } catch (error) {
-        document.getElementById('groupPageName').innerText = "Error loading group";
-      }
-    };
-
-    function listenToChat(groupId) {
-      if (chatUnsubscribe) { chatUnsubscribe(); chatUnsubscribe = null; }
-      const q = query(collection(db, "groups", groupId, "messages"), orderBy("createdAt", "asc"));
-      chatUnsubscribe = onSnapshot(q, (snapshot) => {
-        const container = document.getElementById('chatMessages');
-        container.innerHTML = "";
-        snapshot.forEach(d => {
-          const msg = d.data();
-          const div = document.createElement('div');
-          div.className = 'chatMsg' + (msg.senderId === currentUser.uid ? ' mine' : '');
-          div.innerHTML = `
-            <div class="sender">${msg.senderId === currentUser.uid ? 'You' : (msg.senderEmail || 'Unknown')}</div>
-            <div class="bubble">${(msg.text || '').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
-          `;
-          container.appendChild(div);
-        });
-        container.scrollTop = container.scrollHeight;
-      });
-    }
-
-    window.sendChatMessage = async function () {
-      const input = document.getElementById('chatInput');
-      const text = input.value.trim();
-      if (!text || !currentGroupId) return;
-      input.value = "";
-      try {
-        await addDoc(collection(db, "groups", currentGroupId, "messages"), {
-          text: text,
-          senderId: currentUser.uid,
-          senderEmail: currentUser.email,
-          createdAt: serverTimestamp()
-        });
-      } catch (error) {
-        alert("Error sending message: " + error.message);
-      }
-    };
-
-    window.closeGroupPage = function () {
-      if (chatUnsubscribe) { chatUnsubscribe(); chatUnsubscribe = null; }
-      currentGroupId = null;
-      showMyGroups();
-    };
-
-    onAuthStateChanged(auth, (user) => {
-      currentUser = user;
-      if (user) {
-        showBox('groupChoiceBox');
-        document.getElementById('welcomeText').innerText = "Welcome, " + user.email;
-      } else {
-        showBox('authBox');
-      }
+window.submitCreateGroup = async function(){
+  const name=document.getElementById("groupName").value.trim();
+  const desc=document.getElementById("groupDesc").value.trim();
+  const vis=document.querySelector('input[name="vis"]:checked').value;
+  const raw=document.getElementById("groupInvites").value.trim();
+  const status=document.getElementById("createStatus");
+  if(!name){status.textContent="Please enter a group name.";return;}
+  const invites=raw?raw.split(",").map(x=>x.trim().toLowerCase()).filter(Boolean):[];
+  try{
+    await addDoc(collection(db,"groups"),{
+      name,description:desc,isPublic:vis==="public",
+      ownerId:currentUser.uid,ownerEmail:currentUser.email,
+      members:[currentUser.uid],memberEmails:[currentUser.email],
+      invitedEmails:invites,pendingJoinRequests:[],createdAt:serverTimestamp()
     });
-  </script>
+    status.style.color="#08772a";
+    status.textContent="Group created!";
+    setTimeout(showHome,700);
+  }catch(e){status.textContent=e.message;}
+};
 
+window.showJoinGroup = async function(){
+  main.innerHTML=`<h2>Browse Groups</h2><input id="groupSearch" class="search" placeholder="Search groups..." oninput="renderGroups()"><div id="groups"></div>`;
+  try{
+    const snap=await getDocs(collection(db,"groups"));
+    allGroups=[]; snap.forEach(d=>allGroups.push({id:d.id,...d.data()}));
+    renderGroups();
+  }catch(e){document.getElementById("groups").innerHTML=`<p class="empty">${esc(e.message)}</p>`;}
+};
+
+window.renderGroups = function(){
+  const box=document.getElementById("groups");
+  if(!box)return;
+  const search=(document.getElementById("groupSearch")?.value||"").toLowerCase();
+  const list=allGroups.filter(g=>(g.name||"").toLowerCase().includes(search));
+  if(!list.length){box.innerHTML='<p class="empty">No groups found.</p>';return;}
+  box.innerHTML=list.map(g=>{
+    const member=(g.members||[]).includes(currentUser.uid);
+    const requested=(g.pendingJoinRequests||[]).some(r=>r.uid===currentUser.uid);
+    let button=member
+      ? `<button class="groupBtn" onclick="openGroupPage('${g.id}')">Open Group</button>`
+      : g.isPublic
+      ? `<button class="groupBtn" onclick="joinPublicGroup('${g.id}')">Join</button>`
+      : requested
+      ? `<button class="groupBtn pending" disabled>Request Pending</button>`
+      : `<button class="groupBtn" onclick="requestJoinGroup('${g.id}')">Request to Join</button>`;
+    return `<div class="group">
+      <span class="tag ${g.isPublic?'public':'private'}">${g.isPublic?'🌍 PUBLIC':'🔒 PRIVATE'}</span>
+      <h3>${esc(g.name)}</h3><p>${esc(g.description||"No description")}</p>
+      <p>${(g.members||[]).length} members · ${esc(g.ownerEmail||"")}</p>${button}
+    </div>`;
+  }).join("");
+};
+
+window.joinPublicGroup = async function(id){
+  try{
+    await updateDoc(doc(db,"groups",id),{
+      members:arrayUnion(currentUser.uid),
+      memberEmails:arrayUnion(currentUser.email)
+    });
+    await showJoinGroup();
+  }catch(e){alert(e.message);}
+};
+
+window.requestJoinGroup = async function(id){
+  try{
+    await updateDoc(doc(db,"groups",id),{
+      pendingJoinRequests:arrayUnion({uid:currentUser.uid,email:currentUser.email})
+    });
+    await showJoinGroup();
+  }catch(e){alert(e.message);}
+};
+
+window.showMyGroups = async function(){
+  main.innerHTML=`<h2>My Groups</h2><div id="myGroups"><p class="empty">Loading...</p></div>`;
+  try{
+    const snap=await getDocs(collection(db,"groups"));
+    const list=[];
+    snap.forEach(d=>{
+      const g={id:d.id,...d.data()};
+      if((g.members||[]).includes(currentUser.uid))list.push(g);
+    });
+    const box=document.getElementById("myGroups");
+    if(!list.length){box.innerHTML='<p class="empty">You are not in any groups yet.</p>';return;}
+    box.innerHTML=list.map(g=>{
+      const owner=g.ownerId===currentUser.uid;
+      let requests="";
+      if(owner && (g.pendingJoinRequests||[]).length){
+        requests=`<div style="margin-top:10px"><b>Join requests</b>`+
+        g.pendingJoinRequests.map(r=>`<div style="padding:9px 0;border-bottom:1px solid #eee">
+          <span style="font-size:12px">${esc(r.email)}</span>
+          <div style="display:flex;gap:6px;margin-top:5px">
+            <button onclick="respondToRequest('${g.id}','${r.uid}','${esc(r.email)}',true)" style="flex:1;background:#08772a;color:#fff;border:0;border-radius:7px;padding:7px">Accept</button>
+            <button onclick="respondToRequest('${g.id}','${r.uid}','${esc(r.email)}',false)" style="flex:1;background:#b00020;color:#fff;border:0;border-radius:7px;padding:7px">Reject</button>
+          </div>
+        </div>`).join("")+"</div>";
+      }
+      return `<div class="group">
+        <span class="tag ${g.isPublic?'public':'private'}">${g.isPublic?'🌍 PUBLIC':'🔒 PRIVATE'}</span>
+        ${owner?'<span class="tag" style="background:#eee;color:#333">👑 OWNER</span>':''}
+        <h3>${esc(g.name)}</h3><p>${esc(g.description||"No description")}</p>
+        <p>${(g.members||[]).length} members</p>${requests}
+        <button class="groupBtn" onclick="openGroupPage('${g.id}')">Open Group</button>
+        ${owner ? `<button onclick="deleteMyGroup('${g.id}', '${esc(g.name).replace(/'/g,"\\'")}'); event.stopPropagation();" style="width:100%;margin-top:7px;background:#b00020;color:#fff;border:0;border-radius:8px;padding:10px;font-weight:bold;cursor:pointer">Delete Group</button>` : ''}
+      </div>`;
+    }).join("");
+  }catch(e){document.getElementById("myGroups").innerHTML=`<p class="empty">${esc(e.message)}</p>`;}
+};
+
+window.deleteMyGroup = async function(groupId, groupName){
+  if(!currentUser)return;
+  const confirmed=confirm(`Delete \"${groupName}\"?\n\nThis will permanently delete the group and its chat messages. This cannot be undone.`);
+  if(!confirmed)return;
+  try{
+    const groupRef=doc(db,"groups",groupId);
+    const groupSnap=await getDocs(collection(db,"groups"));
+    let groupData=null;
+    groupSnap.forEach(d=>{if(d.id===groupId)groupData=d.data();});
+    if(!groupData){alert("Group not found.");return;}
+    if(groupData.ownerId!==currentUser.uid){alert("Only the group owner can delete this group.");return;}
+
+    const messagesSnap=await getDocs(collection(db,"groups",groupId,"messages"));
+    for(const messageDoc of messagesSnap.docs){
+      await deleteDoc(messageDoc.ref);
+    }
+    await deleteDoc(groupRef);
+
+    if(currentGroupId===groupId){
+      if(chatUnsubscribe)chatUnsubscribe();
+      chatUnsubscribe=null;
+      currentGroupId=null;
+      document.getElementById("chatPage").classList.add("hidden");
+    }
+    alert("Group deleted successfully.");
+    showMyGroups();
+  }catch(e){
+    alert("Error deleting group: "+e.message);
+  }
+};
+
+window.respondToRequest = async function(groupId,uid,email,accept){
+  const obj={uid,email};
+  try{
+    const update=accept
+      ? {members:arrayUnion(uid),memberEmails:arrayUnion(email),pendingJoinRequests:arrayRemove(obj)}
+      : {pendingJoinRequests:arrayRemove(obj)};
+    await updateDoc(doc(db,"groups",groupId),update);
+    showMyGroups();
+  }catch(e){alert(e.message);}
+};
+
+window.openGroupPage = async function(id){
+  currentGroupId=id;
+  document.getElementById("chatPage").classList.remove("hidden");
+  document.getElementById("memberOverlay").classList.add("hidden");
+  document.getElementById("chatMessages").innerHTML="";
+  try{
+    const snap=await getDocs(collection(db,"groups"));
+    let g=null;snap.forEach(d=>{if(d.id===id)g={id:d.id,...d.data()};});
+    if(!g){document.getElementById("chatGroupName").textContent="Group not found";return;}
+    if(!(g.members||[]).includes(currentUser.uid)){
+      document.getElementById("chatGroupName").textContent="Not a member";
+      return;
+    }
+    document.getElementById("chatGroupName").textContent=g.name;
+    document.getElementById("chatGroupDesc").textContent=`${(g.members||[]).length} members`;
+    document.getElementById("memberOverlay").innerHTML=(g.memberEmails||[]).map(e=>`<div class="member">${esc(e)}${e===g.ownerEmail?" 👑":""}</div>`).join("");
+    listenToChat(id);
+  }catch(e){document.getElementById("chatGroupName").textContent="Error loading group";}
+};
+
+function listenToChat(id){
+  if(chatUnsubscribe)chatUnsubscribe();
+  const q=query(collection(db,"groups",id,"messages"),orderBy("createdAt","asc"));
+  chatUnsubscribe=onSnapshot(q,snap=>{
+    const box=document.getElementById("chatMessages");
+    box.innerHTML="";
+    snap.forEach(d=>{
+      const m=d.data(),mine=m.senderId===currentUser.uid;
+      box.insertAdjacentHTML("beforeend",`
+        <div class="msg ${mine?'mine':''}">
+          <div class="bubbleWrap">
+            ${mine?'':`<div class="sender">${esc(m.senderEmail||"Unknown")}</div>`}
+            <div class="bubble">${esc(m.text||"")}</div>
+          </div>
+        </div>`);
+    });
+    box.scrollTop=box.scrollHeight;
+  });
+}
+
+window.sendChatMessage = async function(){
+  const input=document.getElementById("chatInput");
+  const text=input.value.trim();
+  if(!text||!currentGroupId)return;
+  input.value="";
+  try{
+    await addDoc(collection(db,"groups",currentGroupId,"messages"),{
+      text,senderId:currentUser.uid,senderEmail:currentUser.email,createdAt:serverTimestamp()
+    });
+  }catch(e){alert("Error: "+e.message);}
+};
+
+window.toggleMembers=function(){
+  document.getElementById("memberOverlay").classList.toggle("hidden");
+};
+
+window.closeGroupPage=function(){
+  if(chatUnsubscribe){chatUnsubscribe();chatUnsubscribe=null;}
+  currentGroupId=null;
+  document.getElementById("chatPage").classList.add("hidden");
+  showMyGroups();
+};
+
+window.documentSelected=function(input){
+  if(input.files?.length){
+    alert("Document selected: "+input.files[0].name+"\n\nActual cloud upload ke liye Firebase Storage + secure Storage Rules enable karna hoga. Abhi file upload nahi ki ja rahi.");
+    input.value="";
+  }
+};
+
+/* Placeholder for the future private document vault.
+   This does NOT falsely claim cloud/private storage. */
+window.showMyDocuments=function(){
+  main.innerHTML=`
+    <div class="card">
+      <h2>📁 My Documents</h2>
+      <p class="muted" style="line-height:1.5">
+        Private document storage ka UI ready hai, lekin actual secure cloud storage
+        ke liye Firebase Storage configure karna zaroori hai.
+      </p>
+      <button class="primary" onclick="alert('Firebase Storage setup ke baad yahan secure upload add hoga.')">Add Document</button>
+      <button class="back" onclick="showHome()">Back</button>
+    </div>`;
+};
+
+onAuthStateChanged(auth,user=>{
+  currentUser=user;
+  if(user){
+    showApp();
+    showHome();
+  }else{
+    document.getElementById("app").classList.add("hidden");
+    document.getElementById("authPage").classList.remove("hidden");
+  }
+});
+</script>
 </body>
 </html>
