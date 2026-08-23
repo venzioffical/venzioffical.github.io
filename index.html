@@ -26,7 +26,9 @@
       min-height: 100vh;
     }
 
-    button, input, textarea {
+    button,
+    input,
+    textarea {
       font-family: Arial, sans-serif;
     }
 
@@ -38,7 +40,10 @@
       display: none !important;
     }
 
-    /* AUTH */
+    /* =========================
+       AUTH
+    ========================= */
+
     .auth-page {
       min-height: 100vh;
       display: flex;
@@ -127,7 +132,10 @@
       margin: 8px 0 12px;
     }
 
-    /* APP */
+    /* =========================
+       APP
+    ========================= */
+
     .app {
       min-height: 100vh;
       background: #fafafa;
@@ -188,7 +196,10 @@
       margin: 0 0 20px;
     }
 
-    /* CARDS */
+    /* =========================
+       CARDS
+    ========================= */
+
     .menu-card,
     .form-card,
     .group-card {
@@ -315,7 +326,10 @@
       font-weight: bold;
     }
 
-    /* VAULT */
+    /* =========================
+       VAULT
+    ========================= */
+
     .vault-upload-btn {
       background: #087b2f;
       color: white;
@@ -405,7 +419,10 @@
       margin-left: 6px;
     }
 
-    /* GROUP CHAT */
+    /* =========================
+       GROUP CHAT
+    ========================= */
+
     .group-page {
       position: fixed;
       inset: 0;
@@ -525,6 +542,9 @@
       display: flex;
       flex-direction: column;
       max-width: 72%;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
 
     .message.mine {
@@ -549,6 +569,7 @@
       font-size: 14.5px;
       line-height: 1.35;
       word-break: break-word;
+      cursor: default;
     }
 
     .message.mine .message-bubble {
@@ -559,32 +580,11 @@
     .message-time {
       font-size: 10px;
       color: #b0b0b0;
-      margin: 3px 4px 2px;
+      margin: 3px 4px 8px;
     }
 
     .message.mine .message-time {
       text-align: right;
-    }
-
-    /* NEW: DELETE MESSAGE BUTTON */
-    .message-actions {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin: 0 4px 7px;
-    }
-
-    .message-delete-btn {
-      border: 0;
-      background: transparent;
-      color: #d93025;
-      font-size: 10px;
-      padding: 2px 4px;
-      cursor: pointer;
-    }
-
-    .message-delete-btn:hover {
-      text-decoration: underline;
     }
 
     .chat-img-attachment {
@@ -592,6 +592,7 @@
       border-radius: 14px;
       margin-top: 4px;
       display: block;
+      pointer-events: none;
     }
 
     .chat-file-attachment {
@@ -609,6 +610,17 @@
     .message.mine .chat-file-attachment {
       background: rgba(255,255,255,0.2);
       color: white;
+    }
+
+    /* LONG PRESS FEEDBACK */
+
+    .message.long-pressing .message-bubble {
+      transform: scale(0.97);
+      opacity: 0.75;
+    }
+
+    .message-bubble {
+      transition: transform 0.12s ease, opacity 0.12s ease;
     }
 
     .chat-input-area {
@@ -653,7 +665,10 @@
       font-weight: bold;
     }
 
-    /* MODALS */
+    /* =========================
+       MODALS
+    ========================= */
+
     .modal {
       position: fixed;
       inset: 0;
@@ -686,7 +701,28 @@
       line-height: 1.5;
     }
 
-    /* BOTTOM NAV */
+    /* MESSAGE DELETE POPUP */
+
+    .delete-message-option {
+      width: 100%;
+      border: 0;
+      background: #fff;
+      color: #d93025;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .delete-message-option:active {
+      background: #f5f5f5;
+    }
+
+    /* =========================
+       BOTTOM NAV
+    ========================= */
+
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -730,8 +766,12 @@
 
 <body>
 
-<!-- LOGIN / SIGNUP -->
+<!-- =========================
+     LOGIN / SIGNUP
+========================= -->
+
 <div id="authPage" class="auth-page">
+
   <div class="auth-card">
 
     <img
@@ -766,11 +806,15 @@
       type="text"
       placeholder="Nickname (shown to others instead of email)">
 
-    <button class="primary-btn" onclick="logIn()">
+    <button
+      class="primary-btn"
+      onclick="logIn()">
       Log In
     </button>
 
-    <button class="secondary-btn" onclick="signUp()">
+    <button
+      class="secondary-btn"
+      onclick="signUp()">
       Create New Account
     </button>
 
@@ -778,7 +822,10 @@
 </div>
 
 
-<!-- MAIN APP -->
+<!-- =========================
+     MAIN APP
+========================= -->
+
 <div id="app" class="app hidden">
 
   <header class="topbar">
@@ -802,6 +849,7 @@
   <main class="content">
 
     <!-- HOME -->
+
     <section id="homePage">
 
       <h1 class="page-title">
@@ -821,7 +869,7 @@
         <div
           id="welcomeNickname"
           class="welcome-email"
-          style="font-weight:bold; color:#111; margin-bottom:2px;">
+          style="font-weight:bold;color:#111;margin-bottom:2px;">
         </div>
 
         <div
@@ -842,10 +890,12 @@
         </button>
 
       </div>
+
     </section>
 
 
     <!-- PROFILE -->
+
     <section id="profilePage" class="hidden">
 
       <h1 class="page-title">
@@ -858,7 +908,10 @@
 
       <div class="form-card">
 
-        <div id="profileStatus" class="status"></div>
+        <div
+          id="profileStatus"
+          class="status">
+        </div>
 
         <label class="label">
           Nickname
@@ -893,10 +946,12 @@
         </button>
 
       </div>
+
     </section>
 
 
     <!-- CREATE GROUP -->
+
     <section id="createPage" class="hidden">
 
       <h1 class="page-title">
@@ -909,7 +964,10 @@
 
       <div class="form-card">
 
-        <div id="createStatus" class="status"></div>
+        <div
+          id="createStatus"
+          class="status">
+        </div>
 
         <label class="label">
           Group Name
@@ -928,7 +986,8 @@
         <textarea
           id="groupDescInput"
           class="input"
-          placeholder="What is this group about?"></textarea>
+          placeholder="What is this group about?">
+        </textarea>
 
         <label class="label">
           Visibility
@@ -978,10 +1037,12 @@
         </button>
 
       </div>
+
     </section>
 
 
     <!-- BROWSE GROUPS -->
+
     <section id="browsePage" class="hidden">
 
       <h1 class="page-title">
@@ -1005,6 +1066,7 @@
 
 
     <!-- MY GROUPS -->
+
     <section id="myGroupsPage" class="hidden">
 
       <h1 class="page-title">
@@ -1021,6 +1083,7 @@
 
 
     <!-- VAULT -->
+
     <section id="vaultPage" class="hidden">
 
       <h1 class="page-title">
@@ -1045,7 +1108,7 @@
       </label>
 
       <div class="vault-hint">
-        Max size ~700KB per file
+        Max size ~700KB per file (documents, PDFs, small images)
       </div>
 
       <div
@@ -1053,7 +1116,9 @@
         class="status">
       </div>
 
-      <div id="vaultFilesContainer"></div>
+      <div
+        id="vaultFilesContainer">
+      </div>
 
     </section>
 
@@ -1061,6 +1126,7 @@
 
 
   <!-- BOTTOM NAV -->
+
   <nav class="bottom-nav">
 
     <button
@@ -1096,7 +1162,10 @@
 </div>
 
 
-<!-- FULL SCREEN GROUP CHAT -->
+<!-- =========================
+     FULL SCREEN GROUP CHAT
+========================= -->
+
 <div
   id="groupPage"
   class="group-page hidden">
@@ -1176,7 +1245,82 @@
 </div>
 
 
-<!-- DELETE GROUP MODAL -->
+<!-- =========================
+     DELETE MESSAGE MODAL
+========================= -->
+
+<div
+  id="deleteMessageModal"
+  class="modal hidden">
+
+  <div class="modal-card">
+
+    <h3>
+      Message Options
+    </h3>
+
+    <p>
+      What do you want to do with this message?
+    </p>
+
+    <button
+      class="delete-message-option"
+      onclick="openDeleteMessageConfirm()">
+      🗑️ Delete Message
+    </button>
+
+    <button
+      class="secondary-btn"
+      onclick="closeDeleteMessageModal()">
+      Cancel
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     CONFIRM DELETE MESSAGE
+========================= -->
+
+<div
+  id="confirmDeleteMessageModal"
+  class="modal hidden">
+
+  <div class="modal-card">
+
+    <h3>
+      Delete Message?
+    </h3>
+
+    <p>
+      This message will be permanently deleted.
+      This action cannot be undone.
+    </p>
+
+    <button
+      id="confirmDeleteMessageBtn"
+      class="danger-btn"
+      onclick="confirmDeleteMessage()">
+      Delete
+    </button>
+
+    <button
+      class="secondary-btn"
+      onclick="closeConfirmDeleteMessageModal()">
+      Cancel
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     DELETE GROUP MODAL
+========================= -->
+
 <div
   id="deleteModal"
   class="modal hidden">
@@ -1205,10 +1349,14 @@
     </button>
 
   </div>
+
 </div>
 
 
-<!-- LEAVE GROUP MODAL -->
+<!-- =========================
+     LEAVE GROUP MODAL
+========================= -->
+
 <div
   id="leaveModal"
   class="modal hidden">
@@ -1221,7 +1369,7 @@
 
     <p>
       You will be removed from this group and won't be able to see its chat anymore.
-      You can rejoin later if it's public.
+      You can rejoin later if it's public, or request to join again if private.
     </p>
 
     <button
@@ -1237,10 +1385,14 @@
     </button>
 
   </div>
+
 </div>
 
 
-<!-- DELETE VAULT FILE MODAL -->
+<!-- =========================
+     DELETE VAULT FILE
+========================= -->
+
 <div
   id="deleteVaultModal"
   class="modal hidden">
@@ -1269,41 +1421,14 @@
     </button>
 
   </div>
+
 </div>
 
 
-<!-- DELETE MESSAGE MODAL -->
-<div
-  id="deleteMessageModal"
-  class="modal hidden">
+<!-- =========================
+     VAULT PICKER
+========================= -->
 
-  <div class="modal-card">
-
-    <h3>
-      Delete Message?
-    </h3>
-
-    <p>
-      This message will be permanently deleted for everyone in this group.
-    </p>
-
-    <button
-      class="danger-btn"
-      onclick="confirmDeleteMessage()">
-      Delete Message
-    </button>
-
-    <button
-      class="secondary-btn"
-      onclick="closeDeleteMessageModal()">
-      Cancel
-    </button>
-
-  </div>
-</div>
-
-
-<!-- VAULT PICKER -->
 <div
   id="vaultPickerModal"
   class="modal hidden">
@@ -1320,7 +1445,7 @@
 
     <div
       id="vaultPickerContainer"
-      style="text-align:left; margin-bottom:15px;">
+      style="text-align:left;margin-bottom:15px;">
     </div>
 
     <button
@@ -1330,6 +1455,7 @@
     </button>
 
   </div>
+
 </div>
 
 
@@ -1405,8 +1531,13 @@
   let chatUnsubscribe = null;
   let myVaultFiles = [];
   let vaultFileToDelete = null;
-  let messageToDelete = null;
   let myNickname = "";
+
+  /* Long press variables */
+
+  let longPressTimer = null;
+  let longPressTriggered = false;
+  let messageToDelete = null;
 
   const profileCache = {};
 
@@ -1414,7 +1545,7 @@
 
 
   /* =========================
-     AVATAR
+     AVATAR HELPERS
   ========================= */
 
   const AVATAR_COLORS = [
@@ -1429,7 +1560,6 @@
     "#5b51d8"
   ];
 
-
   function getAvatarColor(uid) {
 
     let hash = 0;
@@ -1439,7 +1569,6 @@
       hash =
         uid.charCodeAt(i) +
         ((hash << 5) - hash);
-
     }
 
     return AVATAR_COLORS[
@@ -1451,10 +1580,7 @@
 
   function getInitial(name) {
 
-    return (
-      name ||
-      "?"
-    )
+    return (name || "?")
       .trim()
       .charAt(0)
       .toUpperCase();
@@ -1493,7 +1619,7 @@
 
 
   /* =========================
-     PROFILES
+     PROFILES / NICKNAMES
   ========================= */
 
   async function ensureOwnProfile(user) {
@@ -1526,8 +1652,7 @@
         await setDoc(
           ref,
           {
-            nickname:
-              myNickname
+            nickname: myNickname
           },
           {
             merge: true
@@ -1552,6 +1677,7 @@
   ) {
 
     if (profileCache[uid]) {
+
       return profileCache[uid];
     }
 
@@ -1569,7 +1695,9 @@
       const name =
         snap.exists() &&
         snap.data().nickname
+
           ? snap.data().nickname
+
           : (
               fallbackEmail
                 ? fallbackEmail.split("@")[0]
@@ -1658,8 +1786,7 @@
             currentUser.uid
           ),
           {
-            nickname:
-              newNickname
+            nickname: newNickname
           },
           {
             merge: true
@@ -1687,12 +1814,12 @@
         status.innerText =
           "Saved!";
 
-        setTimeout(
-          () => {
-            status.innerText = "";
-          },
-          1200
-        );
+        setTimeout(() => {
+
+          status.innerText =
+            "";
+
+        }, 1200);
 
       } catch (error) {
 
@@ -1712,22 +1839,35 @@
 
   function hideAllPages() {
 
-    [
-      "homePage",
-      "createPage",
-      "browsePage",
-      "myGroupsPage",
-      "vaultPage",
-      "profilePage"
-    ]
-      .forEach(id => {
+    document
+      .getElementById("homePage")
+      .classList
+      .add("hidden");
 
-        document
-          .getElementById(id)
-          .classList
-          .add("hidden");
+    document
+      .getElementById("createPage")
+      .classList
+      .add("hidden");
 
-      });
+    document
+      .getElementById("browsePage")
+      .classList
+      .add("hidden");
+
+    document
+      .getElementById("myGroupsPage")
+      .classList
+      .add("hidden");
+
+    document
+      .getElementById("vaultPage")
+      .classList
+      .add("hidden");
+
+    document
+      .getElementById("profilePage")
+      .classList
+      .add("hidden");
   }
 
 
@@ -1752,31 +1892,24 @@
 
       const email =
         document
-          .getElementById(
-            "emailInput"
-          )
+          .getElementById("emailInput")
           .value
           .trim();
 
       const password =
         document
-          .getElementById(
-            "passwordInput"
-          )
+          .getElementById("passwordInput")
           .value;
 
       const nickname =
         document
-          .getElementById(
-            "nicknameInput"
-          )
+          .getElementById("nicknameInput")
           .value
           .trim();
 
       const status =
-        document.getElementById(
-          "authStatus"
-        );
+        document
+          .getElementById("authStatus");
 
       status.style.color =
         "#d93025";
@@ -1831,7 +1964,8 @@
           }
         );
 
-        status.innerText = "";
+        status.innerText =
+          "";
 
       } catch (error) {
 
@@ -1849,23 +1983,18 @@
 
       const email =
         document
-          .getElementById(
-            "emailInput"
-          )
+          .getElementById("emailInput")
           .value
           .trim();
 
       const password =
         document
-          .getElementById(
-            "passwordInput"
-          )
+          .getElementById("passwordInput")
           .value;
 
       const status =
-        document.getElementById(
-          "authStatus"
-        );
+        document
+          .getElementById("authStatus");
 
       if (!email || !password) {
 
@@ -1889,7 +2018,8 @@
           password
         );
 
-        status.innerText = "";
+        status.innerText =
+          "";
 
       } catch (error) {
 
@@ -1908,7 +2038,9 @@
       if (chatUnsubscribe) {
 
         chatUnsubscribe();
-        chatUnsubscribe = null;
+
+        chatUnsubscribe =
+          null;
       }
 
       await signOut(auth);
@@ -1931,7 +2063,8 @@
 
       document
         .getElementById("createStatus")
-        .innerText = "";
+        .innerText =
+        "";
     };
 
 
@@ -1943,38 +2076,29 @@
       }
 
       const status =
-        document.getElementById(
-          "createStatus"
-        );
+        document
+          .getElementById("createStatus");
 
       const name =
         document
-          .getElementById(
-            "groupNameInput"
-          )
+          .getElementById("groupNameInput")
           .value
           .trim();
 
       const description =
         document
-          .getElementById(
-            "groupDescInput"
-          )
+          .getElementById("groupDescInput")
           .value
           .trim();
 
       const visibility =
-        document
-          .querySelector(
-            'input[name="visibility"]:checked'
-          )
-          .value;
+        document.querySelector(
+          'input[name="visibility"]:checked'
+        ).value;
 
       const invites =
         document
-          .getElementById(
-            "groupInvitesInput"
-          )
+          .getElementById("groupInvitesInput")
           .value
           .trim();
 
@@ -1988,12 +2112,15 @@
 
       const invitedEmails =
         invites
+
           ? invites
               .split(",")
-              .map(e =>
-                e.trim().toLowerCase()
+              .map(
+                e =>
+                  e.trim().toLowerCase()
               )
               .filter(Boolean)
+
           : [];
 
       status.style.color =
@@ -2014,17 +2141,25 @@
             description,
             isPublic:
               visibility === "public",
+
             ownerId:
               currentUser.uid,
+
             ownerEmail:
               currentUser.email,
-            members:
-              [currentUser.uid],
-            memberEmails:
-              [currentUser.email],
+
+            members: [
+              currentUser.uid
+            ],
+
+            memberEmails: [
+              currentUser.email
+            ],
+
             invitedEmails,
-            pendingJoinRequests:
-              [],
+
+            pendingJoinRequests: [],
+
             createdAt:
               serverTimestamp()
           }
@@ -2036,32 +2171,29 @@
         status.innerText =
           "Group created successfully!";
 
-        setTimeout(
-          () => {
+        setTimeout(() => {
 
-            document
-              .getElementById(
-                "groupNameInput"
-              )
-              .value = "";
+          document
+            .getElementById(
+              "groupNameInput"
+            )
+            .value = "";
 
-            document
-              .getElementById(
-                "groupDescInput"
-              )
-              .value = "";
+          document
+            .getElementById(
+              "groupDescInput"
+            )
+            .value = "";
 
-            document
-              .getElementById(
-                "groupInvitesInput"
-              )
-              .value = "";
+          document
+            .getElementById(
+              "groupInvitesInput"
+            )
+            .value = "";
 
-            goHome();
+          goHome();
 
-          },
-          900
-        );
+        }, 900);
 
       } catch (error) {
 
@@ -2076,7 +2208,7 @@
 
 
   /* =========================
-     EXPLORE
+     BROWSE GROUPS
   ========================= */
 
   window.showJoinGroup =
@@ -2113,7 +2245,8 @@
             )
           );
 
-        allGroupsCache = [];
+        allGroupsCache =
+          [];
 
         snapshot.forEach(d => {
 
@@ -2153,7 +2286,8 @@
           .trim()
           .toLowerCase();
 
-      container.innerHTML = "";
+      container.innerHTML =
+        "";
 
       const filtered =
         allGroupsCache.filter(
@@ -2200,21 +2334,24 @@
 
         const tag =
           g.isPublic
+
             ? `<span class="tag public">
                 🌍 PUBLIC
               </span>`
+
             : `<span class="tag private">
                 🔒 PRIVATE
               </span>`;
 
-        let button = "";
+        let button =
+          "";
 
         if (isMember) {
 
           button =
             `<button
               class="group-btn"
-              onclick="openGroupPage('${escapeAttribute(g.id)}')">
+              onclick="openGroupPage('${g.id}')">
               Open Group
             </button>`;
 
@@ -2235,7 +2372,7 @@
           button =
             `<button
               class="group-btn"
-              onclick="joinPublicGroup('${escapeAttribute(g.id)}')">
+              onclick="joinPublicGroup('${g.id}')">
               Join Group
             </button>`;
 
@@ -2244,7 +2381,7 @@
           button =
             `<button
               class="group-btn"
-              onclick="requestJoinGroup('${escapeAttribute(g.id)}')">
+              onclick="requestJoinGroup('${g.id}')">
               Request to Join
             </button>`;
         }
@@ -2337,6 +2474,7 @@
               arrayUnion({
                 uid:
                   currentUser.uid,
+
                 email:
                   currentUser.email
               })
@@ -2389,9 +2527,11 @@
             )
           );
 
-        container.innerHTML = "";
+        container.innerHTML =
+          "";
 
-        let count = 0;
+        let count =
+          0;
 
         for (
           const d of snapshot.docs
@@ -2423,7 +2563,8 @@
               g.ownerId ===
               currentUser.uid;
 
-            let reqs = "";
+            let reqs =
+              "";
 
             if (
               isOwner &&
@@ -2475,12 +2616,14 @@
                           padding:6px 8px;
                           border-radius:6px;
                         "
-                        onclick="respondToRequest(
-                          '${escapeAttribute(g.id)}',
-                          '${escapeAttribute(r.uid)}',
-                          '${escapeAttribute(r.email)}',
-                          true
-                        )">
+                        onclick="
+                          respondToRequest(
+                            '${g.id}',
+                            '${r.uid}',
+                            '${escapeAttribute(r.email)}',
+                            true
+                          )
+                        ">
                         Accept
                       </button>
 
@@ -2493,16 +2636,19 @@
                           border-radius:6px;
                           margin-left:4px;
                         "
-                        onclick="respondToRequest(
-                          '${escapeAttribute(g.id)}',
-                          '${escapeAttribute(r.uid)}',
-                          '${escapeAttribute(r.email)}',
-                          false
-                        )">
+                        onclick="
+                          respondToRequest(
+                            '${g.id}',
+                            '${r.uid}',
+                            '${escapeAttribute(r.email)}',
+                            false
+                          )
+                        ">
                         Reject
                       </button>
 
                     </span>
+
                   </div>`;
               }
 
@@ -2517,18 +2663,22 @@
                     ? "public"
                     : "private"
                 }">
+
                 ${
                   g.isPublic
                     ? "🌍 PUBLIC"
                     : "🔒 PRIVATE"
                 }
+
               </span>
 
               ${
                 isOwner
-                  ? `<span class="tag owner-tag">
+                  ? `
+                    <span class="tag owner-tag">
                       👑 OWNER
-                    </span>`
+                    </span>
+                  `
                   : ""
               }
 
@@ -2544,11 +2694,9 @@
               </p>
 
               <p>
-                ${
-                  g.members
-                    ? g.members.length
-                    : 0
-                }
+                ${g.members
+                  ? g.members.length
+                  : 0}
                 members
               </p>
 
@@ -2556,11 +2704,13 @@
 
               <button
                 class="group-btn"
-                onclick="openGroupPage('${escapeAttribute(g.id)}')">
+                onclick="openGroupPage('${g.id}')">
                 Open Group
               </button>`;
 
-            container.appendChild(card);
+            container.appendChild(
+              card
+            );
           }
         }
 
@@ -2611,7 +2761,9 @@
                 arrayUnion(email),
 
               pendingJoinRequests:
-                arrayRemove(reqObj)
+                arrayRemove(
+                  reqObj
+                )
             }
           );
 
@@ -2625,7 +2777,9 @@
             ),
             {
               pendingJoinRequests:
-                arrayRemove(reqObj)
+                arrayRemove(
+                  reqObj
+                )
             }
           );
         }
@@ -2652,9 +2806,7 @@
       hideAllPages();
 
       document
-        .getElementById(
-          "vaultPage"
-        )
+        .getElementById("vaultPage")
         .classList
         .remove("hidden");
 
@@ -2662,7 +2814,8 @@
         .getElementById(
           "vaultUploadStatus"
         )
-        .innerText = "";
+        .innerText =
+        "";
 
       loadVaultFiles();
     };
@@ -2698,7 +2851,8 @@
       const file =
         event.target.files[0];
 
-      event.target.value = "";
+      event.target.value =
+        "";
 
       if (
         !file ||
@@ -2775,12 +2929,12 @@
 
         loadVaultFiles();
 
-        setTimeout(
-          () => {
-            status.innerText = "";
-          },
-          1500
-        );
+        setTimeout(() => {
+
+          status.innerText =
+            "";
+
+        }, 1500);
 
       } catch (error) {
 
@@ -2790,6 +2944,8 @@
         status.innerText =
           "Upload failed: " +
           error.message;
+
+        console.error(error);
       }
     };
 
@@ -2827,9 +2983,11 @@
       const snapshot =
         await getDocs(q);
 
-      myVaultFiles = [];
+      myVaultFiles =
+        [];
 
-      container.innerHTML = "";
+      container.innerHTML =
+        "";
 
       if (snapshot.empty) {
 
@@ -2845,8 +3003,7 @@
           d.data();
 
         myVaultFiles.push({
-          id:
-            d.id,
+          id: d.id,
           ...data
         });
 
@@ -2858,17 +3015,20 @@
 
         const iconHtml =
           isImage
+
             ? `<img
                 src="${data.fileData}"
                 alt="file">`
-            : "📄";
+
+            : `📄`;
 
         const sizeKB =
           data.fileSize
+
             ? Math.round(
-                data.fileSize /
-                1024
+                data.fileSize / 1024
               )
+
             : "?";
 
         const div =
@@ -2912,7 +3072,7 @@
 
           <button
             class="vault-delete-btn"
-            onclick="openDeleteVaultModal('${escapeAttribute(d.id)}')">
+            onclick="openDeleteVaultModal('${d.id}')">
             Delete
           </button>`;
 
@@ -2921,7 +3081,7 @@
         );
       });
 
-    } catch(err) {
+    } catch (err) {
 
       container.innerHTML =
         `<p style="color:red">
@@ -2998,7 +3158,7 @@
 
 
   /* =========================
-     VAULT PICKER
+     VAULT TO CHAT
   ========================= */
 
   window.openVaultPicker =
@@ -3038,7 +3198,8 @@
         const snapshot =
           await getDocs(q);
 
-        container.innerHTML = "";
+        container.innerHTML =
+          "";
 
         if (snapshot.empty) {
 
@@ -3048,10 +3209,21 @@
           return;
         }
 
+        /*
+         * Keep picker files in local cache too.
+         */
+        myVaultFiles =
+          [];
+
         snapshot.forEach(d => {
 
           const data =
             d.data();
+
+          myVaultFiles.push({
+            id: d.id,
+            ...data
+          });
 
           const isImage =
             data.fileType &&
@@ -3061,10 +3233,12 @@
 
           const iconHtml =
             isImage
+
               ? `<img
                   src="${data.fileData}"
                   alt="file">`
-              : "📄";
+
+              : `📄`;
 
           const div =
             document.createElement(
@@ -3091,7 +3265,7 @@
 
             <button
               class="vault-send-btn"
-              onclick="sendVaultFileToChat('${escapeAttribute(d.id)}')">
+              onclick="sendVaultFileToChat('${d.id}')">
               Send
             </button>`;
 
@@ -3100,7 +3274,7 @@
           );
         });
 
-      } catch(err) {
+      } catch (err) {
 
         container.innerHTML =
           "Error loading vault.";
@@ -3121,7 +3295,9 @@
 
 
   window.sendVaultFileToChat =
-    async function(vaultFileId) {
+    async function(
+      vaultFileId
+    ) {
 
       if (
         !currentGroupId ||
@@ -3139,52 +3315,9 @@
 
       if (!file) {
 
-        try {
-
-          const snap =
-            await getDoc(
-              doc(
-                db,
-                "users",
-                currentUser.uid,
-                "vault",
-                vaultFileId
-              )
-            );
-
-          if (!snap.exists()) {
-
-            return alert(
-              "File not found."
-            );
-          }
-
-          const data =
-            snap.data();
-
-          myVaultFiles.push({
-            id:
-              snap.id,
-            ...data
-          });
-
-        } catch (e) {
-
-          return alert(
-            "File not found."
-          );
-        }
-      }
-
-      const finalFile =
-        myVaultFiles.find(
-          f =>
-            f.id ===
-            vaultFileId
+        return alert(
+          "File not found."
         );
-
-      if (!finalFile) {
-        return;
       }
 
       try {
@@ -3198,16 +3331,16 @@
           ),
           {
             text:
-              `Shared a file from Vault: ${finalFile.fileName}`,
+              `Shared a file from Vault: ${file.fileName}`,
 
             fileData:
-              finalFile.fileData,
+              file.fileData,
 
             fileName:
-              finalFile.fileName,
+              file.fileName,
 
             fileType:
-              finalFile.fileType,
+              file.fileType,
 
             senderId:
               currentUser.uid,
@@ -3225,7 +3358,7 @@
 
         closeVaultPicker();
 
-      } catch(err) {
+      } catch (err) {
 
         alert(
           "Failed to send file: " +
@@ -3267,7 +3400,8 @@
         .getElementById(
           "chatMessages"
         )
-        .innerHTML = "";
+        .innerHTML =
+        "";
 
       try {
 
@@ -3295,9 +3429,7 @@
           groupSnap.data();
 
         if (
-          !Array.isArray(
-            data.members
-          ) ||
+          !Array.isArray(data.members) ||
           !data.members.includes(
             currentUser.uid
           )
@@ -3352,15 +3484,14 @@
             "groupPageMembers"
           );
 
-        membersContainer.innerHTML = "";
+        membersContainer.innerHTML =
+          "";
 
         const memberIds =
-          data.members ||
-          [];
+          data.members || [];
 
         const memberEmails =
-          data.memberEmails ||
-          [];
+          data.memberEmails || [];
 
         for (
           let i = 0;
@@ -3391,7 +3522,9 @@
 
           chip.innerText =
             uid === data.ownerId
+
               ? name + " 👑"
+
               : name;
 
           membersContainer
@@ -3417,15 +3550,19 @@
 
 
   /* =========================
-     REAL-TIME CHAT
+     REAL TIME CHAT
   ========================= */
 
-  function listenToChat(groupId) {
+  function listenToChat(
+    groupId
+  ) {
 
     if (chatUnsubscribe) {
 
       chatUnsubscribe();
-      chatUnsubscribe = null;
+
+      chatUnsubscribe =
+        null;
     }
 
     const q =
@@ -3452,7 +3589,8 @@
               "chatMessages"
             );
 
-          container.innerHTML = "";
+          container.innerHTML =
+            "";
 
           let lastSenderId =
             null;
@@ -3462,15 +3600,22 @@
             const msg =
               d.data();
 
+            const messageId =
+              d.id;
+
             const mine =
               msg.senderId ===
               currentUser.uid;
 
             const senderName =
               msg.senderName ||
+
               (
                 msg.senderEmail
-                  ? msg.senderEmail.split("@")[0]
+
+                  ? msg.senderEmail
+                      .split("@")[0]
+
                   : "Unknown"
               );
 
@@ -3510,9 +3655,7 @@
                     target="_blank"
                     class="chat-file-attachment">
                     📄
-                    ${escapeHTML(
-                      msg.fileName
-                    )}
+                    ${escapeHTML(msg.fileName)}
                   </a>`;
               }
             }
@@ -3532,33 +3675,21 @@
 
             const avatarHtml =
               mine
+
                 ? ""
+
                 : `<div
                     class="msg-avatar"
-                    style="background:${getAvatarColor(
-                      msg.senderId ||
-                      "x"
-                    )}">
+                    style="
+                      background:${getAvatarColor(
+                        msg.senderId ||
+                        "x"
+                      )};
+                    ">
                     ${getInitial(
                       senderName
                     )}
                   </div>`;
-
-            /*
-             * IMPORTANT:
-             * Delete button is created ONLY
-             * when msg.senderId === currentUser.uid.
-             */
-            const deleteButtonHtml =
-              mine
-                ? `<div class="message-actions">
-                    <button
-                      class="message-delete-btn"
-                      onclick="openDeleteMessageModal('${escapeAttribute(d.id)}')">
-                      Delete
-                    </button>
-                  </div>`
-                : "";
 
             row.innerHTML =
               `${avatarHtml}
@@ -3568,15 +3699,20 @@
                   mine
                     ? "mine"
                     : "other"
-                }">
+                }"
+                data-message-id="${messageId}"
+                data-sender-id="${msg.senderId || ""}">
 
                 ${
                   showSenderLabel
-                    ? `<div class="message-sender">
+
+                    ? `<div
+                        class="message-sender">
                         ${escapeHTML(
                           senderName
                         )}
                       </div>`
+
                     : ""
                 }
 
@@ -3600,32 +3736,349 @@
                   )}
                 </div>
 
-                ${deleteButtonHtml}
-
               </div>`;
 
             container.appendChild(
               row
             );
+
+            /*
+             * IMPORTANT:
+             * Long press is attached ONLY
+             * to the current user's message.
+             */
+            if (mine) {
+
+              const messageElement =
+                row.querySelector(
+                  ".message"
+                );
+
+              setupLongPress(
+                messageElement,
+                messageId,
+                msg
+              );
+            }
+
           });
 
           container.scrollTop =
             container.scrollHeight;
-        },
-
-        error => {
-
-          console.error(
-            "Chat listener error:",
-            error
-          );
         }
       );
   }
 
 
   /* =========================
-     SEND MESSAGE
+     LONG PRESS DELETE
+  ========================= */
+
+  function setupLongPress(
+    element,
+    messageId,
+    msg
+  ) {
+
+    let localTimer =
+      null;
+
+    let localTriggered =
+      false;
+
+    const startPress =
+      function(event) {
+
+        /*
+         * Only primary touch/mouse.
+         */
+        if (
+          event.type === "mousedown" &&
+          event.button !== 0
+        ) {
+          return;
+        }
+
+        localTriggered =
+          false;
+
+        element.classList
+          .add(
+            "long-pressing"
+          );
+
+        localTimer =
+          setTimeout(() => {
+
+            localTriggered =
+              true;
+
+            element.classList
+              .remove(
+                "long-pressing"
+              );
+
+            openMessageDeleteMenu(
+              messageId,
+              msg
+            );
+
+          }, 650);
+      };
+
+
+    const cancelPress =
+      function() {
+
+        if (localTimer) {
+
+          clearTimeout(
+            localTimer
+          );
+
+          localTimer =
+            null;
+        }
+
+        element.classList
+          .remove(
+            "long-pressing"
+          );
+      };
+
+
+    element.addEventListener(
+      "touchstart",
+      startPress,
+      {
+        passive: true
+      }
+    );
+
+    element.addEventListener(
+      "touchend",
+      cancelPress
+    );
+
+    element.addEventListener(
+      "touchcancel",
+      cancelPress
+    );
+
+    element.addEventListener(
+      "touchmove",
+      cancelPress
+    );
+
+    element.addEventListener(
+      "mousedown",
+      startPress
+    );
+
+    element.addEventListener(
+      "mouseup",
+      cancelPress
+    );
+
+    element.addEventListener(
+      "mouseleave",
+      cancelPress
+    );
+
+    /*
+     * Desktop right-click also opens
+     * the same menu for own messages.
+     */
+    element.addEventListener(
+      "contextmenu",
+      function(event) {
+
+        event.preventDefault();
+
+        openMessageDeleteMenu(
+          messageId,
+          msg
+        );
+      }
+    );
+  }
+
+
+  /* =========================
+     MESSAGE DELETE MENU
+  ========================= */
+
+  function openMessageDeleteMenu(
+    messageId,
+    msg
+  ) {
+
+    if (
+      !currentUser ||
+      !currentGroupId
+    ) {
+      return;
+    }
+
+    /*
+     * Extra client-side check.
+     * Firestore Rules remain the real security.
+     */
+    if (
+      msg.senderId !==
+      currentUser.uid
+    ) {
+      return;
+    }
+
+    messageToDelete = {
+      id:
+        messageId,
+
+      senderId:
+        msg.senderId
+    };
+
+    document
+      .getElementById(
+        "deleteMessageModal"
+      )
+      .classList
+      .remove("hidden");
+  }
+
+
+  window.closeDeleteMessageModal =
+    function() {
+
+      document
+        .getElementById(
+          "deleteMessageModal"
+        )
+        .classList
+        .add("hidden");
+    };
+
+
+  window.openDeleteMessageConfirm =
+    function() {
+
+      if (!messageToDelete) {
+        return;
+      }
+
+      document
+        .getElementById(
+          "deleteMessageModal"
+        )
+        .classList
+        .add("hidden");
+
+      document
+        .getElementById(
+          "confirmDeleteMessageModal"
+        )
+        .classList
+        .remove("hidden");
+    };
+
+
+  window.closeConfirmDeleteMessageModal =
+    function() {
+
+      document
+        .getElementById(
+          "confirmDeleteMessageModal"
+        )
+        .classList
+        .add("hidden");
+
+      messageToDelete =
+        null;
+    };
+
+
+  window.confirmDeleteMessage =
+    async function() {
+
+      if (
+        !messageToDelete ||
+        !currentUser ||
+        !currentGroupId
+      ) {
+        return;
+      }
+
+      /*
+       * Client-side safety check.
+       */
+      if (
+        messageToDelete.senderId !==
+        currentUser.uid
+      ) {
+
+        alert(
+          "You can only delete your own messages."
+        );
+
+        closeConfirmDeleteMessageModal();
+
+        return;
+      }
+
+      const btn =
+        document.getElementById(
+          "confirmDeleteMessageBtn"
+        );
+
+      btn.disabled =
+        true;
+
+      btn.innerText =
+        "Deleting...";
+
+      try {
+
+        await deleteDoc(
+          doc(
+            db,
+            "groups",
+            currentGroupId,
+            "messages",
+            messageToDelete.id
+          )
+        );
+
+        /*
+         * onSnapshot automatically
+         * removes the message from screen.
+         */
+
+        closeConfirmDeleteMessageModal();
+
+      } catch (error) {
+
+        console.error(
+          "Message delete error:",
+          error
+        );
+
+        alert(
+          "Could not delete message: " +
+          error.message
+        );
+
+        btn.disabled =
+          false;
+
+        btn.innerText =
+          "Delete";
+      }
+    };
+
+
+  /* =========================
+     SEND CHAT MESSAGE
   ========================= */
 
   window.sendChatMessage =
@@ -3647,7 +4100,8 @@
         return;
       }
 
-      input.value = "";
+      input.value =
+        "";
 
       try {
 
@@ -3684,152 +4138,6 @@
 
         input.value =
           text;
-      }
-    };
-
-
-  /* =========================
-     DELETE OWN MESSAGE
-  ========================= */
-
-  window.openDeleteMessageModal =
-    function(messageId) {
-
-      if (
-        !messageId ||
-        !currentUser
-      ) {
-        return;
-      }
-
-      messageToDelete =
-        messageId;
-
-      document
-        .getElementById(
-          "deleteMessageModal"
-        )
-        .classList
-        .remove("hidden");
-    };
-
-
-  window.closeDeleteMessageModal =
-    function() {
-
-      messageToDelete =
-        null;
-
-      document
-        .getElementById(
-          "deleteMessageModal"
-        )
-        .classList
-        .add("hidden");
-    };
-
-
-  window.confirmDeleteMessage =
-    async function() {
-
-      if (
-        !messageToDelete ||
-        !currentUser ||
-        !currentGroupId
-      ) {
-        return;
-      }
-
-      const messageId =
-        messageToDelete;
-
-      const btn =
-        document.querySelector(
-          "#deleteMessageModal .danger-btn"
-        );
-
-      btn.disabled = true;
-      btn.innerText =
-        "Deleting...";
-
-      try {
-
-        /*
-         * First check the message.
-         * This prevents the client from blindly
-         * deleting an arbitrary message.
-         */
-        const messageRef =
-          doc(
-            db,
-            "groups",
-            currentGroupId,
-            "messages",
-            messageId
-          );
-
-        const messageSnap =
-          await getDoc(
-            messageRef
-          );
-
-        if (!messageSnap.exists()) {
-
-          closeDeleteMessageModal();
-
-          alert(
-            "Message no longer exists."
-          );
-
-          return;
-        }
-
-        const messageData =
-          messageSnap.data();
-
-        /*
-         * ONLY THE ORIGINAL SENDER
-         * CAN DELETE THE MESSAGE.
-         */
-        if (
-          messageData.senderId !==
-          currentUser.uid
-        ) {
-
-          closeDeleteMessageModal();
-
-          alert(
-            "You can only delete your own messages."
-          );
-
-          return;
-        }
-
-        await deleteDoc(
-          messageRef
-        );
-
-        closeDeleteMessageModal();
-
-      } catch (error) {
-
-        console.error(
-          "Delete message error:",
-          error
-        );
-
-        alert(
-          "Could not delete message: " +
-          error.message
-        );
-
-      } finally {
-
-        btn.disabled =
-          false;
-
-        btn.innerText =
-          "Delete Message";
       }
     };
 
@@ -3916,7 +4224,9 @@
           "#leaveModal .danger-btn"
         );
 
-      btn.disabled = true;
+      btn.disabled =
+        true;
+
       btn.innerText =
         "Leaving...";
 
@@ -3942,6 +4252,7 @@
         );
 
         closeLeaveModal();
+
         closeGroupPage();
 
         await showMyGroups();
@@ -3992,7 +4303,9 @@
           "#deleteModal .danger-btn"
         );
 
-      btn.disabled = true;
+      btn.disabled =
+        true;
+
       btn.innerText =
         "Deleting...";
 
@@ -4027,6 +4340,7 @@
         );
 
         closeDeleteModal();
+
         closeGroupPage();
 
         alert(
@@ -4051,17 +4365,15 @@
     };
 
 
-  /* =========================
-     CLOSE GROUP
-  ========================= */
-
   window.closeGroupPage =
     function() {
 
       if (chatUnsubscribe) {
 
         chatUnsubscribe();
-        chatUnsubscribe = null;
+
+        chatUnsubscribe =
+          null;
       }
 
       currentGroupId =
@@ -4085,9 +4397,7 @@
 
   function escapeHTML(value) {
 
-    return String(
-      value || ""
-    )
+    return String(value || "")
       .replace(
         /&/g,
         "&amp;"
@@ -4113,9 +4423,7 @@
 
   function escapeAttribute(value) {
 
-    return String(
-      value || ""
-    )
+    return String(value || "")
       .replace(
         /\\/g,
         "\\\\"
