@@ -8,7 +8,9 @@
   <meta name="description" content="Venzi - Connect, create groups and chat with your community.">
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html, body {
       margin: 0;
@@ -20,13 +22,17 @@
       color: #111;
     }
 
-    body { min-height: 100vh; }
+    body {
+      min-height: 100vh;
+    }
 
     button, input, textarea {
       font-family: Arial, sans-serif;
     }
 
-    button { cursor: pointer; }
+    button {
+      cursor: pointer;
+    }
 
     .hidden {
       display: none !important;
@@ -121,7 +127,7 @@
       margin: 8px 0 12px;
     }
 
-    /* APP LAYOUT */
+    /* APP */
     .app {
       min-height: 100vh;
       background: #fafafa;
@@ -145,7 +151,6 @@
       font-weight: bold;
     }
 
-    /* PROFILE BUTTON - TOP RIGHT */
     .profile-top-btn {
       width: 38px;
       height: 38px;
@@ -183,7 +188,7 @@
       margin: 0 0 20px;
     }
 
-    /* CARDS & FORMS */
+    /* CARDS */
     .menu-card,
     .form-card,
     .group-card {
@@ -516,10 +521,6 @@
       flex-shrink: 0;
     }
 
-    .msg-avatar.spacer {
-      visibility: hidden;
-    }
-
     .message {
       display: flex;
       flex-direction: column;
@@ -558,11 +559,32 @@
     .message-time {
       font-size: 10px;
       color: #b0b0b0;
-      margin: 3px 4px 8px;
+      margin: 3px 4px 2px;
     }
 
     .message.mine .message-time {
       text-align: right;
+    }
+
+    /* NEW: DELETE MESSAGE BUTTON */
+    .message-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin: 0 4px 7px;
+    }
+
+    .message-delete-btn {
+      border: 0;
+      background: transparent;
+      color: #d93025;
+      font-size: 10px;
+      padding: 2px 4px;
+      cursor: pointer;
+    }
+
+    .message-delete-btn:hover {
+      text-decoration: underline;
     }
 
     .chat-img-attachment {
@@ -711,29 +733,60 @@
 <!-- LOGIN / SIGNUP -->
 <div id="authPage" class="auth-page">
   <div class="auth-card">
-    <img src="1787225529289.png" class="logo" alt="Venzi" onerror="this.style.display='none'">
+
+    <img
+      src="1787225529289.png"
+      class="logo"
+      alt="Venzi"
+      onerror="this.style.display='none'">
+
     <h1>Venzi</h1>
-    <p class="subtitle">Connect with your groups</p>
+
+    <p class="subtitle">
+      Connect with your groups
+    </p>
 
     <div id="authStatus" class="status"></div>
 
-    <input id="emailInput" class="input" type="email" placeholder="Email">
-    <input id="passwordInput" class="input" type="password" placeholder="Password">
-    <input id="nicknameInput" class="input" type="text" placeholder="Nickname (shown to others instead of email)">
+    <input
+      id="emailInput"
+      class="input"
+      type="email"
+      placeholder="Email">
 
-    <button class="primary-btn" onclick="logIn()">Log In</button>
-    <button class="secondary-btn" onclick="signUp()">Create New Account</button>
+    <input
+      id="passwordInput"
+      class="input"
+      type="password"
+      placeholder="Password">
+
+    <input
+      id="nicknameInput"
+      class="input"
+      type="text"
+      placeholder="Nickname (shown to others instead of email)">
+
+    <button class="primary-btn" onclick="logIn()">
+      Log In
+    </button>
+
+    <button class="secondary-btn" onclick="signUp()">
+      Create New Account
+    </button>
+
   </div>
 </div>
+
 
 <!-- MAIN APP -->
 <div id="app" class="app hidden">
 
-  <!-- TOP BAR -->
   <header class="topbar">
-    <div class="topbar-title">Venzi</div>
 
-    <!-- PROFILE MOVED TO TOP RIGHT -->
+    <div class="topbar-title">
+      Venzi
+    </div>
+
     <button
       id="profileTopButton"
       class="profile-top-btn"
@@ -742,18 +795,28 @@
       title="My Profile">
       👤
     </button>
+
   </header>
+
 
   <main class="content">
 
     <!-- HOME -->
     <section id="homePage">
-      <h1 class="page-title">Home</h1>
-      <p class="page-subtitle">Manage your groups and conversations.</p>
+
+      <h1 class="page-title">
+        Home
+      </h1>
+
+      <p class="page-subtitle">
+        Manage your groups and conversations.
+      </p>
 
       <div class="menu-card">
 
-        <div class="welcome">Welcome 👋</div>
+        <div class="welcome">
+          Welcome 👋
+        </div>
 
         <div
           id="welcomeNickname"
@@ -761,24 +824,34 @@
           style="font-weight:bold; color:#111; margin-bottom:2px;">
         </div>
 
-        <div id="welcomeEmail" class="welcome-email"></div>
+        <div
+          id="welcomeEmail"
+          class="welcome-email">
+        </div>
 
-        <!-- ONLY CREATE GROUP + LOGOUT ON HOME -->
-        <button class="primary-btn" onclick="showCreateGroup()">
+        <button
+          class="primary-btn"
+          onclick="showCreateGroup()">
           ＋ Create Group
         </button>
 
-        <button class="secondary-btn" onclick="logOut()">
+        <button
+          class="secondary-btn"
+          onclick="logOut()">
           Logout
         </button>
 
       </div>
     </section>
 
-    <!-- MY PROFILE -->
+
+    <!-- PROFILE -->
     <section id="profilePage" class="hidden">
 
-      <h1 class="page-title">My Profile</h1>
+      <h1 class="page-title">
+        My Profile
+      </h1>
+
       <p class="page-subtitle">
         Your nickname is shown to others instead of your email.
       </p>
@@ -787,57 +860,82 @@
 
         <div id="profileStatus" class="status"></div>
 
-        <label class="label">Nickname</label>
+        <label class="label">
+          Nickname
+        </label>
+
         <input
           id="profileNicknameInput"
           class="input"
           type="text"
           placeholder="Your nickname">
 
-        <label class="label">Email (only visible to you)</label>
+        <label class="label">
+          Email (only visible to you)
+        </label>
+
         <input
           id="profileEmailDisplay"
           class="input"
           type="text"
           disabled>
 
-        <button class="primary-btn" onclick="saveProfile()">
+        <button
+          class="primary-btn"
+          onclick="saveProfile()">
           Save
         </button>
 
-        <button class="secondary-btn" onclick="goHome()">
+        <button
+          class="secondary-btn"
+          onclick="goHome()">
           Back
         </button>
 
       </div>
     </section>
 
+
     <!-- CREATE GROUP -->
     <section id="createPage" class="hidden">
 
-      <h1 class="page-title">Create Group</h1>
-      <p class="page-subtitle">Create your own community.</p>
+      <h1 class="page-title">
+        Create Group
+      </h1>
+
+      <p class="page-subtitle">
+        Create your own community.
+      </p>
 
       <div class="form-card">
 
         <div id="createStatus" class="status"></div>
 
-        <label class="label">Group Name</label>
+        <label class="label">
+          Group Name
+        </label>
+
         <input
           id="groupNameInput"
           class="input"
           type="text"
           placeholder="e.g. Study Buddies">
 
-        <label class="label">Description</label>
+        <label class="label">
+          Description
+        </label>
+
         <textarea
           id="groupDescInput"
           class="input"
           placeholder="What is this group about?"></textarea>
 
-        <label class="label">Visibility</label>
+        <label class="label">
+          Visibility
+        </label>
 
         <div class="visibility">
+
           <label>
             <input
               type="radio"
@@ -854,9 +952,12 @@
               value="private">
             🔒 Private
           </label>
+
         </div>
 
-        <label class="label">Invite members (optional)</label>
+        <label class="label">
+          Invite members (optional)
+        </label>
 
         <input
           id="groupInvitesInput"
@@ -864,22 +965,32 @@
           type="text"
           placeholder="friend@email.com">
 
-        <button class="primary-btn" onclick="submitCreateGroup()">
+        <button
+          class="primary-btn"
+          onclick="submitCreateGroup()">
           Create Group
         </button>
 
-        <button class="secondary-btn" onclick="goHome()">
+        <button
+          class="secondary-btn"
+          onclick="goHome()">
           Cancel
         </button>
 
       </div>
     </section>
 
+
     <!-- BROWSE GROUPS -->
     <section id="browsePage" class="hidden">
 
-      <h1 class="page-title">Explore</h1>
-      <p class="page-subtitle">Find communities to join.</p>
+      <h1 class="page-title">
+        Explore
+      </h1>
+
+      <p class="page-subtitle">
+        Find communities to join.
+      </p>
 
       <input
         id="searchGroupInput"
@@ -892,20 +1003,29 @@
 
     </section>
 
+
     <!-- MY GROUPS -->
     <section id="myGroupsPage" class="hidden">
 
-      <h1 class="page-title">My Groups</h1>
-      <p class="page-subtitle">Groups you are a member of.</p>
+      <h1 class="page-title">
+        My Groups
+      </h1>
+
+      <p class="page-subtitle">
+        Groups you are a member of.
+      </p>
 
       <div id="myGroupsContainer"></div>
 
     </section>
 
-    <!-- MY VAULT -->
+
+    <!-- VAULT -->
     <section id="vaultPage" class="hidden">
 
-      <h1 class="page-title">My Vault</h1>
+      <h1 class="page-title">
+        My Vault
+      </h1>
 
       <p class="page-subtitle">
         Your private folder. Only you can see these.
@@ -925,10 +1045,13 @@
       </label>
 
       <div class="vault-hint">
-        Max size ~700KB per file (documents, PDFs, small images)
+        Max size ~700KB per file
       </div>
 
-      <div id="vaultUploadStatus" class="status"></div>
+      <div
+        id="vaultUploadStatus"
+        class="status">
+      </div>
 
       <div id="vaultFilesContainer"></div>
 
@@ -936,25 +1059,34 @@
 
   </main>
 
-  <!-- BOTTOM NAVIGATION -->
+
+  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
 
-    <button class="nav-btn" onclick="goHome()">
+    <button
+      class="nav-btn"
+      onclick="goHome()">
       <span class="nav-icon">⌂</span>
       Home
     </button>
 
-    <button class="nav-btn" onclick="showJoinGroup()">
+    <button
+      class="nav-btn"
+      onclick="showJoinGroup()">
       <span class="nav-icon">🔍</span>
       Explore
     </button>
 
-    <button class="nav-btn" onclick="showMyGroups()">
+    <button
+      class="nav-btn"
+      onclick="showMyGroups()">
       <span class="nav-icon">👥</span>
       Groups
     </button>
 
-    <button class="nav-btn" onclick="showVault()">
+    <button
+      class="nav-btn"
+      onclick="showVault()">
       <span class="nav-icon">📁</span>
       Vault
     </button>
@@ -963,26 +1095,37 @@
 
 </div>
 
+
 <!-- FULL SCREEN GROUP CHAT -->
-<div id="groupPage" class="group-page hidden">
+<div
+  id="groupPage"
+  class="group-page hidden">
 
   <header class="chat-header">
 
-    <button class="back-icon" onclick="closeGroupPage()">
+    <button
+      class="back-icon"
+      onclick="closeGroupPage()">
       ←
     </button>
 
-    <div id="groupPageAvatar" class="chat-header-avatar">
+    <div
+      id="groupPageAvatar"
+      class="chat-header-avatar">
       G
     </div>
 
     <div class="chat-header-info">
 
-      <div id="groupPageName" class="chat-header-name">
+      <div
+        id="groupPageName"
+        class="chat-header-name">
         Group
       </div>
 
-      <div id="groupPageMembersCount" class="chat-header-members">
+      <div
+        id="groupPageMembersCount"
+        class="chat-header-members">
         0 members
       </div>
 
@@ -997,13 +1140,21 @@
 
   </header>
 
-  <div id="groupPageMembers" class="members-area"></div>
+  <div
+    id="groupPageMembers"
+    class="members-area">
+  </div>
 
-  <div id="chatMessages" class="chat-messages"></div>
+  <div
+    id="chatMessages"
+    class="chat-messages">
+  </div>
 
   <div class="chat-input-area">
 
-    <button class="attach-btn" onclick="openVaultPicker()">
+    <button
+      class="attach-btn"
+      onclick="openVaultPicker()">
       📎
     </button>
 
@@ -1014,7 +1165,9 @@
       placeholder="Message..."
       onkeydown="if(event.key === 'Enter') sendChatMessage()">
 
-    <button class="send-btn" onclick="sendChatMessage()">
+    <button
+      class="send-btn"
+      onclick="sendChatMessage()">
       ➤
     </button>
 
@@ -1022,60 +1175,81 @@
 
 </div>
 
+
 <!-- DELETE GROUP MODAL -->
-<div id="deleteModal" class="modal hidden">
+<div
+  id="deleteModal"
+  class="modal hidden">
 
   <div class="modal-card">
 
-    <h3>Delete Group?</h3>
+    <h3>
+      Delete Group?
+    </h3>
 
     <p>
       This will permanently delete the group and all of its chat messages.
       This action cannot be undone.
     </p>
 
-    <button class="danger-btn" onclick="confirmDeleteGroup()">
+    <button
+      class="danger-btn"
+      onclick="confirmDeleteGroup()">
       Delete Group
     </button>
 
-    <button class="secondary-btn" onclick="closeDeleteModal()">
+    <button
+      class="secondary-btn"
+      onclick="closeDeleteModal()">
       Cancel
     </button>
 
   </div>
-
 </div>
 
+
 <!-- LEAVE GROUP MODAL -->
-<div id="leaveModal" class="modal hidden">
+<div
+  id="leaveModal"
+  class="modal hidden">
 
   <div class="modal-card">
 
-    <h3>Leave Group?</h3>
+    <h3>
+      Leave Group?
+    </h3>
 
     <p>
       You will be removed from this group and won't be able to see its chat anymore.
-      You can rejoin later if it's public, or request to join again if private.
+      You can rejoin later if it's public.
     </p>
 
-    <button class="danger-btn" onclick="confirmLeaveGroup()">
+    <button
+      class="danger-btn"
+      onclick="confirmLeaveGroup()">
       Leave Group
     </button>
 
-    <button class="secondary-btn" onclick="closeLeaveModal()">
+    <button
+      class="secondary-btn"
+      onclick="closeLeaveModal()">
       Cancel
     </button>
 
   </div>
-
 </div>
 
+
 <!-- DELETE VAULT FILE MODAL -->
-<div id="deleteVaultModal" class="modal hidden">
+<div
+  id="deleteVaultModal"
+  class="modal hidden">
 
   <div class="modal-card">
 
-    <h3>Delete File?</h3>
+    <h3>
+      Delete File?
+    </h3>
 
     <p>
       This will permanently delete this file from your Vault.
@@ -1095,15 +1269,50 @@
     </button>
 
   </div>
-
 </div>
 
-<!-- VAULT PICKER MODAL -->
-<div id="vaultPickerModal" class="modal hidden">
+
+<!-- DELETE MESSAGE MODAL -->
+<div
+  id="deleteMessageModal"
+  class="modal hidden">
 
   <div class="modal-card">
 
-    <h3>Select from Vault</h3>
+    <h3>
+      Delete Message?
+    </h3>
+
+    <p>
+      This message will be permanently deleted for everyone in this group.
+    </p>
+
+    <button
+      class="danger-btn"
+      onclick="confirmDeleteMessage()">
+      Delete Message
+    </button>
+
+    <button
+      class="secondary-btn"
+      onclick="closeDeleteMessageModal()">
+      Cancel
+    </button>
+
+  </div>
+</div>
+
+
+<!-- VAULT PICKER -->
+<div
+  id="vaultPickerModal"
+  class="modal hidden">
+
+  <div class="modal-card">
+
+    <h3>
+      Select from Vault
+    </h3>
 
     <p>
       Choose a file to send to this group.
@@ -1121,8 +1330,8 @@
     </button>
 
   </div>
-
 </div>
+
 
 <script type="module">
 
@@ -1196,6 +1405,7 @@
   let chatUnsubscribe = null;
   let myVaultFiles = [];
   let vaultFileToDelete = null;
+  let messageToDelete = null;
   let myNickname = "";
 
   const profileCache = {};
@@ -1204,7 +1414,7 @@
 
 
   /* =========================
-     AVATAR HELPERS
+     AVATAR
   ========================= */
 
   const AVATAR_COLORS = [
@@ -1219,81 +1429,127 @@
     "#5b51d8"
   ];
 
+
   function getAvatarColor(uid) {
 
     let hash = 0;
 
     for (let i = 0; i < uid.length; i++) {
-      hash = uid.charCodeAt(i) + ((hash << 5) - hash);
+
+      hash =
+        uid.charCodeAt(i) +
+        ((hash << 5) - hash);
+
     }
 
     return AVATAR_COLORS[
-      Math.abs(hash) % AVATAR_COLORS.length
+      Math.abs(hash) %
+      AVATAR_COLORS.length
     ];
   }
 
+
   function getInitial(name) {
-    return (name || "?").trim().charAt(0).toUpperCase();
+
+    return (
+      name ||
+      "?"
+    )
+      .trim()
+      .charAt(0)
+      .toUpperCase();
   }
+
 
   function formatMsgTime(ts) {
 
-    if (!ts || !ts.toDate) return "";
+    if (!ts || !ts.toDate) {
+      return "";
+    }
 
     const d = ts.toDate();
 
     let hours = d.getHours();
 
     const minutes =
-      d.getMinutes().toString().padStart(2, "0");
+      d.getMinutes()
+        .toString()
+        .padStart(2, "0");
 
-    const ampm = hours >= 12 ? "PM" : "AM";
+    const ampm =
+      hours >= 12
+        ? "PM"
+        : "AM";
 
-    hours = hours % 12;
+    hours =
+      hours % 12;
 
-    if (hours === 0) hours = 12;
+    if (hours === 0) {
+      hours = 12;
+    }
 
     return `${hours}:${minutes} ${ampm}`;
   }
 
 
   /* =========================
-     PROFILES / NICKNAMES
+     PROFILES
   ========================= */
 
   async function ensureOwnProfile(user) {
 
     try {
 
-      const ref = doc(db, "profiles", user.uid);
+      const ref =
+        doc(
+          db,
+          "profiles",
+          user.uid
+        );
 
-      const snap = await getDoc(ref);
+      const snap =
+        await getDoc(ref);
 
-      if (snap.exists() && snap.data().nickname) {
+      if (
+        snap.exists() &&
+        snap.data().nickname
+      ) {
 
-        myNickname = snap.data().nickname;
+        myNickname =
+          snap.data().nickname;
 
       } else {
 
-        myNickname = user.email.split("@")[0];
+        myNickname =
+          user.email.split("@")[0];
 
         await setDoc(
           ref,
-          { nickname: myNickname },
-          { merge: true }
+          {
+            nickname:
+              myNickname
+          },
+          {
+            merge: true
+          }
         );
       }
 
     } catch (e) {
 
-      myNickname = user.email.split("@")[0];
+      myNickname =
+        user.email.split("@")[0];
     }
 
-    profileCache[user.uid] = myNickname;
+    profileCache[user.uid] =
+      myNickname;
   }
 
 
-  async function getNickname(uid, fallbackEmail) {
+  async function getNickname(
+    uid,
+    fallbackEmail
+  ) {
 
     if (profileCache[uid]) {
       return profileCache[uid];
@@ -1302,10 +1558,17 @@
     try {
 
       const snap =
-        await getDoc(doc(db, "profiles", uid));
+        await getDoc(
+          doc(
+            db,
+            "profiles",
+            uid
+          )
+        );
 
       const name =
-        snap.exists() && snap.data().nickname
+        snap.exists() &&
+        snap.data().nickname
           ? snap.data().nickname
           : (
               fallbackEmail
@@ -1313,7 +1576,8 @@
                 : "Unknown"
             );
 
-      profileCache[uid] = name;
+      profileCache[uid] =
+        name;
 
       return name;
 
@@ -1326,77 +1590,120 @@
   }
 
 
-  window.showProfile = async function() {
+  window.showProfile =
+    async function() {
 
-    hideAllPages();
+      hideAllPages();
 
-    document
-      .getElementById("profilePage")
-      .classList.remove("hidden");
+      document
+        .getElementById("profilePage")
+        .classList
+        .remove("hidden");
 
-    document.getElementById("profileStatus").innerText = "";
+      document
+        .getElementById("profileStatus")
+        .innerText = "";
 
-    document.getElementById("profileEmailDisplay").value =
-      currentUser.email;
+      document
+        .getElementById("profileEmailDisplay")
+        .value =
+        currentUser.email;
 
-    document.getElementById("profileNicknameInput").value =
-      myNickname;
-  };
-
-
-  window.saveProfile = async function() {
-
-    const status =
-      document.getElementById("profileStatus");
-
-    const newNickname =
       document
         .getElementById("profileNicknameInput")
-        .value
-        .trim();
+        .value =
+        myNickname;
+    };
 
-    if (!newNickname) {
 
-      status.style.color = "#d93025";
-      status.innerText = "Nickname cannot be empty.";
+  window.saveProfile =
+    async function() {
 
-      return;
-    }
+      const status =
+        document.getElementById(
+          "profileStatus"
+        );
 
-    status.style.color = "#777";
-    status.innerText = "Saving...";
+      const newNickname =
+        document
+          .getElementById(
+            "profileNicknameInput"
+          )
+          .value
+          .trim();
 
-    try {
+      if (!newNickname) {
 
-      await setDoc(
-        doc(db, "profiles", currentUser.uid),
-        { nickname: newNickname },
-        { merge: true }
-      );
+        status.style.color =
+          "#d93025";
 
-      myNickname = newNickname;
+        status.innerText =
+          "Nickname cannot be empty.";
 
-      profileCache[currentUser.uid] =
-        newNickname;
+        return;
+      }
 
-      document
-        .getElementById("welcomeNickname")
-        .innerText = newNickname;
+      status.style.color =
+        "#777";
 
-      status.style.color = "#087b2f";
-      status.innerText = "Saved!";
-
-      setTimeout(() => {
-        status.innerText = "";
-      }, 1200);
-
-    } catch (error) {
-
-      status.style.color = "#d93025";
       status.innerText =
-        "Error: " + error.message;
-    }
-  };
+        "Saving...";
+
+      try {
+
+        await setDoc(
+          doc(
+            db,
+            "profiles",
+            currentUser.uid
+          ),
+          {
+            nickname:
+              newNickname
+          },
+          {
+            merge: true
+          }
+        );
+
+        myNickname =
+          newNickname;
+
+        profileCache[
+          currentUser.uid
+        ] =
+          newNickname;
+
+        document
+          .getElementById(
+            "welcomeNickname"
+          )
+          .innerText =
+          newNickname;
+
+        status.style.color =
+          "#087b2f";
+
+        status.innerText =
+          "Saved!";
+
+        setTimeout(
+          () => {
+            status.innerText = "";
+          },
+          1200
+        );
+
+      } catch (error) {
+
+        status.style.color =
+          "#d93025";
+
+        status.innerText =
+          "Error: " +
+          error.message;
+      }
+    };
 
 
   /* =========================
@@ -1405,592 +1712,872 @@
 
   function hideAllPages() {
 
-    document
-      .getElementById("homePage")
-      .classList.add("hidden");
+    [
+      "homePage",
+      "createPage",
+      "browsePage",
+      "myGroupsPage",
+      "vaultPage",
+      "profilePage"
+    ]
+      .forEach(id => {
 
-    document
-      .getElementById("createPage")
-      .classList.add("hidden");
+        document
+          .getElementById(id)
+          .classList
+          .add("hidden");
 
-    document
-      .getElementById("browsePage")
-      .classList.add("hidden");
-
-    document
-      .getElementById("myGroupsPage")
-      .classList.add("hidden");
-
-    document
-      .getElementById("vaultPage")
-      .classList.add("hidden");
-
-    document
-      .getElementById("profilePage")
-      .classList.add("hidden");
+      });
   }
 
 
-  window.goHome = function() {
+  window.goHome =
+    function() {
 
-    hideAllPages();
+      hideAllPages();
 
-    document
-      .getElementById("homePage")
-      .classList.remove("hidden");
-  };
+      document
+        .getElementById("homePage")
+        .classList
+        .remove("hidden");
+    };
 
 
   /* =========================
      AUTH
   ========================= */
 
-  window.signUp = async function() {
+  window.signUp =
+    async function() {
 
-    const email =
-      document.getElementById("emailInput").value.trim();
+      const email =
+        document
+          .getElementById(
+            "emailInput"
+          )
+          .value
+          .trim();
 
-    const password =
-      document.getElementById("passwordInput").value;
+      const password =
+        document
+          .getElementById(
+            "passwordInput"
+          )
+          .value;
 
-    const nickname =
-      document.getElementById("nicknameInput").value.trim();
+      const nickname =
+        document
+          .getElementById(
+            "nicknameInput"
+          )
+          .value
+          .trim();
 
-    const status =
-      document.getElementById("authStatus");
+      const status =
+        document.getElementById(
+          "authStatus"
+        );
 
-    status.style.color = "#d93025";
+      status.style.color =
+        "#d93025";
 
-    if (!email || !password) {
+      if (!email || !password) {
+
+        status.innerText =
+          "Please enter email and password.";
+
+        return;
+      }
+
+      if (password.length < 6) {
+
+        status.innerText =
+          "Password must be at least 6 characters.";
+
+        return;
+      }
+
+      status.style.color =
+        "#777";
 
       status.innerText =
-        "Please enter email and password.";
+        "Creating account...";
 
-      return;
-    }
+      try {
 
-    if (password.length < 6) {
+        const cred =
+          await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+        const chosenNickname =
+          nickname ||
+          email.split("@")[0];
+
+        await setDoc(
+          doc(
+            db,
+            "profiles",
+            cred.user.uid
+          ),
+          {
+            nickname:
+              chosenNickname
+          },
+          {
+            merge: true
+          }
+        );
+
+        status.innerText = "";
+
+      } catch (error) {
+
+        status.style.color =
+          "#d93025";
+
+        status.innerText =
+          error.message;
+      }
+    };
+
+
+  window.logIn =
+    async function() {
+
+      const email =
+        document
+          .getElementById(
+            "emailInput"
+          )
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById(
+            "passwordInput"
+          )
+          .value;
+
+      const status =
+        document.getElementById(
+          "authStatus"
+        );
+
+      if (!email || !password) {
+
+        status.innerText =
+          "Please enter email and password.";
+
+        return;
+      }
+
+      status.style.color =
+        "#777";
 
       status.innerText =
-        "Password must be at least 6 characters.";
+        "Logging in...";
 
-      return;
-    }
+      try {
 
-    status.style.color = "#777";
-    status.innerText = "Creating account...";
-
-    try {
-
-      const cred =
-        await createUserWithEmailAndPassword(
+        await signInWithEmailAndPassword(
           auth,
           email,
           password
         );
 
-      const chosenNickname =
-        nickname || email.split("@")[0];
+        status.innerText = "";
 
-      await setDoc(
-        doc(db, "profiles", cred.user.uid),
-        { nickname: chosenNickname },
-        { merge: true }
-      );
+      } catch (error) {
 
-      status.innerText = "";
+        status.style.color =
+          "#d93025";
 
-    } catch (error) {
-
-      status.style.color = "#d93025";
-      status.innerText = error.message;
-    }
-  };
+        status.innerText =
+          "Incorrect email or password.";
+      }
+    };
 
 
-  window.logIn = async function() {
+  window.logOut =
+    async function() {
 
-    const email =
-      document.getElementById("emailInput").value.trim();
+      if (chatUnsubscribe) {
 
-    const password =
-      document.getElementById("passwordInput").value;
+        chatUnsubscribe();
+        chatUnsubscribe = null;
+      }
 
-    const status =
-      document.getElementById("authStatus");
-
-    if (!email || !password) {
-
-      status.innerText =
-        "Please enter email and password.";
-
-      return;
-    }
-
-    status.style.color = "#777";
-    status.innerText = "Logging in...";
-
-    try {
-
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      status.innerText = "";
-
-    } catch (error) {
-
-      status.style.color = "#d93025";
-      status.innerText =
-        "Incorrect email or password.";
-    }
-  };
-
-
-  window.logOut = async function() {
-
-    if (chatUnsubscribe) {
-
-      chatUnsubscribe();
-      chatUnsubscribe = null;
-    }
-
-    await signOut(auth);
-  };
+      await signOut(auth);
+    };
 
 
   /* =========================
      CREATE GROUP
   ========================= */
 
-  window.showCreateGroup = function() {
+  window.showCreateGroup =
+    function() {
 
-    hideAllPages();
+      hideAllPages();
 
-    document
-      .getElementById("createPage")
-      .classList.remove("hidden");
+      document
+        .getElementById("createPage")
+        .classList
+        .remove("hidden");
 
-    document.getElementById("createStatus").innerText = "";
-  };
+      document
+        .getElementById("createStatus")
+        .innerText = "";
+    };
 
 
-  window.submitCreateGroup = async function() {
+  window.submitCreateGroup =
+    async function() {
 
-    if (!currentUser) return;
+      if (!currentUser) {
+        return;
+      }
 
-    const status =
-      document.getElementById("createStatus");
+      const status =
+        document.getElementById(
+          "createStatus"
+        );
 
-    const name =
-      document.getElementById("groupNameInput")
-        .value.trim();
+      const name =
+        document
+          .getElementById(
+            "groupNameInput"
+          )
+          .value
+          .trim();
 
-    const description =
-      document.getElementById("groupDescInput")
-        .value.trim();
+      const description =
+        document
+          .getElementById(
+            "groupDescInput"
+          )
+          .value
+          .trim();
 
-    const visibility =
-      document.querySelector(
-        'input[name="visibility"]:checked'
-      ).value;
+      const visibility =
+        document
+          .querySelector(
+            'input[name="visibility"]:checked'
+          )
+          .value;
 
-    const invites =
-      document.getElementById("groupInvitesInput")
-        .value.trim();
+      const invites =
+        document
+          .getElementById(
+            "groupInvitesInput"
+          )
+          .value
+          .trim();
 
-    if (!name) {
+      if (!name) {
+
+        status.innerText =
+          "Please enter a group name.";
+
+        return;
+      }
+
+      const invitedEmails =
+        invites
+          ? invites
+              .split(",")
+              .map(e =>
+                e.trim().toLowerCase()
+              )
+              .filter(Boolean)
+          : [];
+
+      status.style.color =
+        "#777";
 
       status.innerText =
-        "Please enter a group name.";
+        "Creating group...";
 
-      return;
-    }
+      try {
 
-    const invitedEmails =
-      invites
-        ? invites
-            .split(",")
-            .map(e => e.trim().toLowerCase())
-            .filter(Boolean)
-        : [];
+        await addDoc(
+          collection(
+            db,
+            "groups"
+          ),
+          {
+            name,
+            description,
+            isPublic:
+              visibility === "public",
+            ownerId:
+              currentUser.uid,
+            ownerEmail:
+              currentUser.email,
+            members:
+              [currentUser.uid],
+            memberEmails:
+              [currentUser.email],
+            invitedEmails,
+            pendingJoinRequests:
+              [],
+            createdAt:
+              serverTimestamp()
+          }
+        );
 
-    status.style.color = "#777";
-    status.innerText = "Creating group...";
+        status.style.color =
+          "#087b2f";
 
-    try {
+        status.innerText =
+          "Group created successfully!";
 
-      await addDoc(
-        collection(db, "groups"),
-        {
-          name,
-          description,
-          isPublic: visibility === "public",
-          ownerId: currentUser.uid,
-          ownerEmail: currentUser.email,
-          members: [currentUser.uid],
-          memberEmails: [currentUser.email],
-          invitedEmails,
-          pendingJoinRequests: [],
-          createdAt: serverTimestamp()
-        }
-      );
+        setTimeout(
+          () => {
 
-      status.style.color = "#087b2f";
-      status.innerText =
-        "Group created successfully!";
+            document
+              .getElementById(
+                "groupNameInput"
+              )
+              .value = "";
 
-      setTimeout(() => {
+            document
+              .getElementById(
+                "groupDescInput"
+              )
+              .value = "";
 
-        document.getElementById("groupNameInput").value = "";
-        document.getElementById("groupDescInput").value = "";
-        document.getElementById("groupInvitesInput").value = "";
+            document
+              .getElementById(
+                "groupInvitesInput"
+              )
+              .value = "";
 
-        goHome();
+            goHome();
 
-      }, 900);
+          },
+          900
+        );
 
-    } catch (error) {
+      } catch (error) {
 
-      status.style.color = "#d93025";
-      status.innerText =
-        "Error: " + error.message;
-    }
-  };
+        status.style.color =
+          "#d93025";
+
+        status.innerText =
+          "Error: " +
+          error.message;
+      }
+    };
 
 
   /* =========================
-     BROWSE / EXPLORE GROUPS
+     EXPLORE
   ========================= */
 
-  window.showJoinGroup = async function() {
+  window.showJoinGroup =
+    async function() {
 
-    hideAllPages();
+      hideAllPages();
 
-    document
-      .getElementById("browsePage")
-      .classList.remove("hidden");
+      document
+        .getElementById("browsePage")
+        .classList
+        .remove("hidden");
 
-    document
-      .getElementById("searchGroupInput")
-      .value = "";
+      document
+        .getElementById(
+          "searchGroupInput"
+        )
+        .value = "";
 
-    const container =
-      document.getElementById("groupListContainer");
-
-    container.innerHTML =
-      "<p>Loading groups...</p>";
-
-    try {
-
-      const snapshot =
-        await getDocs(
-          collection(db, "groups")
+      const container =
+        document.getElementById(
+          "groupListContainer"
         );
 
-      allGroupsCache = [];
+      container.innerHTML =
+        "<p>Loading groups...</p>";
 
-      snapshot.forEach(d => {
+      try {
 
-        allGroupsCache.push({
-          id: d.id,
-          ...d.data()
+        const snapshot =
+          await getDocs(
+            collection(
+              db,
+              "groups"
+            )
+          );
+
+        allGroupsCache = [];
+
+        snapshot.forEach(d => {
+
+          allGroupsCache.push({
+            id: d.id,
+            ...d.data()
+          });
+
         });
 
-      });
+        renderGroupList();
 
-      renderGroupList();
+      } catch (error) {
 
-    } catch (error) {
+        container.innerHTML =
+          `<p style="color:#d93025">
+            Error: ${escapeHTML(error.message)}
+          </p>`;
+      }
+    };
 
-      container.innerHTML =
-        `<p style="color:#d93025">Error: ${error.message}</p>`;
-    }
-  };
 
+  window.renderGroupList =
+    function() {
 
-  window.renderGroupList = function() {
-
-    const container =
-      document.getElementById("groupListContainer");
-
-    const search =
-      document
-        .getElementById("searchGroupInput")
-        .value
-        .trim()
-        .toLowerCase();
-
-    container.innerHTML = "";
-
-    const filtered =
-      allGroupsCache.filter(
-        g =>
-          g.name &&
-          g.name.toLowerCase().includes(search)
-      );
-
-    if (filtered.length === 0) {
-
-      container.innerHTML =
-        "<p style='color:#888'>No groups found.</p>";
-
-      return;
-    }
-
-    filtered.forEach(g => {
-
-      const isMember =
-        Array.isArray(g.members) &&
-        g.members.includes(currentUser.uid);
-
-      const hasReq =
-        Array.isArray(g.pendingJoinRequests) &&
-        g.pendingJoinRequests.some(
-          r => r.uid === currentUser.uid
+      const container =
+        document.getElementById(
+          "groupListContainer"
         );
 
-      const card =
-        document.createElement("div");
+      const search =
+        document
+          .getElementById(
+            "searchGroupInput"
+          )
+          .value
+          .trim()
+          .toLowerCase();
 
-      card.className = "group-card";
+      container.innerHTML = "";
 
-      const tag =
-        g.isPublic
-          ? `<span class="tag public">🌍 PUBLIC</span>`
-          : `<span class="tag private">🔒 PRIVATE</span>`;
+      const filtered =
+        allGroupsCache.filter(
+          g =>
+            g.name &&
+            g.name
+              .toLowerCase()
+              .includes(search)
+        );
 
-      let button = "";
+      if (filtered.length === 0) {
 
-      if (isMember) {
+        container.innerHTML =
+          "<p style='color:#888'>No groups found.</p>";
 
-        button =
-          `<button class="group-btn" onclick="openGroupPage('${g.id}')">Open Group</button>`;
-
-      } else if (!g.isPublic && hasReq) {
-
-        button =
-          `<button class="group-btn pending-btn" disabled>Request Pending</button>`;
-
-      } else if (g.isPublic) {
-
-        button =
-          `<button class="group-btn" onclick="joinPublicGroup('${g.id}')">Join Group</button>`;
-
-      } else {
-
-        button =
-          `<button class="group-btn" onclick="requestJoinGroup('${g.id}')">Request to Join</button>`;
+        return;
       }
 
-      card.innerHTML =
-        `${tag}
-        <h3>${escapeHTML(g.name)}</h3>
-        <p>${escapeHTML(g.description || "No description")}</p>
-        <p>${g.members ? g.members.length : 0} members</p>
-        ${button}`;
+      filtered.forEach(g => {
 
-      container.appendChild(card);
-    });
-  };
+        const isMember =
+          Array.isArray(g.members) &&
+          g.members.includes(
+            currentUser.uid
+          );
 
+        const hasReq =
+          Array.isArray(
+            g.pendingJoinRequests
+          ) &&
+          g.pendingJoinRequests.some(
+            r =>
+              r.uid ===
+              currentUser.uid
+          );
 
-  window.joinPublicGroup = async function(groupId) {
+        const card =
+          document.createElement(
+            "div"
+          );
 
-    if (!currentUser) return;
+        card.className =
+          "group-card";
 
-    try {
+        const tag =
+          g.isPublic
+            ? `<span class="tag public">
+                🌍 PUBLIC
+              </span>`
+            : `<span class="tag private">
+                🔒 PRIVATE
+              </span>`;
 
-      await updateDoc(
-        doc(db, "groups", groupId),
-        {
-          members: arrayUnion(currentUser.uid),
-          memberEmails: arrayUnion(currentUser.email)
+        let button = "";
+
+        if (isMember) {
+
+          button =
+            `<button
+              class="group-btn"
+              onclick="openGroupPage('${escapeAttribute(g.id)}')">
+              Open Group
+            </button>`;
+
+        } else if (
+          !g.isPublic &&
+          hasReq
+        ) {
+
+          button =
+            `<button
+              class="group-btn pending-btn"
+              disabled>
+              Request Pending
+            </button>`;
+
+        } else if (g.isPublic) {
+
+          button =
+            `<button
+              class="group-btn"
+              onclick="joinPublicGroup('${escapeAttribute(g.id)}')">
+              Join Group
+            </button>`;
+
+        } else {
+
+          button =
+            `<button
+              class="group-btn"
+              onclick="requestJoinGroup('${escapeAttribute(g.id)}')">
+              Request to Join
+            </button>`;
         }
-      );
 
-      await showJoinGroup();
+        card.innerHTML =
+          `${tag}
 
-    } catch (error) {
+          <h3>
+            ${escapeHTML(g.name)}
+          </h3>
 
-      alert(
-        "Unable to join: " + error.message
-      );
-    }
-  };
+          <p>
+            ${escapeHTML(
+              g.description ||
+              "No description"
+            )}
+          </p>
+
+          <p>
+            ${g.members
+              ? g.members.length
+              : 0}
+            members
+          </p>
+
+          ${button}`;
+
+        container.appendChild(card);
+      });
+    };
 
 
-  window.requestJoinGroup = async function(groupId) {
+  window.joinPublicGroup =
+    async function(groupId) {
 
-    if (!currentUser) return;
+      if (!currentUser) {
+        return;
+      }
 
-    try {
+      try {
 
-      await updateDoc(
-        doc(db, "groups", groupId),
-        {
-          pendingJoinRequests:
-            arrayUnion({
-              uid: currentUser.uid,
-              email: currentUser.email
-            })
-        }
-      );
+        await updateDoc(
+          doc(
+            db,
+            "groups",
+            groupId
+          ),
+          {
+            members:
+              arrayUnion(
+                currentUser.uid
+              ),
 
-      await showJoinGroup();
+            memberEmails:
+              arrayUnion(
+                currentUser.email
+              )
+          }
+        );
 
-    } catch (error) {
+        await showJoinGroup();
 
-      alert(
-        "Unable to send request: " +
-        error.message
-      );
-    }
-  };
+      } catch (error) {
+
+        alert(
+          "Unable to join: " +
+          error.message
+        );
+      }
+    };
+
+
+  window.requestJoinGroup =
+    async function(groupId) {
+
+      if (!currentUser) {
+        return;
+      }
+
+      try {
+
+        await updateDoc(
+          doc(
+            db,
+            "groups",
+            groupId
+          ),
+          {
+            pendingJoinRequests:
+              arrayUnion({
+                uid:
+                  currentUser.uid,
+                email:
+                  currentUser.email
+              })
+          }
+        );
+
+        await showJoinGroup();
+
+      } catch (error) {
+
+        alert(
+          "Unable to send request: " +
+          error.message
+        );
+      }
+    };
 
 
   /* =========================
      MY GROUPS
   ========================= */
 
-  window.showMyGroups = async function() {
+  window.showMyGroups =
+    async function() {
 
-    hideAllPages();
+      hideAllPages();
 
-    document
-      .getElementById("myGroupsPage")
-      .classList.remove("hidden");
+      document
+        .getElementById(
+          "myGroupsPage"
+        )
+        .classList
+        .remove("hidden");
 
-    const container =
-      document.getElementById("myGroupsContainer");
-
-    container.innerHTML =
-      "<p>Loading...</p>";
-
-    try {
-
-      const snapshot =
-        await getDocs(
-          collection(db, "groups")
+      const container =
+        document.getElementById(
+          "myGroupsContainer"
         );
 
-      container.innerHTML = "";
+      container.innerHTML =
+        "<p>Loading...</p>";
 
-      let count = 0;
+      try {
 
-      for (const d of snapshot.docs) {
+        const snapshot =
+          await getDocs(
+            collection(
+              db,
+              "groups"
+            )
+          );
 
-        const g = {
-          id: d.id,
-          ...d.data()
-        };
+        container.innerHTML = "";
 
-        if (
-          Array.isArray(g.members) &&
-          g.members.includes(currentUser.uid)
+        let count = 0;
+
+        for (
+          const d of snapshot.docs
         ) {
 
-          count++;
-
-          const card =
-            document.createElement("div");
-
-          card.className = "group-card";
-
-          const isOwner =
-            g.ownerId === currentUser.uid;
-
-          let reqs = "";
+          const g = {
+            id: d.id,
+            ...d.data()
+          };
 
           if (
-            isOwner &&
-            Array.isArray(g.pendingJoinRequests) &&
-            g.pendingJoinRequests.length > 0
+            Array.isArray(g.members) &&
+            g.members.includes(
+              currentUser.uid
+            )
           ) {
 
-            reqs +=
-              `<div style="margin-top:12px">
-                <b style="font-size:13px">Join Requests</b>`;
+            count++;
 
-            for (
-              const r of g.pendingJoinRequests
+            const card =
+              document.createElement(
+                "div"
+              );
+
+            card.className =
+              "group-card";
+
+            const isOwner =
+              g.ownerId ===
+              currentUser.uid;
+
+            let reqs = "";
+
+            if (
+              isOwner &&
+              Array.isArray(
+                g.pendingJoinRequests
+              ) &&
+              g.pendingJoinRequests.length > 0
             ) {
 
-              const reqName =
-                await getNickname(
-                  r.uid,
-                  r.email
-                );
+              reqs +=
+                `<div style="margin-top:12px">
+                  <b style="font-size:13px">
+                    Join Requests
+                  </b>`;
+
+              for (
+                const r of
+                g.pendingJoinRequests
+              ) {
+
+                const reqName =
+                  await getNickname(
+                    r.uid,
+                    r.email
+                  );
+
+                reqs +=
+                  `<div
+                    style="
+                      display:flex;
+                      justify-content:space-between;
+                      align-items:center;
+                      padding:9px 0;
+                      border-bottom:1px solid #eee;
+                      font-size:12px;
+                    ">
+
+                    <span>
+                      ${escapeHTML(reqName)}
+                    </span>
+
+                    <span>
+
+                      <button
+                        style="
+                          border:0;
+                          background:#087b2f;
+                          color:white;
+                          padding:6px 8px;
+                          border-radius:6px;
+                        "
+                        onclick="respondToRequest(
+                          '${escapeAttribute(g.id)}',
+                          '${escapeAttribute(r.uid)}',
+                          '${escapeAttribute(r.email)}',
+                          true
+                        )">
+                        Accept
+                      </button>
+
+                      <button
+                        style="
+                          border:0;
+                          background:#d93025;
+                          color:white;
+                          padding:6px 8px;
+                          border-radius:6px;
+                          margin-left:4px;
+                        "
+                        onclick="respondToRequest(
+                          '${escapeAttribute(g.id)}',
+                          '${escapeAttribute(r.uid)}',
+                          '${escapeAttribute(r.email)}',
+                          false
+                        )">
+                        Reject
+                      </button>
+
+                    </span>
+                  </div>`;
+              }
 
               reqs +=
-                `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #eee;font-size:12px;">
-                  <span>${escapeHTML(reqName)}</span>
-                  <span>
-                    <button
-                      style="border:0;background:#087b2f;color:white;padding:6px 8px;border-radius:6px;"
-                      onclick="respondToRequest('${g.id}','${r.uid}','${escapeAttribute(r.email)}',true)">
-                      Accept
-                    </button>
-
-                    <button
-                      style="border:0;background:#d93025;color:white;padding:6px 8px;border-radius:6px;margin-left:4px;"
-                      onclick="respondToRequest('${g.id}','${r.uid}','${escapeAttribute(r.email)}',false)">
-                      Reject
-                    </button>
-                  </span>
-                </div>`;
+                "</div>";
             }
 
-            reqs += "</div>";
+            card.innerHTML =
+              `<span
+                class="tag ${
+                  g.isPublic
+                    ? "public"
+                    : "private"
+                }">
+                ${
+                  g.isPublic
+                    ? "🌍 PUBLIC"
+                    : "🔒 PRIVATE"
+                }
+              </span>
+
+              ${
+                isOwner
+                  ? `<span class="tag owner-tag">
+                      👑 OWNER
+                    </span>`
+                  : ""
+              }
+
+              <h3>
+                ${escapeHTML(g.name)}
+              </h3>
+
+              <p>
+                ${escapeHTML(
+                  g.description ||
+                  "No description"
+                )}
+              </p>
+
+              <p>
+                ${
+                  g.members
+                    ? g.members.length
+                    : 0
+                }
+                members
+              </p>
+
+              ${reqs}
+
+              <button
+                class="group-btn"
+                onclick="openGroupPage('${escapeAttribute(g.id)}')">
+                Open Group
+              </button>`;
+
+            container.appendChild(card);
           }
-
-          card.innerHTML =
-            `<span class="tag ${g.isPublic ? "public" : "private"}">
-              ${g.isPublic ? "🌍 PUBLIC" : "🔒 PRIVATE"}
-            </span>
-
-            ${isOwner
-              ? `<span class="tag owner-tag">👑 OWNER</span>`
-              : ""}
-
-            <h3>${escapeHTML(g.name)}</h3>
-
-            <p>
-              ${escapeHTML(
-                g.description || "No description"
-              )}
-            </p>
-
-            <p>
-              ${g.members ? g.members.length : 0} members
-            </p>
-
-            ${reqs}
-
-            <button
-              class="group-btn"
-              onclick="openGroupPage('${g.id}')">
-              Open Group
-            </button>`;
-
-          container.appendChild(card);
         }
-      }
 
-      if (count === 0) {
+        if (count === 0) {
+
+          container.innerHTML =
+            "<p style='color:#888'>You haven't joined any groups yet.</p>";
+        }
+
+      } catch (error) {
 
         container.innerHTML =
-          "<p style='color:#888'>You haven't joined any groups yet.</p>";
+          `<p style="color:#d93025">
+            Error: ${escapeHTML(error.message)}
+          </p>`;
       }
-
-    } catch (error) {
-
-      container.innerHTML =
-        `<p style="color:#d93025">Error: ${error.message}</p>`;
-    }
-  };
+    };
 
 
   window.respondToRequest =
@@ -2011,7 +2598,11 @@
         if (accept) {
 
           await updateDoc(
-            doc(db, "groups", groupId),
+            doc(
+              db,
+              "groups",
+              groupId
+            ),
             {
               members:
                 arrayUnion(uid),
@@ -2027,7 +2618,11 @@
         } else {
 
           await updateDoc(
-            doc(db, "groups", groupId),
+            doc(
+              db,
+              "groups",
+              groupId
+            ),
             {
               pendingJoinRequests:
                 arrayRemove(reqObj)
@@ -2040,30 +2635,37 @@
       } catch (error) {
 
         alert(
-          "Error: " + error.message
+          "Error: " +
+          error.message
         );
       }
     };
 
 
   /* =========================
-     VAULT SYSTEM
+     VAULT
   ========================= */
 
-  window.showVault = function() {
+  window.showVault =
+    function() {
 
-    hideAllPages();
+      hideAllPages();
 
-    document
-      .getElementById("vaultPage")
-      .classList.remove("hidden");
+      document
+        .getElementById(
+          "vaultPage"
+        )
+        .classList
+        .remove("hidden");
 
-    document
-      .getElementById("vaultUploadStatus")
-      .innerText = "";
+      document
+        .getElementById(
+          "vaultUploadStatus"
+        )
+        .innerText = "";
 
-    loadVaultFiles();
-  };
+      loadVaultFiles();
+    };
 
 
   function readFileAsBase64(file) {
@@ -2075,11 +2677,16 @@
           new FileReader();
 
         reader.onload = () =>
-          resolve(reader.result);
+          resolve(
+            reader.result
+          );
 
-        reader.onerror = reject;
+        reader.onerror =
+          reject;
 
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(
+          file
+        );
       }
     );
   }
@@ -2093,16 +2700,25 @@
 
       event.target.value = "";
 
-      if (!file || !currentUser) return;
+      if (
+        !file ||
+        !currentUser
+      ) {
+        return;
+      }
 
       const status =
         document.getElementById(
           "vaultUploadStatus"
         );
 
-      if (file.size > MAX_FILE_BYTES) {
+      if (
+        file.size >
+        MAX_FILE_BYTES
+      ) {
 
-        status.style.color = "#d93025";
+        status.style.color =
+          "#d93025";
 
         status.innerText =
           "File too large. Please choose a file under ~700KB.";
@@ -2110,15 +2726,20 @@
         return;
       }
 
-      status.style.color = "#777";
+      status.style.color =
+        "#777";
 
       status.innerText =
-        "Uploading " + file.name + "...";
+        "Uploading " +
+        file.name +
+        "...";
 
       try {
 
         const base64 =
-          await readFileAsBase64(file);
+          await readFileAsBase64(
+            file
+          );
 
         await addDoc(
           collection(
@@ -2128,44 +2749,56 @@
             "vault"
           ),
           {
-            fileName: file.name,
+            fileName:
+              file.name,
+
             fileType:
               file.type ||
               "application/octet-stream",
-            fileData: base64,
-            fileSize: file.size,
+
+            fileData:
+              base64,
+
+            fileSize:
+              file.size,
+
             uploadedAt:
               serverTimestamp()
           }
         );
 
-        status.style.color = "#087b2f";
+        status.style.color =
+          "#087b2f";
 
         status.innerText =
           "Uploaded successfully!";
 
         loadVaultFiles();
 
-        setTimeout(() => {
-          status.innerText = "";
-        }, 1500);
+        setTimeout(
+          () => {
+            status.innerText = "";
+          },
+          1500
+        );
 
       } catch (error) {
 
-        status.style.color = "#d93025";
+        status.style.color =
+          "#d93025";
 
         status.innerText =
           "Upload failed: " +
           error.message;
-
-        console.error(error);
       }
     };
 
 
   async function loadVaultFiles() {
 
-    if (!currentUser) return;
+    if (!currentUser) {
+      return;
+    }
 
     const container =
       document.getElementById(
@@ -2208,10 +2841,12 @@
 
       snapshot.forEach(d => {
 
-        const data = d.data();
+        const data =
+          d.data();
 
         myVaultFiles.push({
-          id: d.id,
+          id:
+            d.id,
           ...data
         });
 
@@ -2223,20 +2858,26 @@
 
         const iconHtml =
           isImage
-            ? `<img src="${data.fileData}" alt="file">`
-            : `📄`;
+            ? `<img
+                src="${data.fileData}"
+                alt="file">`
+            : "📄";
 
         const sizeKB =
           data.fileSize
             ? Math.round(
-                data.fileSize / 1024
+                data.fileSize /
+                1024
               )
             : "?";
 
         const div =
-          document.createElement("div");
+          document.createElement(
+            "div"
+          );
 
-        div.className = "vault-item";
+        div.className =
+          "vault-item";
 
         div.innerHTML =
           `<div class="vault-item-icon">
@@ -2244,36 +2885,48 @@
           </div>
 
           <div class="vault-item-info">
+
             <div class="vault-item-title">
-              ${escapeHTML(data.fileName)}
+              ${escapeHTML(
+                data.fileName
+              )}
             </div>
 
             <div class="vault-item-date">
               ${sizeKB} KB
             </div>
+
           </div>
 
           <a
             href="${data.fileData}"
             download="${escapeAttribute(data.fileName)}"
             target="_blank"
-            style="margin-right:6px;font-size:12px;color:#555;">
+            style="
+              margin-right:6px;
+              font-size:12px;
+              color:#555;
+            ">
             View
           </a>
 
           <button
             class="vault-delete-btn"
-            onclick="openDeleteVaultModal('${d.id}')">
+            onclick="openDeleteVaultModal('${escapeAttribute(d.id)}')">
             Delete
           </button>`;
 
-        container.appendChild(div);
+        container.appendChild(
+          div
+        );
       });
 
     } catch(err) {
 
       container.innerHTML =
-        `<p style="color:red">Error: ${err.message}</p>`;
+        `<p style="color:red">
+          Error: ${escapeHTML(err.message)}
+        </p>`;
     }
   }
 
@@ -2281,26 +2934,30 @@
   window.openDeleteVaultModal =
     function(fileId) {
 
-      vaultFileToDelete = fileId;
+      vaultFileToDelete =
+        fileId;
 
       document
         .getElementById(
           "deleteVaultModal"
         )
-        .classList.remove("hidden");
+        .classList
+        .remove("hidden");
     };
 
 
   window.closeDeleteVaultModal =
     function() {
 
-      vaultFileToDelete = null;
+      vaultFileToDelete =
+        null;
 
       document
         .getElementById(
           "deleteVaultModal"
         )
-        .classList.add("hidden");
+        .classList
+        .add("hidden");
     };
 
 
@@ -2310,7 +2967,9 @@
       if (
         !vaultFileToDelete ||
         !currentUser
-      ) return;
+      ) {
+        return;
+      }
 
       try {
 
@@ -2339,7 +2998,7 @@
 
 
   /* =========================
-     VAULT TO CHAT SHARE
+     VAULT PICKER
   ========================= */
 
   window.openVaultPicker =
@@ -2349,7 +3008,8 @@
         .getElementById(
           "vaultPickerModal"
         )
-        .classList.remove("hidden");
+        .classList
+        .remove("hidden");
 
       const container =
         document.getElementById(
@@ -2390,7 +3050,8 @@
 
         snapshot.forEach(d => {
 
-          const data = d.data();
+          const data =
+            d.data();
 
           const isImage =
             data.fileType &&
@@ -2400,11 +3061,15 @@
 
           const iconHtml =
             isImage
-              ? `<img src="${data.fileData}" alt="file">`
-              : `📄`;
+              ? `<img
+                  src="${data.fileData}"
+                  alt="file">`
+              : "📄";
 
           const div =
-            document.createElement("div");
+            document.createElement(
+              "div"
+            );
 
           div.className =
             "vault-item";
@@ -2415,18 +3080,24 @@
             </div>
 
             <div class="vault-item-info">
+
               <div class="vault-item-title">
-                ${escapeHTML(data.fileName)}
+                ${escapeHTML(
+                  data.fileName
+                )}
               </div>
+
             </div>
 
             <button
               class="vault-send-btn"
-              onclick="sendVaultFileToChat('${d.id}')">
+              onclick="sendVaultFileToChat('${escapeAttribute(d.id)}')">
               Send
             </button>`;
 
-          container.appendChild(div);
+          container.appendChild(
+            div
+          );
         });
 
       } catch(err) {
@@ -2444,7 +3115,8 @@
         .getElementById(
           "vaultPickerModal"
         )
-        .classList.add("hidden");
+        .classList
+        .add("hidden");
     };
 
 
@@ -2454,18 +3126,65 @@
       if (
         !currentGroupId ||
         !currentUser
-      ) return;
+      ) {
+        return;
+      }
 
       const file =
         myVaultFiles.find(
-          f => f.id === vaultFileId
+          f =>
+            f.id ===
+            vaultFileId
         );
 
       if (!file) {
 
-        return alert(
-          "File not found."
+        try {
+
+          const snap =
+            await getDoc(
+              doc(
+                db,
+                "users",
+                currentUser.uid,
+                "vault",
+                vaultFileId
+              )
+            );
+
+          if (!snap.exists()) {
+
+            return alert(
+              "File not found."
+            );
+          }
+
+          const data =
+            snap.data();
+
+          myVaultFiles.push({
+            id:
+              snap.id,
+            ...data
+          });
+
+        } catch (e) {
+
+          return alert(
+            "File not found."
+          );
+        }
+      }
+
+      const finalFile =
+        myVaultFiles.find(
+          f =>
+            f.id ===
+            vaultFileId
         );
+
+      if (!finalFile) {
+        return;
       }
 
       try {
@@ -2479,16 +3198,16 @@
           ),
           {
             text:
-              `Shared a file from Vault: ${file.fileName}`,
+              `Shared a file from Vault: ${finalFile.fileName}`,
 
             fileData:
-              file.fileData,
+              finalFile.fileData,
 
             fileName:
-              file.fileName,
+              finalFile.fileName,
 
             fileType:
-              file.fileType,
+              finalFile.fileType,
 
             senderId:
               currentUser.uid,
@@ -2517,27 +3236,37 @@
 
 
   /* =========================
-     OPEN GROUP & REAL-TIME CHAT
+     OPEN GROUP
   ========================= */
 
   window.openGroupPage =
     async function(groupId) {
 
-      if (!currentUser) return;
+      if (!currentUser) {
+        return;
+      }
 
       currentGroupId =
         groupId;
 
       document
-        .getElementById("groupPage")
-        .classList.remove("hidden");
+        .getElementById(
+          "groupPage"
+        )
+        .classList
+        .remove("hidden");
 
       document
-        .getElementById("groupPageName")
-        .innerText = "Loading...";
+        .getElementById(
+          "groupPageName"
+        )
+        .innerText =
+        "Loading...";
 
       document
-        .getElementById("chatMessages")
+        .getElementById(
+          "chatMessages"
+        )
         .innerHTML = "";
 
       try {
@@ -2566,7 +3295,9 @@
           groupSnap.data();
 
         if (
-          !Array.isArray(data.members) ||
+          !Array.isArray(
+            data.members
+          ) ||
           !data.members.includes(
             currentUser.uid
           )
@@ -2582,7 +3313,8 @@
         }
 
         currentGroupData = {
-          id: groupId,
+          id:
+            groupId,
           ...data
         };
 
@@ -2606,10 +3338,14 @@
           );
 
         avatarEl.innerText =
-          getInitial(data.name);
+          getInitial(
+            data.name
+          );
 
         avatarEl.style.background =
-          getAvatarColor(groupId);
+          getAvatarColor(
+            groupId
+          );
 
         const membersContainer =
           document.getElementById(
@@ -2619,10 +3355,12 @@
         membersContainer.innerHTML = "";
 
         const memberIds =
-          data.members || [];
+          data.members ||
+          [];
 
         const memberEmails =
-          data.memberEmails || [];
+          data.memberEmails ||
+          [];
 
         for (
           let i = 0;
@@ -2634,7 +3372,8 @@
             memberIds[i];
 
           const fallbackEmail =
-            memberEmails[i] || "";
+            memberEmails[i] ||
+            "";
 
           const name =
             await getNickname(
@@ -2656,10 +3395,14 @@
               : name;
 
           membersContainer
-            .appendChild(chip);
+            .appendChild(
+              chip
+            );
         }
 
-        listenToChat(groupId);
+        listenToChat(
+          groupId
+        );
 
       } catch (error) {
 
@@ -2672,6 +3415,10 @@
       }
     };
 
+
+  /* =========================
+     REAL-TIME CHAT
+  ========================= */
 
   function listenToChat(groupId) {
 
@@ -2707,7 +3454,8 @@
 
           container.innerHTML = "";
 
-          let lastSenderId = null;
+          let lastSenderId =
+            null;
 
           snapshot.forEach(d => {
 
@@ -2734,7 +3482,8 @@
             lastSenderId =
               msg.senderId;
 
-            let attachmentHtml = "";
+            let attachmentHtml =
+              "";
 
             if (msg.fileData) {
 
@@ -2760,7 +3509,10 @@
                     download="${escapeAttribute(msg.fileName)}"
                     target="_blank"
                     class="chat-file-attachment">
-                    📄 ${escapeHTML(msg.fileName)}
+                    📄
+                    ${escapeHTML(
+                      msg.fileName
+                    )}
                   </a>`;
               }
             }
@@ -2772,55 +3524,109 @@
 
             row.className =
               "message-row" +
-              (mine ? " mine" : "");
+              (
+                mine
+                  ? " mine"
+                  : ""
+              );
 
             const avatarHtml =
               mine
                 ? ""
                 : `<div
                     class="msg-avatar"
-                    style="background:${getAvatarColor(msg.senderId || "x")}">
-                    ${getInitial(senderName)}
+                    style="background:${getAvatarColor(
+                      msg.senderId ||
+                      "x"
+                    )}">
+                    ${getInitial(
+                      senderName
+                    )}
                   </div>`;
+
+            /*
+             * IMPORTANT:
+             * Delete button is created ONLY
+             * when msg.senderId === currentUser.uid.
+             */
+            const deleteButtonHtml =
+              mine
+                ? `<div class="message-actions">
+                    <button
+                      class="message-delete-btn"
+                      onclick="openDeleteMessageModal('${escapeAttribute(d.id)}')">
+                      Delete
+                    </button>
+                  </div>`
+                : "";
 
             row.innerHTML =
               `${avatarHtml}
 
-              <div class="message ${mine ? "mine" : "other"}">
+              <div
+                class="message ${
+                  mine
+                    ? "mine"
+                    : "other"
+                }">
 
                 ${
                   showSenderLabel
                     ? `<div class="message-sender">
-                        ${escapeHTML(senderName)}
+                        ${escapeHTML(
+                          senderName
+                        )}
                       </div>`
                     : ""
                 }
 
                 <div class="message-bubble">
 
-                  ${msg.text
-                    ? escapeHTML(msg.text)
-                    : ""}
+                  ${
+                    msg.text
+                      ? escapeHTML(
+                          msg.text
+                        )
+                      : ""
+                  }
 
                   ${attachmentHtml}
 
                 </div>
 
                 <div class="message-time">
-                  ${formatMsgTime(msg.createdAt)}
+                  ${formatMsgTime(
+                    msg.createdAt
+                  )}
                 </div>
+
+                ${deleteButtonHtml}
 
               </div>`;
 
-            container.appendChild(row);
+            container.appendChild(
+              row
+            );
           });
 
           container.scrollTop =
             container.scrollHeight;
+        },
+
+        error => {
+
+          console.error(
+            "Chat listener error:",
+            error
+          );
         }
       );
   }
 
+
+  /* =========================
+     SEND MESSAGE
+  ========================= */
 
   window.sendChatMessage =
     async function() {
@@ -2837,7 +3643,9 @@
         !text ||
         !currentGroupId ||
         !currentUser
-      ) return;
+      ) {
+        return;
+      }
 
       input.value = "";
 
@@ -2874,7 +3682,154 @@
           error.message
         );
 
-        input.value = text;
+        input.value =
+          text;
+      }
+    };
+
+
+  /* =========================
+     DELETE OWN MESSAGE
+  ========================= */
+
+  window.openDeleteMessageModal =
+    function(messageId) {
+
+      if (
+        !messageId ||
+        !currentUser
+      ) {
+        return;
+      }
+
+      messageToDelete =
+        messageId;
+
+      document
+        .getElementById(
+          "deleteMessageModal"
+        )
+        .classList
+        .remove("hidden");
+    };
+
+
+  window.closeDeleteMessageModal =
+    function() {
+
+      messageToDelete =
+        null;
+
+      document
+        .getElementById(
+          "deleteMessageModal"
+        )
+        .classList
+        .add("hidden");
+    };
+
+
+  window.confirmDeleteMessage =
+    async function() {
+
+      if (
+        !messageToDelete ||
+        !currentUser ||
+        !currentGroupId
+      ) {
+        return;
+      }
+
+      const messageId =
+        messageToDelete;
+
+      const btn =
+        document.querySelector(
+          "#deleteMessageModal .danger-btn"
+        );
+
+      btn.disabled = true;
+      btn.innerText =
+        "Deleting...";
+
+      try {
+
+        /*
+         * First check the message.
+         * This prevents the client from blindly
+         * deleting an arbitrary message.
+         */
+        const messageRef =
+          doc(
+            db,
+            "groups",
+            currentGroupId,
+            "messages",
+            messageId
+          );
+
+        const messageSnap =
+          await getDoc(
+            messageRef
+          );
+
+        if (!messageSnap.exists()) {
+
+          closeDeleteMessageModal();
+
+          alert(
+            "Message no longer exists."
+          );
+
+          return;
+        }
+
+        const messageData =
+          messageSnap.data();
+
+        /*
+         * ONLY THE ORIGINAL SENDER
+         * CAN DELETE THE MESSAGE.
+         */
+        if (
+          messageData.senderId !==
+          currentUser.uid
+        ) {
+
+          closeDeleteMessageModal();
+
+          alert(
+            "You can only delete your own messages."
+          );
+
+          return;
+        }
+
+        await deleteDoc(
+          messageRef
+        );
+
+        closeDeleteMessageModal();
+
+      } catch (error) {
+
+        console.error(
+          "Delete message error:",
+          error
+        );
+
+        alert(
+          "Could not delete message: " +
+          error.message
+        );
+
+      } finally {
+
+        btn.disabled =
+          false;
+
+        btn.innerText =
+          "Delete Message";
       }
     };
 
@@ -2889,7 +3844,9 @@
       if (
         !currentGroupData ||
         !currentUser
-      ) return;
+      ) {
+        return;
+      }
 
       if (
         currentGroupData.ownerId ===
@@ -2900,9 +3857,8 @@
           .getElementById(
             "deleteModal"
           )
-          .classList.remove(
-            "hidden"
-          );
+          .classList
+          .remove("hidden");
 
       } else {
 
@@ -2910,9 +3866,8 @@
           .getElementById(
             "leaveModal"
           )
-          .classList.remove(
-            "hidden"
-          );
+          .classList
+          .remove("hidden");
       }
     };
 
@@ -2924,9 +3879,8 @@
         .getElementById(
           "deleteModal"
         )
-        .classList.add(
-          "hidden"
-        );
+        .classList
+        .add("hidden");
     };
 
 
@@ -2937,9 +3891,8 @@
         .getElementById(
           "leaveModal"
         )
-        .classList.add(
-          "hidden"
-        );
+        .classList
+        .add("hidden");
     };
 
 
@@ -2954,7 +3907,9 @@
         !currentGroupData ||
         !currentGroupId ||
         !currentUser
-      ) return;
+      ) {
+        return;
+      }
 
       const btn =
         document.querySelector(
@@ -2962,7 +3917,8 @@
         );
 
       btn.disabled = true;
-      btn.innerText = "Leaving...";
+      btn.innerText =
+        "Leaving...";
 
       try {
 
@@ -2997,7 +3953,9 @@
           error.message
         );
 
-        btn.disabled = false;
+        btn.disabled =
+          false;
+
         btn.innerText =
           "Leave Group";
       }
@@ -3015,7 +3973,9 @@
         !currentGroupData ||
         !currentGroupId ||
         !currentUser
-      ) return;
+      ) {
+        return;
+      }
 
       if (
         currentGroupData.ownerId !==
@@ -3033,7 +3993,8 @@
         );
 
       btn.disabled = true;
-      btn.innerText = "Deleting...";
+      btn.innerText =
+        "Deleting...";
 
       try {
 
@@ -3048,7 +4009,8 @@
           );
 
         for (
-          const m of msgs.docs
+          const m of
+          msgs.docs
         ) {
 
           await deleteDoc(
@@ -3080,12 +4042,18 @@
           error.message
         );
 
-        btn.disabled = false;
+        btn.disabled =
+          false;
+
         btn.innerText =
           "Delete Group";
       }
     };
 
+
+  /* =========================
+     CLOSE GROUP
+  ========================= */
 
   window.closeGroupPage =
     function() {
@@ -3096,16 +4064,18 @@
         chatUnsubscribe = null;
       }
 
-      currentGroupId = null;
-      currentGroupData = null;
+      currentGroupId =
+        null;
+
+      currentGroupData =
+        null;
 
       document
         .getElementById(
           "groupPage"
         )
-        .classList.add(
-          "hidden"
-        );
+        .classList
+        .add("hidden");
     };
 
 
@@ -3115,20 +4085,45 @@
 
   function escapeHTML(value) {
 
-    return String(value || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+    return String(
+      value || ""
+    )
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
   }
 
 
   function escapeAttribute(value) {
 
-    return String(value || "")
-      .replace(/\\/g, "\\\\")
-      .replace(/'/g, "\\'");
+    return String(
+      value || ""
+    )
+      .replace(
+        /\\/g,
+        "\\\\"
+      )
+      .replace(
+        /'/g,
+        "\\'"
+      );
   }
 
 
@@ -3140,7 +4135,8 @@
     auth,
     async user => {
 
-      currentUser = user;
+      currentUser =
+        user;
 
       const authPage =
         document.getElementById(
@@ -3154,7 +4150,9 @@
 
       if (user) {
 
-        await ensureOwnProfile(user);
+        await ensureOwnProfile(
+          user
+        );
 
         authPage
           .classList
