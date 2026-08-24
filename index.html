@@ -103,6 +103,28 @@
     .page-title { font-size: 25px; margin: 5px 0 4px; }
     .page-subtitle { color: #777; font-size: 14px; margin: 0 0 20px; }
 
+    /* STORIES SECTION (NEW) */
+    .stories-wrapper {
+      display: flex; gap: 14px; overflow-x: auto;
+      padding: 4px 4px 16px; margin-bottom: 5px;
+      scrollbar-width: none;
+    }
+    .stories-wrapper::-webkit-scrollbar { display: none; }
+    .story-item {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 5px; cursor: pointer; flex-shrink: 0; position: relative;
+    }
+    .story-avatar {
+      width: 60px; height: 60px; border-radius: 50%;
+      border: 2.5px solid #3897f0; padding: 2px;
+      display: flex; align-items: center; justify-content: center;
+      background: #fff; font-weight: bold; font-size: 22px;
+      overflow: hidden;
+    }
+    body.dark .story-avatar { background: #1e1e1e; }
+    .add-story-btn { border: 2px dashed #888; color: #3897f0; }
+    .story-username { font-size: 11px; color: #777; max-width: 64px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
+
     .menu-card, .form-card, .group-card {
       background: #fff; border: 1px solid #ddd; border-radius: 16px;
       padding: 22px; margin-bottom: 15px; position: relative;
@@ -127,6 +149,7 @@
       width: 100%; border: 0; border-radius: 9px; padding: 11px;
       margin-top: 10px; font-weight: bold; background: #111; color: white;
     }
+    body.dark .group-btn { background: #fff; color: #000; }
     .pending-btn { background: #eee; color: #777; cursor: default; }
 
     .star-btn {
@@ -158,6 +181,7 @@
       display: flex; align-items: center; padding: 12px; border: 1px solid #eee;
       border-radius: 10px; margin-bottom: 10px; background: #fff;
     }
+    body.dark .vault-item { background: #1e1e1e; border-color: #333; }
     .vault-item-icon {
       width: 40px; height: 40px; background: #eee; border-radius: 8px;
       display: flex; align-items: center; justify-content: center; font-size: 20px;
@@ -229,7 +253,6 @@
       font-weight: bold; font-size: 11px; flex-shrink: 0;
     }
 
-    /* UPDATED: Emojis ko sahi jagah dikhane ke liye position: relative lagaya hai */
     .message { display: flex; flex-direction: column; max-width: 72%; position: relative; }
     .message.mine { align-items: flex-end; }
     .message.other { align-items: flex-start; }
@@ -237,13 +260,12 @@
     .message-bubble {
       background: #efefef; color: #111; padding: 9px 14px; border-radius: 20px;
       font-size: 14.5px; line-height: 1.35; word-break: break-word; cursor: pointer;
-      user-select: none; /* Long press par text select na ho iske liye */
+      user-select: none;
     }
     .message.mine .message-bubble { background: #3897f0; color: #fff; }
     .message-time { font-size: 10px; color: #b0b0b0; margin: 3px 4px 2px; }
     .message.mine .message-time { text-align: right; }
 
-    /* UPDATED: Hold karne par hi dikhega, default hide kar diya hai */
     .message-actions { 
       display: none; align-items: center; gap: 8px; margin: 4px; 
       background: #fff; padding: 8px 12px; border-radius: 10px; 
@@ -296,6 +318,19 @@
       color: #3897f0; font-size: 22px; display: flex; align-items: center;
       justify-content: center; font-weight: bold;
     }
+
+    /* FULLSCREEN STORY VIEWER MODAL */
+    .story-modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 99999;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .story-modal-content { max-width: 400px; width: 100%; text-align: center; position: relative; display: flex; flex-direction: column; height: 100vh; justify-content: center; }
+    .story-progress-bg { height: 3px; background: rgba(255,255,255,0.3); width: 95%; margin: 10px auto; border-radius: 2px; position: absolute; top: 10px; left: 2.5%; }
+    .story-progress-bar { height: 100%; background: #ffffff; width: 0%; transition: width 5s linear; }
+    .story-header { display: flex; justify-content: space-between; color: #fff; font-size: 14px; padding: 10px 15px; position: absolute; top: 25px; width: 100%; box-sizing: border-box; z-index: 2; }
+    .close-story { cursor: pointer; font-size: 22px; font-weight: bold; }
+    .story-media-box { width: 100%; height: 80vh; display: flex; align-items: center; justify-content: center; }
+    .story-media-box img, .story-media-box video { max-width: 100%; max-height: 100%; border-radius: 12px; object-fit: contain; }
 
     /* MODALS */
     .modal {
@@ -363,6 +398,19 @@
     <section id="homePage">
       <h1 class="page-title">Home</h1>
       <p class="page-subtitle">Manage your groups and conversations.</p>
+      
+      <!-- STORIES SECTION (NEW) -->
+      <div class="stories-wrapper">
+        <!-- Your Story Button -->
+        <div class="story-item" onclick="document.getElementById('storyFileInput').click()">
+          <div class="story-avatar add-story-btn">＋</div>
+          <span class="story-username">Your Story</span>
+          <input type="file" id="storyFileInput" class="hidden" accept="image/*,video/*" onchange="uploadStory(event)">
+        </div>
+        <!-- Active Stories Container -->
+        <div id="storiesContainer" style="display:flex; gap:14px;"></div>
+      </div>
+
       <div class="menu-card">
         <div class="welcome">Welcome 👋</div>
         <div id="welcomeNickname" class="welcome-email" style="font-weight:bold; color:inherit; margin-bottom:2px;"></div>
@@ -499,6 +547,21 @@
   </div>
 </div>
 
+<!-- FULLSCREEN STORY VIEWER MODAL -->
+<div id="storyViewerModal" class="story-modal hidden">
+  <div class="story-modal-content">
+    <div class="story-progress-bg"><div id="storyProgressBar" class="story-progress-bar"></div></div>
+    <div class="story-header">
+      <b id="storyViewerName">User</b>
+      <span onclick="closeStoryViewer()" class="close-story">✕</span>
+    </div>
+    <div class="story-media-box">
+      <img id="storyViewerImage" src="" class="hidden">
+      <video id="storyViewerVideo" src="" class="hidden" playsinline autoplay muted></video>
+    </div>
+  </div>
+</div>
+
 <!-- MODALS -->
 <div id="deleteModal" class="modal hidden">
   <div class="modal-card">
@@ -565,8 +628,11 @@
   import {
     getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc,
     updateDoc, deleteDoc, arrayUnion, arrayRemove, serverTimestamp,
-    query, orderBy, onSnapshot
+    query, orderBy, onSnapshot, where
   } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { 
+    getStorage, ref, uploadBytes, uploadString, getDownloadURL, deleteObject 
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDQmh4yBGXeOiAIn-pKANxl3BR2H-jQPHE",
@@ -581,6 +647,7 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  const storage = getStorage(app);
 
   let currentUser = null;
   let allGroupsCache = [];
@@ -593,6 +660,7 @@
   let myNickname = "";
   let myStarredGroups = [];
   let pendingInviteGroupId = null;
+  let storyTimer = null;
 
   const profileCache = {};
   const MAX_FILE_BYTES = 700000;
@@ -622,19 +690,15 @@
     return String(value || "").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
   }
 
-  /* UPDATED: Hold (Long press) detect karne ka code */
   window.pressTimer = null;
 
   window.handlePressStart = function(msgId) {
     window.pressTimer = setTimeout(() => {
-      // Pehle se khule huye options hide karo
       document.querySelectorAll('.message-actions').forEach(el => el.classList.remove('show'));
-      // Jis message par hold kiya hai, uske options show karo
       const actions = document.getElementById('actions_' + msgId);
       if (actions) actions.classList.add('show');
-      // Mobile mein vibration feel ke liye
       if (navigator.vibrate) navigator.vibrate(50);
-    }, 500); // 500 milliseconds hold
+    }, 500);
   };
 
   window.handlePressEnd = function() {
@@ -649,6 +713,166 @@
   if (localStorage.getItem("venziDarkMode") === "on") {
     document.body.classList.add("dark");
   }
+
+  /* ==========================================
+     STORY SYSTEM LOGIC (UPLOAD, RENDER, CLEANUP)
+     ========================================== */
+  function compressImage(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const maxW = 600; const scale = maxW / img.width;
+          canvas.width = maxW; canvas.height = img.height * scale;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", 0.6));
+        };
+      };
+    });
+  }
+
+  window.uploadStory = async function(e) {
+    const file = e.target.files[0];
+    e.target.value = "";
+    if (!file || !currentUser) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Storage limit: Please upload files smaller than 5MB!");
+      return;
+    }
+
+    const btn = document.querySelector(".add-story-btn");
+    if (btn) btn.innerHTML = "⌛";
+
+    const isVideo = file.type.startsWith("video/");
+    const fileExt = isVideo ? "mp4" : "jpg";
+    const storagePath = `stories/${currentUser.uid}_${Date.now()}.${fileExt}`;
+    const storageRef = ref(storage, storagePath);
+
+    try {
+      let downloadURL = "";
+      if (isVideo) {
+        await uploadBytes(storageRef, file);
+        downloadURL = await getDownloadURL(storageRef);
+      } else {
+        const compressedBase64 = await compressImage(file);
+        await uploadString(storageRef, compressedBase64, 'data_url');
+        downloadURL = await getDownloadURL(storageRef);
+      }
+
+      await addDoc(collection(db, "stories"), {
+        userId: currentUser.uid,
+        userName: myNickname || currentUser.email.split('@')[0],
+        mediaUrl: downloadURL,
+        storagePath: storagePath,
+        mediaType: isVideo ? "video" : "image",
+        createdAt: serverTimestamp()
+      });
+
+      loadStories();
+    } catch (err) { 
+      alert("Upload Failed: " + err.message); 
+    } finally {
+      if (btn) btn.innerHTML = "＋";
+    }
+  };
+
+  async function loadStories() {
+    if (!currentUser) return;
+    const container = document.getElementById("storiesContainer");
+    if (!container) return;
+    container.innerHTML = "<span style='font-size:12px;color:#777;padding:10px;'>Loading...</span>";
+    
+    const twentyFourHoursAgo = new Date(Date.now() - (24 * 60 * 60 * 1000));
+    
+    try {
+      const oldQ = query(collection(db, "stories"), where("createdAt", "<=", twentyFourHoursAgo));
+      const oldSnap = await getDocs(oldQ);
+      oldSnap.forEach(async (d) => {
+        const data = d.data();
+        if (data.storagePath) {
+          try { await deleteObject(ref(storage, data.storagePath)); } catch(e){}
+        }
+        await deleteDoc(doc(db, "stories", d.id));
+      });
+
+      const activeQ = query(collection(db, "stories"), where("createdAt", ">=", twentyFourHoursAgo), orderBy("createdAt", "desc"));
+      const snap = await getDocs(activeQ);
+      
+      container.innerHTML = "";
+      if (snap.empty) {
+        container.innerHTML = "";
+        return;
+      }
+
+      snap.forEach(d => {
+        const data = d.data();
+        const item = document.createElement("div");
+        item.className = "story-item";
+        item.onclick = () => openStoryViewer(data.userName, data.mediaUrl, data.mediaType);
+        
+        const mediaHTML = data.mediaType === "video" 
+          ? `<video src="${data.mediaUrl}#t=0.1" style="width:100%; height:100%; object-fit:cover;"></video>`
+          : `<img src="${data.mediaUrl}" style="width:100%; height:100%; object-fit:cover;">`;
+
+        item.innerHTML = `
+          <div class="story-avatar" style="padding:0; border: 2.5px solid #3897f0;">
+            ${mediaHTML}
+          </div>
+          <span class="story-username">${escapeHTML(data.userName || "User")}</span>
+        `;
+        container.appendChild(item);
+      });
+    } catch (e) {
+      container.innerHTML = "";
+    }
+  }
+
+  window.openStoryViewer = function(name, url, type) {
+    const modal = document.getElementById("storyViewerModal");
+    const imgEl = document.getElementById("storyViewerImage");
+    const videoEl = document.getElementById("storyViewerVideo");
+    const bar = document.getElementById("storyProgressBar");
+
+    document.getElementById("storyViewerName").innerText = name || "User";
+
+    if (type === "video") {
+      imgEl.classList.add("hidden");
+      videoEl.classList.remove("hidden");
+      videoEl.src = url;
+      videoEl.currentTime = 0;
+      videoEl.play();
+    } else {
+      videoEl.classList.add("hidden");
+      videoEl.pause();
+      imgEl.classList.remove("hidden");
+      imgEl.src = url;
+    }
+
+    modal.classList.remove("hidden");
+    
+    bar.style.transition = "none";
+    bar.style.width = "0%";
+    setTimeout(() => { 
+      bar.style.transition = "width 5s linear";
+      bar.style.width = "100%"; 
+    }, 50);
+
+    clearTimeout(storyTimer);
+    storyTimer = setTimeout(() => { closeStoryViewer(); }, 5000);
+  };
+
+  window.closeStoryViewer = function() {
+    clearTimeout(storyTimer);
+    const videoEl = document.getElementById("storyViewerVideo");
+    if(videoEl) videoEl.pause();
+    document.getElementById("storyViewerModal").classList.add("hidden");
+  };
 
   /* PROFILES */
   async function ensureOwnProfile(user) {
@@ -712,7 +936,11 @@
       document.getElementById(id).classList.add("hidden");
     });
   }
-  window.goHome = function() { hideAllPages(); document.getElementById("homePage").classList.remove("hidden"); };
+  window.goHome = function() { 
+    hideAllPages(); 
+    document.getElementById("homePage").classList.remove("hidden"); 
+    loadStories();
+  };
 
   /* AUTH */
   window.signUp = async function() {
@@ -862,7 +1090,7 @@
     } catch (error) { alert("Unable to send request: " + error.message); }
   };
 
-  /* MY GROUPS (with star sorting) */
+  /* MY GROUPS */
   window.showMyGroups = async function() {
     hideAllPages();
     document.getElementById("myGroupsPage").classList.remove("hidden");
@@ -1215,7 +1443,6 @@
 
         const msgTextEscaped = escapeAttribute((msg.text || "").substring(0, 80));
 
-        /* UPDATED: Options (Delete/Pin/React) default hidden, hold par pop honga */
         const actionsHtml = `<div id="actions_${d.id}" class="message-actions">
           <button class="message-react-btn" onclick="toggleReactionPicker('${escapeAttribute(d.id)}', event)">😊 React</button>
           <button class="message-pin-btn" onclick="pinMessage('${escapeAttribute(d.id)}', '${msgTextEscaped}'); document.getElementById('actions_${d.id}').classList.remove('show');">📌 Pin</button>
@@ -1223,7 +1450,6 @@
           <button style="border:0; background:transparent; font-size:11px; cursor:pointer;" onclick="document.getElementById('actions_${d.id}').classList.remove('show')">❌</button>
         </div>`;
 
-        /* UPDATED: Message bubble me mouse aur touch hold ke events lagaye gaye hain */
         row.innerHTML = `${avatarHtml}
           <div class="message ${mine ? "mine" : "other"}">
             ${showSenderLabel ? `<div class="message-sender">${escapeHTML(senderName)}</div>` : ""}
@@ -1384,6 +1610,7 @@
       document.getElementById("welcomeNickname").innerText = myNickname;
       document.getElementById("welcomeEmail").innerText = user.email;
       goHome();
+      loadStories();
       handleInviteFromURL();
     } else {
       authPage.classList.remove("hidden");
@@ -1396,4 +1623,3 @@
 
 </body>
 </html>
-
