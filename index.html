@@ -228,21 +228,33 @@
       align-items: center; justify-content: center; color: #fff;
       font-weight: bold; font-size: 11px; flex-shrink: 0;
     }
-    .message { display: flex; flex-direction: column; max-width: 72%; }
+
+    /* UPDATED: Emojis ko sahi jagah dikhane ke liye position: relative lagaya hai */
+    .message { display: flex; flex-direction: column; max-width: 72%; position: relative; }
     .message.mine { align-items: flex-end; }
     .message.other { align-items: flex-start; }
     .message-sender { font-size: 11px; color: #8e8e8e; margin: 6px 0 2px 4px; }
     .message-bubble {
       background: #efefef; color: #111; padding: 9px 14px; border-radius: 20px;
       font-size: 14.5px; line-height: 1.35; word-break: break-word; cursor: pointer;
+      user-select: none; /* Long press par text select na ho iske liye */
     }
     .message.mine .message-bubble { background: #3897f0; color: #fff; }
     .message-time { font-size: 10px; color: #b0b0b0; margin: 3px 4px 2px; }
     .message.mine .message-time { text-align: right; }
 
-    .message-actions { display: flex; align-items: center; gap: 8px; margin: 0 4px 7px; flex-wrap: wrap; }
+    /* UPDATED: Hold karne par hi dikhega, default hide kar diya hai */
+    .message-actions { 
+      display: none; align-items: center; gap: 8px; margin: 4px; 
+      background: #fff; padding: 8px 12px; border-radius: 10px; 
+      border: 1px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      position: absolute; top: -45px; z-index: 10; white-space: nowrap;
+    }
+    body.dark .message-actions { background: #2a2a2a; border-color: #444; }
+    .message-actions.show { display: flex; }
+
     .message-delete-btn, .message-pin-btn, .message-react-btn {
-      border: 0; background: transparent; color: #666; font-size: 10px; padding: 2px 4px; cursor: pointer;
+      border: 0; background: transparent; color: #666; font-size: 11px; padding: 4px 8px; cursor: pointer;
     }
     .message-delete-btn { color: #d93025; }
 
@@ -250,6 +262,7 @@
       display: flex; gap: 6px; background: #fff; border: 1px solid #ddd;
       border-radius: 20px; padding: 6px 10px; margin: 4px; font-size: 18px;
       position: absolute; z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      top: -45px;
     }
     body.dark .reaction-picker { background: #1e1e1e; border-color: #444; }
     .reaction-picker span { cursor: pointer; }
@@ -608,6 +621,25 @@
   function escapeAttribute(value) {
     return String(value || "").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
   }
+
+  /* UPDATED: Hold (Long press) detect karne ka code */
+  window.pressTimer = null;
+
+  window.handlePressStart = function(msgId) {
+    window.pressTimer = setTimeout(() => {
+      // Pehle se khule huye options hide karo
+      document.querySelectorAll('.message-actions').forEach(el => el.classList.remove('show'));
+      // Jis message par hold kiya hai, uske options show karo
+      const actions = document.getElementById('actions_' + msgId);
+      if (actions) actions.classList.add('show');
+      // Mobile mein vibration feel ke liye
+      if (navigator.vibrate) navigator.vibrate(50);
+    }, 500); // 500 milliseconds hold
+  };
+
+  window.handlePressEnd = function() {
+    clearTimeout(window.pressTimer);
+  };
 
   /* DARK MODE */
   window.toggleDarkMode = function() {
@@ -1183,16 +1215,21 @@
 
         const msgTextEscaped = escapeAttribute((msg.text || "").substring(0, 80));
 
-        const actionsHtml = `<div class="message-actions">
+        /* UPDATED: Options (Delete/Pin/React) default hidden, hold par pop honga */
+        const actionsHtml = `<div id="actions_${d.id}" class="message-actions">
           <button class="message-react-btn" onclick="toggleReactionPicker('${escapeAttribute(d.id)}', event)">😊 React</button>
-          <button class="message-pin-btn" onclick="pinMessage('${escapeAttribute(d.id)}', '${msgTextEscaped}')">📌 Pin</button>
-          ${mine ? `<button class="message-delete-btn" onclick="openDeleteMessageModal('${escapeAttribute(d.id)}')">Delete</button>` : ""}
+          <button class="message-pin-btn" onclick="pinMessage('${escapeAttribute(d.id)}', '${msgTextEscaped}'); document.getElementById('actions_${d.id}').classList.remove('show');">📌 Pin</button>
+          ${mine ? `<button class="message-delete-btn" onclick="openDeleteMessageModal('${escapeAttribute(d.id)}'); document.getElementById('actions_${d.id}').classList.remove('show');">🗑️ Delete</button>` : ""}
+          <button style="border:0; background:transparent; font-size:11px; cursor:pointer;" onclick="document.getElementById('actions_${d.id}').classList.remove('show')">❌</button>
         </div>`;
 
+        /* UPDATED: Message bubble me mouse aur touch hold ke events lagaye gaye hain */
         row.innerHTML = `${avatarHtml}
           <div class="message ${mine ? "mine" : "other"}">
             ${showSenderLabel ? `<div class="message-sender">${escapeHTML(senderName)}</div>` : ""}
-            <div class="message-bubble">
+            <div class="message-bubble"
+                 onmousedown="handlePressStart('${d.id}')" onmouseup="handlePressEnd()" onmouseleave="handlePressEnd()"
+                 ontouchstart="handlePressStart('${d.id}')" ontouchend="handlePressEnd()" ontouchcancel="handlePressEnd()">
               ${msg.text ? escapeHTML(msg.text) : ""}
               ${attachmentHtml}
             </div>
@@ -1359,3 +1396,4 @@
 
 </body>
 </html>
+
