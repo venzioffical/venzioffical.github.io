@@ -1,1625 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Venzi</title>
-  <meta name="google-site-verification" content="BrJRvivgpr_8AxU4f-Jh0SHmfgNWrTGkIKxXS4fp-_Q" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Venzi - Connect, create groups and chat with your community.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Venzi</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            user-select: none; /* Prevents text selection on long press */
+            -webkit-user-select: none;
+        }
 
-  <style>
-    * { box-sizing: border-box; }
+        body {
+            background-color: #f8f9fa;
+            color: #1a1a1a;
+            padding-bottom: 80px;
+        }
 
-    html, body {
-      margin: 0; padding: 0; width: 100%; min-height: 100%;
-      font-family: Arial, sans-serif;
-      background: #fafafa; color: #111;
-      transition: background 0.3s, color 0.3s;
-    }
-    body { min-height: 100vh; }
-    button, input, textarea, select { font-family: Arial, sans-serif; }
-    button { cursor: pointer; }
-    .hidden { display: none !important; }
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: #fff;
+            border-bottom: 1px solid #eaeaea;
+        }
+        .top-header h2 { font-size: 22px; font-weight: 700; }
+        .header-icons { display: flex; gap: 12px; }
+        .icon-btn {
+            background: #f0f0f2;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-    /* DARK MODE */
-    body.dark {
-      background: #121212;
-      color: #eee;
-    }
-    body.dark .auth-page { background: #121212; }
-    body.dark .auth-card,
-    body.dark .menu-card,
-    body.dark .form-card,
-    body.dark .group-card,
-    body.dark .topbar,
-    body.dark .group-page,
-    body.dark .chat-header,
-    body.dark .chat-input-area,
-    body.dark .bottom-nav,
-    body.dark .modal-card {
-      background: #1e1e1e;
-      border-color: #333;
-      color: #eee;
-    }
-    body.dark .input,
-    body.dark .search,
-    body.dark .chat-input {
-      background: #2a2a2a;
-      border-color: #444;
-      color: #eee;
-    }
-    body.dark .secondary-btn { background: #333; color: #eee; }
-    body.dark .message-bubble { background: #2a2a2a; color: #eee; }
-    body.dark .message.mine .message-bubble { background: #3897f0; color: #fff; }
-    body.dark .nav-btn { color: #ccc; }
-    body.dark .vault-item { background: #1e1e1e; border-color: #333; }
-    body.dark .member-chip { background: #2a2a2a; color: #eee; }
+        .main-container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 16px;
+        }
 
-    /* AUTH */
-    .auth-page {
-      min-height: 100vh; display: flex; align-items: center;
-      justify-content: center; padding: 20px; background: #fafafa;
-    }
-    .auth-card {
-      width: 100%; max-width: 390px; background: #fff; border: 1px solid #ddd;
-      padding: 32px 28px; border-radius: 18px; box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-      text-align: center;
-    }
-    .logo { width: 105px; max-width: 100%; margin: 0 auto 18px; display: block; }
-    .auth-card h1 { margin: 0 0 8px; font-size: 30px; }
-    .auth-card .subtitle { margin: 0 0 25px; color: #777; font-size: 14px; }
-    .input {
-      width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #ddd;
-      border-radius: 10px; outline: none; font-size: 15px; background: #fafafa;
-    }
-    .input:focus { border-color: #111; background: #fff; }
-    .primary-btn, .secondary-btn, .danger-btn {
-      width: 100%; padding: 14px; border: 0; border-radius: 10px;
-      font-size: 15px; font-weight: bold; margin-bottom: 10px;
-    }
-    .primary-btn { background: #111; color: #fff; }
-    .secondary-btn { background: #eee; color: #111; }
-    .danger-btn { background: #d93025; color: #fff; }
-    .status { min-height: 20px; font-size: 13px; color: #d93025; margin: 8px 0 12px; }
+        .page-title h1 { font-size: 26px; font-weight: 800; }
+        .page-title p { color: #666; font-size: 14px; margin-top: 4px; margin-bottom: 20px; }
 
-    /* APP */
-    .app { min-height: 100vh; background: #fafafa; }
-    .topbar {
-      height: 62px; background: #fff; border-bottom: 1px solid #ddd;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 18px; position: sticky; top: 0; z-index: 50;
-    }
-    .topbar-title { font-size: 23px; font-weight: bold; }
-    .topbar-right { display: flex; align-items: center; gap: 10px; }
-    .icon-btn {
-      width: 38px; height: 38px; border: 0; border-radius: 50%;
-      background: #eee; color: #111; display: flex; align-items: center;
-      justify-content: center; font-size: 18px; padding: 0;
-    }
-    .icon-btn:active { transform: scale(0.95); }
-    body.dark .icon-btn { background: #2a2a2a; color: #eee; }
+        /* Story Section */
+        .story-section { display: flex; gap: 15px; margin-bottom: 20px; }
+        .story-item { display: flex; flex-direction: column; align-items: center; font-size: 12px; color: #666; }
+        .story-circle {
+            width: 60px; height: 60px; border-radius: 50%;
+            border: 2px dashed #007aff; display: flex; align-items: center;
+            justify-content: center; font-size: 24px; color: #007aff;
+            margin-bottom: 6px; cursor: pointer;
+        }
 
-    .content { width: 100%; max-width: 650px; margin: 0 auto; padding: 18px; padding-bottom: 90px; }
-    .page-title { font-size: 25px; margin: 5px 0 4px; }
-    .page-subtitle { color: #777; font-size: 14px; margin: 0 0 20px; }
+        /* Post Card Styling */
+        .post-card {
+            position: relative;
+            background: #fff;
+            border: 1px solid #eaeaea;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: background 0.2s, transform 0.1s;
+            cursor: pointer;
+        }
+        .post-card.pinned {
+            border: 2px solid #007aff;
+            background: #f0f7ff;
+        }
+        .pin-badge {
+            display: none;
+            font-size: 12px;
+            color: #007aff;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .post-card.pinned .pin-badge { display: block; }
 
-    /* STORIES SECTION */
-    .stories-wrapper {
-      display: flex; gap: 14px; overflow-x: auto;
-      padding: 4px 4px 16px; margin-bottom: 5px;
-      scrollbar-width: none;
-    }
-    .stories-wrapper::-webkit-scrollbar { display: none; }
-    .story-item {
-      display: flex; flex-direction: column; align-items: center;
-      gap: 5px; cursor: pointer; flex-shrink: 0; position: relative;
-    }
-    .story-avatar {
-      width: 60px; height: 60px; border-radius: 50%;
-      border: 2.5px solid #3897f0; padding: 2px;
-      display: flex; align-items: center; justify-content: center;
-      background: #fff; font-weight: bold; font-size: 22px;
-      overflow: hidden;
-    }
-    body.dark .story-avatar { background: #1e1e1e; }
-    .add-story-btn { border: 2px dashed #888; color: #3897f0; }
-    .story-username { font-size: 11px; color: #777; max-width: 64px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
+        .post-header { font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+        .post-content { font-size: 14px; color: #333; line-height: 1.4; }
+        .active-reaction { margin-top: 8px; font-size: 18px; }
 
-    .menu-card, .form-card, .group-card {
-      background: #fff; border: 1px solid #ddd; border-radius: 16px;
-      padding: 22px; margin-bottom: 15px; position: relative;
-    }
-    .welcome { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-    .welcome-email { font-size: 13px; color: #777; word-break: break-all; margin-bottom: 20px; }
-    .search {
-      width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 12px;
-      margin-bottom: 15px; outline: none; font-size: 15px; background: #fff;
-    }
-    .group-card h3 { margin: 7px 0 5px; font-size: 18px; }
-    .group-card p { margin: 5px 0; color: #666; font-size: 13px; line-height: 1.45; }
-    .tag {
-      display: inline-block; padding: 5px 9px; border-radius: 20px;
-      font-size: 10px; font-weight: bold; margin-right: 4px;
-    }
-    .public { background: #e8f7ed; color: #087b2f; }
-    .private { background: #fdeaea; color: #b00020; }
-    .owner-tag { background: #eee; color: #333; }
-    .category-tag { background: #eef2ff; color: #3730a3; }
-    .group-btn {
-      width: 100%; border: 0; border-radius: 9px; padding: 11px;
-      margin-top: 10px; font-weight: bold; background: #111; color: white;
-    }
-    body.dark .group-btn { background: #fff; color: #000; }
-    .pending-btn { background: #eee; color: #777; cursor: default; }
+        /* Long Press Floating Menu Overlay */
+        .action-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .action-overlay.active { display: flex; }
 
-    .star-btn {
-      position: absolute; top: 18px; right: 18px; border: 0; background: transparent;
-      font-size: 22px; padding: 0; cursor: pointer; line-height: 1;
-    }
+        .action-popup {
+            background: #fff;
+            width: 280px;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: popupAnim 0.2s ease-out;
+        }
+        @keyframes popupAnim {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
 
-    .label { display: block; font-size: 12px; font-weight: bold; color: #666; margin: 12px 0 6px; }
-    textarea.input { min-height: 100px; resize: vertical; }
-    select.input { appearance: none; }
+        /* Reaction Bar inside Menu */
+        .popup-reactions {
+            display: flex;
+            justify-content: space-around;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 8px;
+        }
+        .emoji-btn {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .emoji-btn:active { transform: scale(1.3); }
 
-    .visibility { display: flex; gap: 10px; margin-bottom: 10px; }
-    .visibility label {
-      flex: 1; padding: 13px; border: 1px solid #ddd; border-radius: 10px;
-      text-align: center; font-size: 13px; cursor: pointer;
-    }
-    .visibility input { display: none; }
-    .visibility label:has(input:checked) { border-color: #111; background: #f3f3f3; font-weight: bold; }
-    body.dark .visibility label:has(input:checked) { background: #2a2a2a; }
+        /* Option Menu Actions (Pin / Delete) */
+        .menu-options { display: flex; flex-direction: column; gap: 4px; }
+        .menu-btn {
+            background: none;
+            border: none;
+            padding: 12px;
+            text-align: left;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .menu-btn:hover { background: #f5f5f5; }
+        .menu-btn.delete { color: #ff3b30; }
 
-    /* VAULT */
-    .vault-upload-btn {
-      background: #087b2f; color: white; display: inline-block; text-align: center;
-      padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer;
-      width: 100%; margin-bottom: 6px;
-    }
-    .vault-hint { font-size: 12px; color: #888; margin-bottom: 15px; }
-    .vault-item {
-      display: flex; align-items: center; padding: 12px; border: 1px solid #eee;
-      border-radius: 10px; margin-bottom: 10px; background: #fff;
-    }
-    body.dark .vault-item { background: #1e1e1e; border-color: #333; }
-    .vault-item-icon {
-      width: 40px; height: 40px; background: #eee; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center; font-size: 20px;
-      margin-right: 12px; flex-shrink: 0; overflow: hidden;
-    }
-    .vault-item-icon img { width: 100%; height: 100%; object-fit: cover; }
-    .vault-item-info { flex: 1; min-width: 0; }
-    .vault-item-title {
-      font-size: 14px; font-weight: bold; white-space: nowrap;
-      overflow: hidden; text-overflow: ellipsis;
-    }
-    .vault-item-date { font-size: 11px; color: #888; margin-top: 3px; }
-    .vault-send-btn {
-      background: #111; color: #fff; border: none; padding: 6px 12px;
-      border-radius: 6px; font-size: 12px; font-weight: bold;
-    }
-    .vault-delete-btn {
-      background: #fdeaea; color: #b00020; border: none; padding: 6px 10px;
-      border-radius: 6px; font-size: 11px; font-weight: bold; margin-left: 6px;
-    }
+        /* Login / Signup Auth Section */
+        .auth-card {
+            background: #fff;
+            border: 1px solid #eaeaea;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin-top: 24px;
+        }
+        .auth-card img.logo { width: 60px; height: 60px; border-radius: 50%; margin-bottom: 10px; }
+        .input {
+            width: 100%; padding: 12px; margin: 8px 0;
+            border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px;
+        }
+        .primary-btn, .secondary-btn {
+            width: 100%; padding: 12px; margin: 6px 0;
+            border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
+        }
+        .primary-btn { background: #000; color: #fff; }
+        .secondary-btn { background: #f0f0f0; color: #333; }
 
-    /* CHAT */
-    .group-page {
-      position: fixed; inset: 0; z-index: 100; background: #fff;
-      display: flex; flex-direction: column;
-    }
-    .chat-header {
-      height: 60px; border-bottom: 1px solid #efefef; display: flex;
-      align-items: center; gap: 10px; padding: 0 12px; flex-shrink: 0;
-    }
-    .back-icon { border: 0; background: transparent; font-size: 24px; padding: 5px; color: inherit; }
-    .chat-header-avatar {
-      width: 38px; height: 38px; border-radius: 50%; display: flex;
-      align-items: center; justify-content: center; color: #fff;
-      font-weight: bold; font-size: 15px; flex-shrink: 0;
-    }
-    .chat-header-info { flex: 1; min-width: 0; }
-    .chat-header-name {
-      font-weight: 600; font-size: 15px; overflow: hidden;
-      text-overflow: ellipsis; white-space: nowrap;
-    }
-    .chat-header-members { color: #8e8e8e; font-size: 12px; margin-top: 1px; }
-    .chat-header-menu { border: 0; background: transparent; font-size: 20px; padding: 5px; color: inherit; }
-
-    .pinned-banner {
-      background: #fff8e1; border-bottom: 1px solid #ffe082;
-      padding: 8px 15px; font-size: 12px; display: flex;
-      align-items: center; gap: 8px; flex-shrink: 0;
-    }
-    body.dark .pinned-banner { background: #332b00; border-color: #554400; }
-    .pinned-banner .pin-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .pinned-banner button { border: 0; background: transparent; color: #b00020; font-size: 11px; font-weight: bold; }
-
-    .members-area {
-      padding: 8px 15px; border-bottom: 1px solid #efefef;
-      overflow-x: auto; white-space: nowrap; flex-shrink: 0;
-    }
-    .member-chip {
-      display: inline-block; background: #f0f0f0; padding: 6px 10px;
-      border-radius: 20px; font-size: 11px; margin-right: 5px;
-    }
-
-    .chat-messages { flex: 1; overflow-y: auto; padding: 12px 12px 6px; background: inherit; }
-    .message-row { display: flex; align-items: flex-end; gap: 7px; margin-bottom: 3px; }
-    .message-row.mine { flex-direction: row-reverse; }
-    .msg-avatar {
-      width: 26px; height: 26px; border-radius: 50%; display: flex;
-      align-items: center; justify-content: center; color: #fff;
-      font-weight: bold; font-size: 11px; flex-shrink: 0;
-    }
-
-    .message { display: flex; flex-direction: column; max-width: 72%; position: relative; }
-    .message.mine { align-items: flex-end; }
-    .message.other { align-items: flex-start; }
-    .message-sender { font-size: 11px; color: #8e8e8e; margin: 6px 0 2px 4px; }
-    .message-bubble {
-      background: #efefef; color: #111; padding: 9px 14px; border-radius: 20px;
-      font-size: 14.5px; line-height: 1.35; word-break: break-word; cursor: pointer;
-      user-select: none;
-    }
-    .message.mine .message-bubble { background: #3897f0; color: #fff; }
-    .message-time { font-size: 10px; color: #b0b0b0; margin: 3px 4px 2px; }
-    .message.mine .message-time { text-align: right; }
-
-    .message-actions { 
-      display: none; align-items: center; gap: 8px; margin: 4px; 
-      background: #fff; padding: 8px 12px; border-radius: 10px; 
-      border: 1px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      position: absolute; top: -45px; z-index: 10; white-space: nowrap;
-    }
-    body.dark .message-actions { background: #2a2a2a; border-color: #444; }
-    .message-actions.show { display: flex; }
-
-    .message-delete-btn, .message-pin-btn, .message-react-btn {
-      border: 0; background: transparent; color: #666; font-size: 11px; padding: 4px 8px; cursor: pointer;
-    }
-    .message-delete-btn { color: #d93025; }
-
-    .reaction-picker {
-      display: flex; gap: 6px; background: #fff; border: 1px solid #ddd;
-      border-radius: 20px; padding: 6px 10px; margin: 4px; font-size: 18px;
-      position: absolute; z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      top: -45px;
-    }
-    body.dark .reaction-picker { background: #1e1e1e; border-color: #444; }
-    .reaction-picker span { cursor: pointer; }
-
-    .reactions-row { display: flex; gap: 4px; margin: 2px 4px; flex-wrap: wrap; }
-    .reaction-chip {
-      background: #f0f0f0; border-radius: 12px; padding: 2px 7px;
-      font-size: 11px; display: flex; align-items: center; gap: 3px;
-    }
-    body.dark .reaction-chip { background: #2a2a2a; }
-
-    .chat-img-attachment { max-width: 100%; border-radius: 14px; margin-top: 4px; display: block; }
-    .chat-file-attachment {
-      display: flex; align-items: center; background: rgba(0,0,0,0.06);
-      padding: 8px; border-radius: 10px; margin-top: 4px; text-decoration: none;
-      color: inherit; font-size: 12px;
-    }
-    .message.mine .chat-file-attachment { background: rgba(255,255,255,0.2); color: white; }
-
-    .chat-input-area {
-      display: flex; align-items: center; gap: 6px; padding: 8px 10px;
-      border-top: 1px solid #efefef; background: #fff; flex-shrink: 0;
-    }
-    .attach-btn { border: 0; background: transparent; font-size: 22px; padding: 5px; color: inherit; }
-    .chat-input {
-      flex: 1; border: 1px solid #dbdbdb; border-radius: 22px; padding: 10px 16px;
-      outline: none; font-size: 14px; background: #fafafa;
-    }
-    .send-btn {
-      width: 40px; height: 40px; border-radius: 50%; border: 0; background: transparent;
-      color: #3897f0; font-size: 22px; display: flex; align-items: center;
-      justify-content: center; font-weight: bold;
-    }
-
-    /* FULLSCREEN STORY VIEWER MODAL */
-    .story-modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 99999;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .story-modal-content { max-width: 400px; width: 100%; text-align: center; position: relative; display: flex; flex-direction: column; height: 100vh; justify-content: center; }
-    .story-progress-bg { height: 3px; background: rgba(255,255,255,0.3); width: 95%; margin: 10px auto; border-radius: 2px; position: absolute; top: 10px; left: 2.5%; }
-    .story-progress-bar { height: 100%; background: #ffffff; width: 0%; transition: width 5s linear; }
-    .story-header { display: flex; justify-content: space-between; color: #fff; font-size: 14px; padding: 10px 15px; position: absolute; top: 25px; width: 100%; box-sizing: border-box; z-index: 2; }
-    .close-story { cursor: pointer; font-size: 22px; font-weight: bold; }
-    .story-media-box { width: 100%; height: 80vh; display: flex; align-items: center; justify-content: center; }
-    .story-media-box img, .story-media-box video { max-width: 100%; max-height: 100%; border-radius: 12px; object-fit: contain; }
-
-    /* MODALS */
-    .modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: flex;
-      align-items: center; justify-content: center; padding: 20px; z-index: 300;
-    }
-    .modal-card {
-      width: 100%; max-width: 400px; background: white; border-radius: 16px;
-      padding: 22px; text-align: center; max-height: 85vh; overflow-y: auto;
-    }
-    .modal-card h3 { margin-top: 0; }
-    .modal-card p { color: #666; font-size: 13px; line-height: 1.5; }
-    .invite-link-box {
-      background: #f0f0f0; padding: 12px; border-radius: 8px; font-size: 12px;
-      word-break: break-all; margin-bottom: 15px; text-align: left;
-    }
-    body.dark .invite-link-box { background: #2a2a2a; }
-
-    /* BOTTOM NAV */
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0; height: 64px; background: #fff;
-      border-top: 1px solid #ddd; display: flex; justify-space-around;
-      align-items: center; z-index: 80;
-    }
-    .nav-btn { border: 0; background: transparent; color: #555; font-size: 11px; text-align: center; padding: 7px 15px; }
-    .nav-icon { display: block; font-size: 21px; margin-bottom: 2px; }
-
-    @media (min-width: 700px) {
-      .bottom-nav { max-width: 650px; left: 50%; transform: translateX(-50%); border-left: 1px solid #ddd; border-right: 1px solid #ddd; }
-    }
-  </style>
+        /* Bottom Fixed Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; text-decoration: none;
+            color: #8e8e93; font-size: 11px; font-weight: 500; flex: 1;
+        }
+        .nav-item.active { color: #000000; font-weight: 600; }
+        .nav-item.active .nav-icon { stroke: #000000; }
+    </style>
 </head>
-
 <body>
 
-<!-- LOGIN / SIGNUP -->
-<div id="authPage" class="auth-page">
-  <div class="auth-card">
-    <img src="1787225529289.png" class="logo" alt="Venzi" onerror="this.style.display='none'">
-    <h1>Venzi</h1>
-    <p class="subtitle">Connect with your groups</p>
-    <div id="authStatus" class="status"></div>
-    <input id="emailInput" class="input" type="email" placeholder="Email">
-    <input id="passwordInput" class="input" type="password" placeholder="Password">
-    <input id="nicknameInput" class="input" type="text" placeholder="Nickname (shown to others instead of email)">
-    <button class="primary-btn" onclick="logIn()">Log In</button>
-    <button class="secondary-btn" onclick="signUp()">Create New Account</button>
-  </div>
-</div>
-
-<!-- MAIN APP -->
-<div id="app" class="app hidden">
-
-  <header class="topbar">
-    <div class="topbar-title">Venzi</div>
-    <div class="topbar-right">
-      <button class="icon-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
-      <button id="profileTopButton" class="icon-btn" onclick="showProfile()" title="My Profile">👤</button>
-    </div>
-  </header>
-
-  <main class="content">
-
-    <!-- HOME -->
-    <section id="homePage">
-      <h1 class="page-title">Home</h1>
-      <p class="page-subtitle">Manage your groups and conversations.</p>
-      
-      <!-- STORIES SECTION -->
-      <div class="stories-wrapper">
-        <!-- Your Story Button -->
-        <div class="story-item" onclick="document.getElementById('storyFileInput').click()">
-          <div class="story-avatar add-story-btn">＋</div>
-          <span class="story-username">Your Story</span>
-          <input type="file" id="storyFileInput" class="hidden" accept="image/*,video/*" onchange="uploadStory(event)">
+    <!-- Header -->
+    <div class="top-header">
+        <h2>Venzi</h2>
+        <div class="header-icons">
+            <button class="icon-btn">🌙</button>
+            <button class="icon-btn">👤</button>
         </div>
-        <!-- Active Stories Container -->
-        <div id="storiesContainer" style="display:flex; gap:14px;"></div>
-      </div>
+    </div>
 
-      <div class="menu-card">
-        <div class="welcome">Welcome 👋</div>
-        <div id="welcomeNickname" class="welcome-email" style="font-weight:bold; color:inherit; margin-bottom:2px;"></div>
-        <div id="welcomeEmail" class="welcome-email"></div>
-        <button class="primary-btn" onclick="showCreateGroup()">＋ Create Group</button>
-      </div>
-    </section>
-
-    <!-- PROFILE -->
-    <section id="profilePage" class="hidden">
-      <h1 class="page-title">My Profile</h1>
-      <p class="page-subtitle">Your nickname is shown to others instead of your email.</p>
-      <div class="form-card">
-        <div id="profileStatus" class="status"></div>
-        <label class="label">Nickname</label>
-        <input id="profileNicknameInput" class="input" type="text" placeholder="Your nickname">
-        <label class="label">Email (only visible to you)</label>
-        <input id="profileEmailDisplay" class="input" type="text" disabled>
-        <button class="primary-btn" onclick="saveProfile()">Save</button>
-        <button class="secondary-btn" onclick="goHome()">Back</button>
-        <button class="danger-btn" onclick="logOut()" style="margin-top: 15px;">Logout</button>
-      </div>
-    </section>
-
-    <!-- CREATE GROUP -->
-    <section id="createPage" class="hidden">
-      <h1 class="page-title">Create Group</h1>
-      <p class="page-subtitle">Create your own community.</p>
-      <div class="form-card">
-        <div id="createStatus" class="status"></div>
-        <label class="label">Group Name</label>
-        <input id="groupNameInput" class="input" type="text" placeholder="e.g. Study Buddies">
-        <label class="label">Description</label>
-        <textarea id="groupDescInput" class="input" placeholder="What is this group about?"></textarea>
-        <label class="label">Category</label>
-        <select id="groupCategoryInput" class="input">
-          <option value="General">General</option>
-          <option value="Study">📚 Study</option>
-          <option value="Business">💼 Business</option>
-          <option value="Fashion">👗 Fashion</option>
-          <option value="Gaming">🎮 Gaming</option>
-          <option value="Tech">💻 Tech</option>
-          <option value="Sports">⚽ Sports</option>
-          <option value="Other">✨ Other</option>
-        </select>
-        <label class="label">Visibility</label>
-        <div class="visibility">
-          <label><input type="radio" name="visibility" value="public" checked>🌍 Public</label>
-          <label><input type="radio" name="visibility" value="private">🔒 Private</label>
+    <div class="main-container">
+        <div class="page-title">
+            <h1>Home</h1>
+            <p>Hold/Tap any post for Options (React, Pin, Delete)</p>
         </div>
-        <label class="label">Invite members (optional)</label>
-        <input id="groupInvitesInput" class="input" type="text" placeholder="friend@email.com">
-        <button class="primary-btn" onclick="submitCreateGroup()">Create Group</button>
-        <button class="secondary-btn" onclick="goHome()">Cancel</button>
-      </div>
-    </section>
 
-    <!-- BROWSE -->
-    <section id="browsePage" class="hidden">
-      <h1 class="page-title">Explore</h1>
-      <p class="page-subtitle">Find communities to join.</p>
-      <input id="searchGroupInput" class="search" type="text" placeholder="Search groups..." oninput="renderGroupList()">
-      <select id="categoryFilterInput" class="input" onchange="renderGroupList()">
-        <option value="">All Categories</option>
-        <option value="General">General</option>
-        <option value="Study">📚 Study</option>
-        <option value="Business">💼 Business</option>
-        <option value="Fashion">👗 Fashion</option>
-        <option value="Gaming">🎮 Gaming</option>
-        <option value="Tech">💻 Tech</option>
-        <option value="Sports">⚽ Sports</option>
-        <option value="Other">✨ Other</option>
-      </select>
-      <div id="groupListContainer"></div>
-    </section>
-
-    <!-- MY GROUPS -->
-    <section id="myGroupsPage" class="hidden">
-      <h1 class="page-title">My Groups</h1>
-      <p class="page-subtitle">Groups you are a member of. Starred groups show first.</p>
-      <div id="myGroupsContainer"></div>
-    </section>
-
-    <!-- VAULT -->
-    <section id="vaultPage" class="hidden">
-      <h1 class="page-title">My Vault</h1>
-      <p class="page-subtitle">Your private folder. Only you can see these.</p>
-      <label class="vault-upload-btn">
-        <input type="file" id="vaultFileInput" class="hidden" onchange="uploadToVault(event)">
-        ⬆️ Upload File to Vault
-      </label>
-      <div class="vault-hint">Max size ~700KB per file</div>
-      <div id="vaultUploadStatus" class="status"></div>
-      <div id="vaultFilesContainer"></div>
-    </section>
-
-  </main>
-
-  <nav class="bottom-nav">
-    <button class="nav-btn" onclick="goHome()"><span class="nav-icon">⌂</span>Home</button>
-    <button class="nav-btn" onclick="showJoinGroup()"><span class="nav-icon">🔍</span>Explore</button>
-    <button class="nav-btn" onclick="showMyGroups()"><span class="nav-icon">👥</span>Groups</button>
-    <button class="nav-btn" onclick="showVault()"><span class="nav-icon">📁</span>Vault</button>
-  </nav>
-
-</div>
-
-<!-- GROUP CHAT -->
-<div id="groupPage" class="group-page hidden">
-  <header class="chat-header">
-    <button class="back-icon" onclick="closeGroupPage()">←</button>
-    <div id="groupPageAvatar" class="chat-header-avatar">G</div>
-    <div class="chat-header-info">
-      <div id="groupPageName" class="chat-header-name">Group</div>
-      <div id="groupPageMembersCount" class="chat-header-members">0 members</div>
-    </div>
-    <button class="icon-btn" onclick="showInviteLink()" title="Invite Link">🔗</button>
-    <button id="chatMenuButton" class="chat-header-menu" onclick="showGroupMenu()">⋮</button>
-  </header>
-
-  <div id="pinnedBanner" class="pinned-banner hidden">
-    <span>📌</span>
-    <span id="pinnedText" class="pin-text"></span>
-    <button onclick="unpinMessage()">Unpin</button>
-  </div>
-
-  <div id="groupPageMembers" class="members-area"></div>
-  <div id="chatMessages" class="chat-messages"></div>
-
-  <div class="chat-input-area">
-    <button class="attach-btn" onclick="openVaultPicker()">📎</button>
-    <input id="chatInput" class="chat-input" type="text" placeholder="Message..." onkeydown="if(event.key === 'Enter') sendChatMessage()">
-    <button class="send-btn" onclick="sendChatMessage()">➤</button>
-  </div>
-</div>
-
-<!-- FULLSCREEN STORY VIEWER MODAL -->
-<div id="storyViewerModal" class="story-modal hidden">
-  <div class="story-modal-content">
-    <div class="story-progress-bg"><div id="storyProgressBar" class="story-progress-bar"></div></div>
-    <div class="story-header">
-      <b id="storyViewerName">User</b>
-      <span onclick="closeStoryViewer()" class="close-story">✕</span>
-    </div>
-    <div class="story-media-box">
-      <img id="storyViewerImage" src="" class="hidden">
-      <video id="storyViewerVideo" src="" class="hidden" playsinline autoplay muted></video>
-    </div>
-  </div>
-</div>
-
-<!-- MODALS -->
-<div id="deleteModal" class="modal hidden">
-  <div class="modal-card">
-    <h3>Delete Group?</h3>
-    <p>This will permanently delete the group and all of its chat messages. This action cannot be undone.</p>
-    <button class="danger-btn" onclick="confirmDeleteGroup()">Delete Group</button>
-    <button class="secondary-btn" onclick="closeDeleteModal()">Cancel</button>
-  </div>
-</div>
-
-<div id="leaveModal" class="modal hidden">
-  <div class="modal-card">
-    <h3>Leave Group?</h3>
-    <p>You will be removed from this group. You can rejoin later if it's public.</p>
-    <button class="danger-btn" onclick="confirmLeaveGroup()">Leave Group</button>
-    <button class="secondary-btn" onclick="closeLeaveModal()">Cancel</button>
-  </div>
-</div>
-
-<div id="deleteVaultModal" class="modal hidden">
-  <div class="modal-card">
-    <h3>Delete File?</h3>
-    <p>This will permanently delete this file from your Vault.</p>
-    <button class="danger-btn" onclick="confirmDeleteVaultFile()">Delete File</button>
-    <button class="secondary-btn" onclick="closeDeleteVaultModal()">Cancel</button>
-  </div>
-</div>
-
-<div id="deleteMessageModal" class="modal hidden">
-  <div class="modal-card">
-    <h3>Delete Message?</h3>
-    <p>This message will be permanently deleted for everyone in this group.</p>
-    <button class="danger-btn" onclick="confirmDeleteMessage()">Delete Message</button>
-    <button class="secondary-btn" onclick="closeDeleteMessageModal()">Cancel</button>
-  </div>
-</div>
-
-<div id="vaultPickerModal" class="modal hidden">
-  <div class="modal-card">
-    <h3>Select from Vault</h3>
-    <p>Choose a file to send to this group.</p>
-    <div id="vaultPickerContainer" style="text-align:left; margin-bottom:15px;"></div>
-    <button class="secondary-btn" onclick="closeVaultPicker()">Cancel</button>
-  </div>
-</div>
-
-<div id="inviteLinkModal" class="modal hidden">
-  <div class="modal-card">
-    <h3>Invite Link</h3>
-    <p>Share this link. Anyone who opens it (and logs in) can join this group directly.</p>
-    <div id="inviteLinkBox" class="invite-link-box"></div>
-    <button class="primary-btn" onclick="copyInviteLink()">Copy Link</button>
-    <button class="secondary-btn" onclick="closeInviteLink()">Close</button>
-  </div>
-</div>
-
-<script type="module">
-
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import {
-    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-    signOut, onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import {
-    getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc,
-    updateDoc, deleteDoc, arrayUnion, arrayRemove, serverTimestamp,
-    query, orderBy, onSnapshot, where
-  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  import { 
-    getStorage, ref, uploadBytes, uploadString, getDownloadURL, deleteObject 
-  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDQmh4yBGXeOiAIn-pKANxl3BR2H-jQPHE",
-    authDomain: "venzi-community.firebaseapp.com",
-    projectId: "venzi-community",
-    storageBucket: "venzi-community.firebasestorage.app",
-    messagingSenderId: "1008790056674",
-    appId: "1:1008790056674:web:22fa088270df6a5be938bb",
-    measurementId: "G-352E4PXB3B"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const storage = getStorage(app);
-
-  let currentUser = null;
-  let allGroupsCache = [];
-  let currentGroupId = null;
-  let currentGroupData = null;
-  let chatUnsubscribe = null;
-  let myVaultFiles = [];
-  let vaultFileToDelete = null;
-  let messageToDelete = null;
-  let myNickname = "";
-  let myStarredGroups = [];
-  let pendingInviteGroupId = null;
-  let storyTimer = null;
-
-  const profileCache = {};
-  const MAX_FILE_BYTES = 700000;
-  const REACTION_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🙏"];
-
-  const AVATAR_COLORS = ["#f56040","#fccc63","#5851db","#833ab4","#c13584","#e1306c","#fd1d1d","#405de6","#5b51d8"];
-
-  function getAvatarColor(uid) {
-    let hash = 0;
-    for (let i = 0; i < uid.length; i++) hash = uid.charCodeAt(i) + ((hash << 5) - hash);
-    return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
-  }
-  function getInitial(name) { return (name || "?").trim().charAt(0).toUpperCase(); }
-  function formatMsgTime(ts) {
-    if (!ts || !ts.toDate) return "";
-    const d = ts.toDate();
-    let hours = d.getHours();
-    const minutes = d.getMinutes().toString().padStart(2, "0");
-    const ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12; if (hours === 0) hours = 12;
-    return `${hours}:${minutes} ${ampm}`;
-  }
-  function escapeHTML(value) {
-    return String(value || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-  }
-  function escapeAttribute(value) {
-    return String(value || "").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
-  }
-
-  window.pressTimer = null;
-
-  window.handlePressStart = function(msgId) {
-    window.pressTimer = setTimeout(() => {
-      document.querySelectorAll('.message-actions').forEach(el => el.classList.remove('show'));
-      const actions = document.getElementById('actions_' + msgId);
-      if (actions) actions.classList.add('show');
-      if (navigator.vibrate) navigator.vibrate(50);
-    }, 500);
-  };
-
-  window.handlePressEnd = function() {
-    clearTimeout(window.pressTimer);
-  };
-
-  /* DARK MODE */
-  window.toggleDarkMode = function() {
-    document.body.classList.toggle("dark");
-    localStorage.setItem("venziDarkMode", document.body.classList.contains("dark") ? "on" : "off");
-  };
-  if (localStorage.getItem("venziDarkMode") === "on") {
-    document.body.classList.add("dark");
-  }
-
-  /* STORY SYSTEM LOGIC */
-  function compressImage(file) {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (e) => {
-        const img = new Image();
-        img.src = e.target.result;
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          const maxW = 600; const scale = maxW / img.width;
-          canvas.width = maxW; canvas.height = img.height * scale;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL("image/jpeg", 0.6));
-        };
-      };
-    });
-  }
-
-  window.uploadStory = async function(e) {
-    const file = e.target.files[0];
-    e.target.value = "";
-    if (!file || !currentUser) return;
-
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Storage limit: Please upload files smaller than 5MB!");
-      return;
-    }
-
-    const btn = document.querySelector(".add-story-btn");
-    if (btn) btn.innerHTML = "⌛";
-
-    const isVideo = file.type.startsWith("video/");
-    const fileExt = isVideo ? "mp4" : "jpg";
-    const storagePath = `stories/${currentUser.uid}_${Date.now()}.${fileExt}`;
-    const storageRef = ref(storage, storagePath);
-
-    try {
-      let downloadURL = "";
-      if (isVideo) {
-        await uploadBytes(storageRef, file);
-        downloadURL = await getDownloadURL(storageRef);
-      } else {
-        const compressedBase64 = await compressImage(file);
-        await uploadString(storageRef, compressedBase64, 'data_url');
-        downloadURL = await getDownloadURL(storageRef);
-      }
-
-      await addDoc(collection(db, "stories"), {
-        userId: currentUser.uid,
-        userName: myNickname || currentUser.email.split('@')[0],
-        mediaUrl: downloadURL,
-        storagePath: storagePath,
-        mediaType: isVideo ? "video" : "image",
-        createdAt: serverTimestamp()
-      });
-
-      loadStories();
-    } catch (err) { 
-      alert("Upload Failed: " + err.message); 
-    } finally {
-      if (btn) btn.innerHTML = "＋";
-    }
-  };
-
-  async function loadStories() {
-    if (!currentUser) return;
-    const container = document.getElementById("storiesContainer");
-    if (!container) return;
-    container.innerHTML = "<span style='font-size:12px;color:#777;padding:10px;'>Loading...</span>";
-    
-    const twentyFourHoursAgo = new Date(Date.now() - (24 * 60 * 60 * 1000));
-    
-    try {
-      const oldQ = query(collection(db, "stories"), where("createdAt", "<=", twentyFourHoursAgo));
-      const oldSnap = await getDocs(oldQ);
-      oldSnap.forEach(async (d) => {
-        const data = d.data();
-        if (data.storagePath) {
-          try { await deleteObject(ref(storage, data.storagePath)); } catch(e){}
-        }
-        await deleteDoc(doc(db, "stories", d.id));
-      });
-
-      const activeQ = query(collection(db, "stories"), where("createdAt", ">=", twentyFourHoursAgo), orderBy("createdAt", "desc"));
-      const snap = await getDocs(activeQ);
-      
-      container.innerHTML = "";
-      if (snap.empty) {
-        container.innerHTML = "";
-        return;
-      }
-
-      snap.forEach(d => {
-        const data = d.data();
-        const item = document.createElement("div");
-        item.className = "story-item";
-        item.onclick = () => openStoryViewer(data.userName, data.mediaUrl, data.mediaType);
-        
-        const mediaHTML = data.mediaType === "video" 
-          ? `<video src="${data.mediaUrl}#t=0.1" style="width:100%; height:100%; object-fit:cover;"></video>`
-          : `<img src="${data.mediaUrl}" style="width:100%; height:100%; object-fit:cover;">`;
-
-        item.innerHTML = `
-          <div class="story-avatar" style="padding:0; border: 2.5px solid #3897f0;">
-            ${mediaHTML}
-          </div>
-          <span class="story-username">${escapeHTML(data.userName || "User")}</span>
-        `;
-        container.appendChild(item);
-      });
-    } catch (e) {
-      container.innerHTML = "";
-    }
-  }
-
-  window.openStoryViewer = function(name, url, type) {
-    const modal = document.getElementById("storyViewerModal");
-    const imgEl = document.getElementById("storyViewerImage");
-    const videoEl = document.getElementById("storyViewerVideo");
-    const bar = document.getElementById("storyProgressBar");
-
-    document.getElementById("storyViewerName").innerText = name || "User";
-
-    if (type === "video") {
-      imgEl.classList.add("hidden");
-      videoEl.classList.remove("hidden");
-      videoEl.src = url;
-      videoEl.currentTime = 0;
-      videoEl.play();
-    } else {
-      videoEl.classList.add("hidden");
-      videoEl.pause();
-      imgEl.classList.remove("hidden");
-      imgEl.src = url;
-    }
-
-    modal.classList.remove("hidden");
-    
-    bar.style.transition = "none";
-    bar.style.width = "0%";
-    setTimeout(() => { 
-      bar.style.transition = "width 5s linear";
-      bar.style.width = "100%"; 
-    }, 50);
-
-    clearTimeout(storyTimer);
-    storyTimer = setTimeout(() => { closeStoryViewer(); }, 5000);
-  };
-
-  window.closeStoryViewer = function() {
-    clearTimeout(storyTimer);
-    const videoEl = document.getElementById("storyViewerVideo");
-    if(videoEl) videoEl.pause();
-    document.getElementById("storyViewerModal").classList.add("hidden");
-  };
-
-  /* PROFILES */
-  async function ensureOwnProfile(user) {
-    try {
-      const ref = doc(db, "profiles", user.uid);
-      const snap = await getDoc(ref);
-      if (snap.exists() && snap.data().nickname) {
-        myNickname = snap.data().nickname;
-        myStarredGroups = snap.data().starredGroups || [];
-      } else {
-        myNickname = user.email.split("@")[0];
-        await setDoc(ref, { nickname: myNickname, starredGroups: [] }, { merge: true });
-        myStarredGroups = [];
-      }
-    } catch (e) {
-      myNickname = user.email.split("@")[0];
-    }
-    profileCache[user.uid] = myNickname;
-  }
-
-  async function getNickname(uid, fallbackEmail) {
-    if (profileCache[uid]) return profileCache[uid];
-    try {
-      const snap = await getDoc(doc(db, "profiles", uid));
-      const name = snap.exists() && snap.data().nickname ? snap.data().nickname : (fallbackEmail ? fallbackEmail.split("@")[0] : "Unknown");
-      profileCache[uid] = name;
-      return name;
-    } catch (e) {
-      return fallbackEmail ? fallbackEmail.split("@")[0] : "Unknown";
-    }
-  }
-
-  window.showProfile = async function() {
-    hideAllPages();
-    document.getElementById("profilePage").classList.remove("hidden");
-    document.getElementById("profileStatus").innerText = "";
-    document.getElementById("profileEmailDisplay").value = currentUser.email;
-    document.getElementById("profileNicknameInput").value = myNickname;
-  };
-
-  window.saveProfile = async function() {
-    const status = document.getElementById("profileStatus");
-    const newNickname = document.getElementById("profileNicknameInput").value.trim();
-    if (!newNickname) { status.style.color = "#d93025"; status.innerText = "Nickname cannot be empty."; return; }
-    status.style.color = "#777"; status.innerText = "Saving...";
-    try {
-      await setDoc(doc(db, "profiles", currentUser.uid), { nickname: newNickname }, { merge: true });
-      myNickname = newNickname;
-      profileCache[currentUser.uid] = newNickname;
-      document.getElementById("welcomeNickname").innerText = newNickname;
-      status.style.color = "#087b2f"; status.innerText = "Saved!";
-      setTimeout(() => { status.innerText = ""; }, 1200);
-    } catch (error) {
-      status.style.color = "#d93025"; status.innerText = "Error: " + error.message;
-    }
-  };
-
-  /* NAVIGATION */
-  function hideAllPages() {
-    ["homePage","createPage","browsePage","myGroupsPage","vaultPage","profilePage"].forEach(id => {
-      document.getElementById(id).classList.add("hidden");
-    });
-  }
-  window.goHome = function() { 
-    hideAllPages(); 
-    document.getElementById("homePage").classList.remove("hidden"); 
-    loadStories();
-  };
-
-  /* AUTH */
-  window.signUp = async function() {
-    const email = document.getElementById("emailInput").value.trim();
-    const password = document.getElementById("passwordInput").value;
-    const nickname = document.getElementById("nicknameInput").value.trim();
-    const status = document.getElementById("authStatus");
-    status.style.color = "#d93025";
-    if (!email || !password) { status.innerText = "Please enter email and password."; return; }
-    if (password.length < 6) { status.innerText = "Password must be at least 6 characters."; return; }
-    status.style.color = "#777"; status.innerText = "Creating account...";
-    try {
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      const chosenNickname = nickname || email.split("@")[0];
-      await setDoc(doc(db, "profiles", cred.user.uid), { nickname: chosenNickname, starredGroups: [] }, { merge: true });
-      status.innerText = "";
-    } catch (error) { status.style.color = "#d93025"; status.innerText = error.message; }
-  };
-
-  window.logIn = async function() {
-    const email = document.getElementById("emailInput").value.trim();
-    const password = document.getElementById("passwordInput").value;
-    const status = document.getElementById("authStatus");
-    if (!email || !password) { status.innerText = "Please enter email and password."; return; }
-    status.style.color = "#777"; status.innerText = "Logging in...";
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      status.innerText = "";
-    } catch (error) { status.style.color = "#d93025"; status.innerText = "Incorrect email or password."; }
-  };
-
-  window.logOut = async function() {
-    if (chatUnsubscribe) { chatUnsubscribe(); chatUnsubscribe = null; }
-    await signOut(auth);
-  };
-
-  /* CREATE GROUP */
-  window.showCreateGroup = function() {
-    hideAllPages();
-    document.getElementById("createPage").classList.remove("hidden");
-    document.getElementById("createStatus").innerText = "";
-  };
-
-  window.submitCreateGroup = async function() {
-    if (!currentUser) return;
-    const status = document.getElementById("createStatus");
-    const name = document.getElementById("groupNameInput").value.trim();
-    const description = document.getElementById("groupDescInput").value.trim();
-    const category = document.getElementById("groupCategoryInput").value;
-    const visibility = document.querySelector('input[name="visibility"]:checked').value;
-    const invites = document.getElementById("groupInvitesInput").value.trim();
-    if (!name) { status.innerText = "Please enter a group name."; return; }
-    const invitedEmails = invites ? invites.split(",").map(e => e.trim().toLowerCase()).filter(Boolean) : [];
-    status.style.color = "#777"; status.innerText = "Creating group...";
-    try {
-      await addDoc(collection(db, "groups"), {
-        name, description, category,
-        isPublic: visibility === "public",
-        ownerId: currentUser.uid, ownerEmail: currentUser.email,
-        members: [currentUser.uid], memberEmails: [currentUser.email],
-        invitedEmails, pendingJoinRequests: [],
-        pinnedMessageId: null, pinnedMessageText: null,
-        createdAt: serverTimestamp()
-      });
-      status.style.color = "#087b2f"; status.innerText = "Group created successfully!";
-      setTimeout(() => {
-        document.getElementById("groupNameInput").value = "";
-        document.getElementById("groupDescInput").value = "";
-        document.getElementById("groupInvitesInput").value = "";
-        goHome();
-      }, 900);
-    } catch (error) { status.style.color = "#d93025"; status.innerText = "Error: " + error.message; }
-  };
-
-  /* EXPLORE */
-  window.showJoinGroup = async function() {
-    hideAllPages();
-    document.getElementById("browsePage").classList.remove("hidden");
-    document.getElementById("searchGroupInput").value = "";
-    const container = document.getElementById("groupListContainer");
-    container.innerHTML = "<p>Loading groups...</p>";
-    try {
-      const snapshot = await getDocs(collection(db, "groups"));
-      allGroupsCache = [];
-      snapshot.forEach(d => allGroupsCache.push({ id: d.id, ...d.data() }));
-      renderGroupList();
-    } catch (error) {
-      container.innerHTML = `<p style="color:#d93025">Error: ${escapeHTML(error.message)}</p>`;
-    }
-  };
-
-  window.renderGroupList = function() {
-    const container = document.getElementById("groupListContainer");
-    const search = document.getElementById("searchGroupInput").value.trim().toLowerCase();
-    const categoryFilter = document.getElementById("categoryFilterInput").value;
-    container.innerHTML = "";
-    const filtered = allGroupsCache.filter(g => {
-      const matchesSearch = g.name && g.name.toLowerCase().includes(search);
-      const matchesCategory = !categoryFilter || g.category === categoryFilter;
-      return matchesSearch && matchesCategory;
-    });
-    if (filtered.length === 0) { container.innerHTML = "<p style='color:#888'>No groups found.</p>"; return; }
-    filtered.forEach(g => {
-      const isMember = Array.isArray(g.members) && g.members.includes(currentUser.uid);
-      const hasReq = Array.isArray(g.pendingJoinRequests) && g.pendingJoinRequests.some(r => r.uid === currentUser.uid);
-      const card = document.createElement("div");
-      card.className = "group-card";
-      const tag = g.isPublic ? `<span class="tag public">🌍 PUBLIC</span>` : `<span class="tag private">🔒 PRIVATE</span>`;
-      const catTag = g.category ? `<span class="tag category-tag">${escapeHTML(g.category)}</span>` : "";
-      let button = "";
-      if (isMember) {
-        button = `<button class="group-btn" onclick="openGroupPage('${escapeAttribute(g.id)}')">Open Group</button>`;
-      } else if (!g.isPublic && hasReq) {
-        button = `<button class="group-btn pending-btn" disabled>Request Pending</button>`;
-      } else if (g.isPublic) {
-        button = `<button class="group-btn" onclick="joinPublicGroup('${escapeAttribute(g.id)}')">Join Group</button>`;
-      } else {
-        button = `<button class="group-btn" onclick="requestJoinGroup('${escapeAttribute(g.id)}')">Request to Join</button>`;
-      }
-      card.innerHTML = `${tag}${catTag}
-        <h3>${escapeHTML(g.name)}</h3>
-        <p>${escapeHTML(g.description || "No description")}</p>
-        <p>${g.members ? g.members.length : 0} members</p>
-        ${button}`;
-      container.appendChild(card);
-    });
-  };
-
-  window.joinPublicGroup = async function(groupId) {
-    if (!currentUser) return;
-    try {
-      await updateDoc(doc(db, "groups", groupId), {
-        members: arrayUnion(currentUser.uid),
-        memberEmails: arrayUnion(currentUser.email)
-      });
-      await showJoinGroup();
-    } catch (error) { alert("Unable to join: " + error.message); }
-  };
-
-  window.requestJoinGroup = async function(groupId) {
-    if (!currentUser) return;
-    try {
-      await updateDoc(doc(db, "groups", groupId), {
-        pendingJoinRequests: arrayUnion({ uid: currentUser.uid, email: currentUser.email })
-      });
-      await showJoinGroup();
-    } catch (error) { alert("Unable to send request: " + error.message); }
-  };
-
-  /* MY GROUPS */
-  window.showMyGroups = async function() {
-    hideAllPages();
-    document.getElementById("myGroupsPage").classList.remove("hidden");
-    const container = document.getElementById("myGroupsContainer");
-    container.innerHTML = "<p>Loading...</p>";
-    try {
-      const snapshot = await getDocs(collection(db, "groups"));
-      let groups = [];
-      snapshot.forEach(d => {
-        const g = { id: d.id, ...d.data() };
-        if (Array.isArray(g.members) && g.members.includes(currentUser.uid)) groups.push(g);
-      });
-
-      groups.sort((a, b) => {
-        const aStar = myStarredGroups.includes(a.id) ? 1 : 0;
-        const bStar = myStarredGroups.includes(b.id) ? 1 : 0;
-        return bStar - aStar;
-      });
-
-      container.innerHTML = "";
-      if (groups.length === 0) { container.innerHTML = "<p style='color:#888'>You haven't joined any groups yet.</p>"; return; }
-
-      for (const g of groups) {
-        const card = document.createElement("div");
-        card.className = "group-card";
-        const isOwner = g.ownerId === currentUser.uid;
-        const isStarred = myStarredGroups.includes(g.id);
-
-        let reqs = "";
-        if (isOwner && Array.isArray(g.pendingJoinRequests) && g.pendingJoinRequests.length > 0) {
-          reqs += `<div style="margin-top:12px"><b style="font-size:13px">Join Requests</b>`;
-          for (const r of g.pendingJoinRequests) {
-            const reqName = await getNickname(r.uid, r.email);
-            reqs += `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #eee;font-size:12px;">
-              <span>${escapeHTML(reqName)}</span>
-              <span>
-                <button style="border:0;background:#087b2f;color:white;padding:6px 8px;border-radius:6px;" onclick="respondToRequest('${escapeAttribute(g.id)}','${escapeAttribute(r.uid)}','${escapeAttribute(r.email)}',true)">Accept</button>
-                <button style="border:0;background:#d93025;color:white;padding:6px 8px;border-radius:6px;margin-left:4px;" onclick="respondToRequest('${escapeAttribute(g.id)}','${escapeAttribute(r.uid)}','${escapeAttribute(r.email)}',false)">Reject</button>
-              </span>
-            </div>`;
-          }
-          reqs += "</div>";
-        }
-
-        const catTag = g.category ? `<span class="tag category-tag">${escapeHTML(g.category)}</span>` : "";
-
-        card.innerHTML = `
-          <button class="star-btn" onclick="toggleStar('${escapeAttribute(g.id)}')">${isStarred ? "⭐" : "☆"}</button>
-          <span class="tag ${g.isPublic ? "public" : "private"}">${g.isPublic ? "🌍 PUBLIC" : "🔒 PRIVATE"}</span>
-          ${catTag}
-          ${isOwner ? `<span class="tag owner-tag">👑 OWNER</span>` : ""}
-          <h3>${escapeHTML(g.name)}</h3>
-          <p>${escapeHTML(g.description || "No description")}</p>
-          <p>${g.members ? g.members.length : 0} members</p>
-          ${reqs}
-          <button class="group-btn" onclick="openGroupPage('${escapeAttribute(g.id)}')">Open Group</button>`;
-        container.appendChild(card);
-      }
-    } catch (error) {
-      container.innerHTML = `<p style="color:#d93025">Error: ${escapeHTML(error.message)}</p>`;
-    }
-  };
-
-  window.toggleStar = async function(groupId) {
-    if (myStarredGroups.includes(groupId)) {
-      myStarredGroups = myStarredGroups.filter(id => id !== groupId);
-    } else {
-      myStarredGroups.push(groupId);
-    }
-    try {
-      await setDoc(doc(db, "profiles", currentUser.uid), { starredGroups: myStarredGroups }, { merge: true });
-    } catch (e) {}
-    showMyGroups();
-  };
-
-  window.respondToRequest = async function(groupId, uid, email, accept) {
-    try {
-      const reqObj = { uid, email };
-      if (accept) {
-        await updateDoc(doc(db, "groups", groupId), {
-          members: arrayUnion(uid), memberEmails: arrayUnion(email),
-          pendingJoinRequests: arrayRemove(reqObj)
-        });
-      } else {
-        await updateDoc(doc(db, "groups", groupId), { pendingJoinRequests: arrayRemove(reqObj) });
-      }
-      await showMyGroups();
-    } catch (error) { alert("Error: " + error.message); }
-  };
-
-  /* VAULT */
-  window.showVault = function() {
-    hideAllPages();
-    document.getElementById("vaultPage").classList.remove("hidden");
-    document.getElementById("vaultUploadStatus").innerText = "";
-    loadVaultFiles();
-  };
-
-  function readFileAsBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  window.uploadToVault = async function(event) {
-    const file = event.target.files[0];
-    event.target.value = "";
-    if (!file || !currentUser) return;
-    const status = document.getElementById("vaultUploadStatus");
-    if (file.size > MAX_FILE_BYTES) { status.style.color = "#d93025"; status.innerText = "File too large. Please choose a file under ~700KB."; return; }
-    status.style.color = "#777"; status.innerText = "Uploading " + file.name + "...";
-    try {
-      const base64 = await readFileAsBase64(file);
-      await addDoc(collection(db, "users", currentUser.uid, "vault"), {
-        fileName: file.name, fileType: file.type || "application/octet-stream",
-        fileData: base64, fileSize: file.size, uploadedAt: serverTimestamp()
-      });
-      status.style.color = "#087b2f"; status.innerText = "Uploaded successfully!";
-      loadVaultFiles();
-      setTimeout(() => { status.innerText = ""; }, 1500);
-    } catch (error) { status.style.color = "#d93025"; status.innerText = "Upload failed: " + error.message; }
-  };
-
-  async function loadVaultFiles() {
-    if (!currentUser) return;
-    const container = document.getElementById("vaultFilesContainer");
-    container.innerHTML = "<p>Loading your vault...</p>";
-    try {
-      const q = query(collection(db, "users", currentUser.uid, "vault"), orderBy("uploadedAt", "desc"));
-      const snapshot = await getDocs(q);
-      myVaultFiles = [];
-      container.innerHTML = "";
-      if (snapshot.empty) { container.innerHTML = "<p style='color:#888'>Your vault is empty. Upload some files.</p>"; return; }
-      snapshot.forEach(d => {
-        const data = d.data();
-        myVaultFiles.push({ id: d.id, ...data });
-        const isImage = data.fileType && data.fileType.startsWith("image/");
-        const iconHtml = isImage ? `<img src="${data.fileData}" alt="file">` : "📄";
-        const sizeKB = data.fileSize ? Math.round(data.fileSize / 1024) : "?";
-        const div = document.createElement("div");
-        div.className = "vault-item";
-        div.innerHTML = `<div class="vault-item-icon">${iconHtml}</div>
-          <div class="vault-item-info">
-            <div class="vault-item-title">${escapeHTML(data.fileName)}</div>
-            <div class="vault-item-date">${sizeKB} KB</div>
-          </div>
-          <a href="${data.fileData}" download="${escapeAttribute(data.fileName)}" target="_blank" style="margin-right:6px;font-size:12px;color:#555;">View</a>
-          <button class="vault-delete-btn" onclick="openDeleteVaultModal('${escapeAttribute(d.id)}')">Delete</button>`;
-        container.appendChild(div);
-      });
-    } catch(err) { container.innerHTML = `<p style="color:red">Error: ${escapeHTML(err.message)}</p>`; }
-  }
-
-  window.openDeleteVaultModal = function(fileId) {
-    vaultFileToDelete = fileId;
-    document.getElementById("deleteVaultModal").classList.remove("hidden");
-  };
-  window.closeDeleteVaultModal = function() {
-    vaultFileToDelete = null;
-    document.getElementById("deleteVaultModal").classList.add("hidden");
-  };
-  window.confirmDeleteVaultFile = async function() {
-    if (!vaultFileToDelete || !currentUser) return;
-    try {
-      await deleteDoc(doc(db, "users", currentUser.uid, "vault", vaultFileToDelete));
-      closeDeleteVaultModal();
-      loadVaultFiles();
-    } catch (error) { alert("Error deleting file: " + error.message); }
-  };
-
-  /* VAULT PICKER */
-  window.openVaultPicker = async function() {
-    document.getElementById("vaultPickerModal").classList.remove("hidden");
-    const container = document.getElementById("vaultPickerContainer");
-    container.innerHTML = "Loading...";
-    try {
-      const q = query(collection(db, "users", currentUser.uid, "vault"), orderBy("uploadedAt", "desc"));
-      const snapshot = await getDocs(q);
-      container.innerHTML = "";
-      if (snapshot.empty) { container.innerHTML = "<p style='color:#888'>Your vault is empty.</p>"; return; }
-      snapshot.forEach(d => {
-        const data = d.data();
-        const isImage = data.fileType && data.fileType.startsWith("image/");
-        const iconHtml = isImage ? `<img src="${data.fileData}" alt="file">` : "📄";
-        const div = document.createElement("div");
-        div.className = "vault-item";
-        div.innerHTML = `<div class="vault-item-icon">${iconHtml}</div>
-          <div class="vault-item-info"><div class="vault-item-title">${escapeHTML(data.fileName)}</div></div>
-          <button class="vault-send-btn" onclick="sendVaultFileToChat('${escapeAttribute(d.id)}')">Send</button>`;
-        container.appendChild(div);
-      });
-    } catch(err) { container.innerHTML = "Error loading vault."; }
-  };
-  window.closeVaultPicker = function() { document.getElementById("vaultPickerModal").classList.add("hidden"); };
-
-  window.sendVaultFileToChat = async function(vaultFileId) {
-    if (!currentGroupId || !currentUser) return;
-    let file = myVaultFiles.find(f => f.id === vaultFileId);
-    if (!file) {
-      try {
-        const snap = await getDoc(doc(db, "users", currentUser.uid, "vault", vaultFileId));
-        if (!snap.exists()) return alert("File not found.");
-        file = { id: snap.id, ...snap.data() };
-        myVaultFiles.push(file);
-      } catch (e) { return alert("File not found."); }
-    }
-    try {
-      await addDoc(collection(db, "groups", currentGroupId, "messages"), {
-        text: `Shared a file from Vault: ${file.fileName}`,
-        fileData: file.fileData, fileName: file.fileName, fileType: file.type,
-        senderId: currentUser.uid, senderEmail: currentUser.email, senderName: myNickname,
-        reactions: {}, createdAt: serverTimestamp()
-      });
-      closeVaultPicker();
-    } catch(err) { alert("Failed to send file: " + err.message); }
-  };
-
-  /* OPEN GROUP */
-  window.openGroupPage = async function(groupId) {
-    if (!currentUser) return;
-    currentGroupId = groupId;
-    document.getElementById("groupPage").classList.remove("hidden");
-    document.getElementById("groupPageName").innerText = "Loading...";
-    document.getElementById("chatMessages").innerHTML = "";
-    document.getElementById("pinnedBanner").classList.add("hidden");
-    try {
-      const groupSnap = await getDoc(doc(db, "groups", groupId));
-      if (!groupSnap.exists()) { alert("Group not found."); closeGroupPage(); return; }
-      const data = groupSnap.data();
-      if (!Array.isArray(data.members) || !data.members.includes(currentUser.uid)) {
-        alert("You are not a member."); closeGroupPage(); return;
-      }
-      currentGroupData = { id: groupId, ...data };
-      document.getElementById("groupPageName").innerText = data.name;
-      document.getElementById("groupPageMembersCount").innerText = `${data.members.length} members`;
-
-      const avatarEl = document.getElementById("groupPageAvatar");
-      avatarEl.innerText = getInitial(data.name);
-      avatarEl.style.background = getAvatarColor(groupId);
-
-      if (data.pinnedMessageId && data.pinnedMessageText) {
-        document.getElementById("pinnedText").innerText = data.pinnedMessageText;
-        document.getElementById("pinnedBanner").classList.remove("hidden");
-      }
-
-      const membersContainer = document.getElementById("groupPageMembers");
-      membersContainer.innerHTML = "";
-      const memberIds = data.members || [];
-      const memberEmails = data.memberEmails || [];
-      for (let i = 0; i < memberIds.length; i++) {
-        const uid = memberIds[i];
-        const fallbackEmail = memberEmails[i] || "";
-        const name = await getNickname(uid, fallbackEmail);
-        const chip = document.createElement("span");
-        chip.className = "member-chip";
-        chip.innerText = uid === data.ownerId ? name + " 👑" : name;
-        membersContainer.appendChild(chip);
-      }
-      listenToChat(groupId);
-    } catch (error) { alert("Error: " + error.message); closeGroupPage(); }
-  };
-
-  /* PIN / UNPIN */
-  window.pinMessage = async function(messageId, text) {
-    if (!currentGroupId) return;
-    try {
-      await updateDoc(doc(db, "groups", currentGroupId), { pinnedMessageId: messageId, pinnedMessageText: text });
-      document.getElementById("pinnedText").innerText = text;
-      document.getElementById("pinnedBanner").classList.remove("hidden");
-    } catch (e) { alert("Could not pin message: " + e.message); }
-  };
-  window.unpinMessage = async function() {
-    if (!currentGroupId) return;
-    try {
-      await updateDoc(doc(db, "groups", currentGroupId), { pinnedMessageId: null, pinnedMessageText: null });
-      document.getElementById("pinnedBanner").classList.add("hidden");
-    } catch (e) { alert("Could not unpin: " + e.message); }
-  };
-
-  /* REACTIONS */
-  window.toggleReactionPicker = function(messageId, event) {
-    event.stopPropagation();
-    const existing = document.getElementById("reactionPicker_" + messageId);
-    document.querySelectorAll(".reaction-picker").forEach(el => el.remove());
-    if (existing) return;
-    const picker = document.createElement("div");
-    picker.className = "reaction-picker";
-    picker.id = "reactionPicker_" + messageId;
-    REACTION_EMOJIS.forEach(emoji => {
-      const span = document.createElement("span");
-      span.innerText = emoji;
-      span.onclick = (e) => { e.stopPropagation(); addReaction(messageId, emoji); picker.remove(); };
-      picker.appendChild(span);
-    });
-    event.currentTarget.closest(".message").appendChild(picker);
-  };
-
-  window.addReaction = async function(messageId, emoji) {
-    if (!currentGroupId || !currentUser) return;
-    try {
-      const msgRef = doc(db, "groups", currentGroupId, "messages", messageId);
-      const snap = await getDoc(msgRef);
-      if (!snap.exists()) return;
-      const reactions = snap.data().reactions || {};
-      if (!reactions[emoji]) reactions[emoji] = [];
-      const idx = reactions[emoji].indexOf(currentUser.uid);
-      if (idx === -1) reactions[emoji].push(currentUser.uid);
-      else reactions[emoji].splice(idx, 1);
-      await updateDoc(msgRef, { reactions });
-    } catch (e) { console.error(e); }
-  };
-
-  /* REAL-TIME CHAT */
-  function listenToChat(groupId) {
-    if (chatUnsubscribe) { chatUnsubscribe(); chatUnsubscribe = null; }
-    const q = query(collection(db, "groups", groupId, "messages"), orderBy("createdAt", "asc"));
-    chatUnsubscribe = onSnapshot(q, snapshot => {
-      const container = document.getElementById("chatMessages");
-      container.innerHTML = "";
-      let lastSenderId = null;
-      snapshot.forEach(d => {
-        const msg = d.data();
-        const mine = msg.senderId === currentUser.uid;
-        const senderName = msg.senderName || (msg.senderEmail ? msg.senderEmail.split("@")[0] : "Unknown");
-        const showSenderLabel = !mine && msg.senderId !== lastSenderId;
-        lastSenderId = msg.senderId;
-
-        let attachmentHtml = "";
-        if (msg.fileData) {
-          const isImage = msg.fileType && msg.fileType.startsWith("image/");
-          attachmentHtml = isImage
-            ? `<img src="${msg.fileData}" class="chat-img-attachment" alt="Image">`
-            : `<a href="${msg.fileData}" download="${escapeAttribute(msg.fileName)}" target="_blank" class="chat-file-attachment">📄 ${escapeHTML(msg.fileName)}</a>`;
-        }
-
-        let reactionsHtml = "";
-        if (msg.reactions) {
-          const chips = Object.keys(msg.reactions).filter(e => msg.reactions[e] && msg.reactions[e].length > 0)
-            .map(e => `<span class="reaction-chip">${e} ${msg.reactions[e].length}</span>`).join("");
-          if (chips) reactionsHtml = `<div class="reactions-row">${chips}</div>`;
-        }
-
-        const row = document.createElement("div");
-        row.className = "message-row" + (mine ? " mine" : "");
-
-        const avatarHtml = mine ? "" : `<div class="msg-avatar" style="background:${getAvatarColor(msg.senderId || "x")}">${getInitial(senderName)}</div>`;
-
-        const msgTextEscaped = escapeAttribute((msg.text || "").substring(0, 80));
-
-        const actionsHtml = `<div id="actions_${d.id}" class="message-actions">
-          <button class="message-react-btn" onclick="toggleReactionPicker('${escapeAttribute(d.id)}', event)">😊 React</button>
-          <button class="message-pin-btn" onclick="pinMessage('${escapeAttribute(d.id)}', '${msgTextEscaped}'); document.getElementById('actions_${d.id}').classList.remove('show');">📌 Pin</button>
-          ${mine ? `<button class="message-delete-btn" onclick="openDeleteMessageModal('${escapeAttribute(d.id)}'); document.getElementById('actions_${d.id}').classList.remove('show');">🗑️ Delete</button>` : ""}
-          <button style="border:0; background:transparent; font-size:11px; cursor:pointer;" onclick="document.getElementById('actions_${d.id}').classList.remove('show')">❌</button>
-        </div>`;
-
-        row.innerHTML = `${avatarHtml}
-          <div class="message ${mine ? "mine" : "other"}">
-            ${showSenderLabel ? `<div class="message-sender">${escapeHTML(senderName)}</div>` : ""}
-            <div class="message-bubble"
-                 onmousedown="handlePressStart('${d.id}')" onmouseup="handlePressEnd()" onmouseleave="handlePressEnd()"
-                 ontouchstart="handlePressStart('${d.id}')" ontouchend="handlePressEnd()" ontouchcancel="handlePressEnd()">
-              ${msg.text ? escapeHTML(msg.text) : ""}
-              ${attachmentHtml}
+        <div class="story-section">
+            <div class="story-item">
+                <div class="story-circle">+</div>
+                <span>Your Story</span>
             </div>
-            ${reactionsHtml}
-            <div class="message-time">${formatMsgTime(msg.createdAt)}</div>
-            ${actionsHtml}
-          </div>`;
-        container.appendChild(row);
-      });
-      container.scrollTop = container.scrollHeight;
-    }, error => { console.error("Chat listener error:", error); });
-  }
+        </div>
 
-  window.sendChatMessage = async function() {
-    const input = document.getElementById("chatInput");
-    const text = input.value.trim();
-    if (!text || !currentGroupId || !currentUser) return;
-    input.value = "";
-    try {
-      await addDoc(collection(db, "groups", currentGroupId, "messages"), {
-        text, senderId: currentUser.uid, senderEmail: currentUser.email,
-        senderName: myNickname, reactions: {}, createdAt: serverTimestamp()
-      });
-    } catch (error) { alert("Error: " + error.message); input.value = text; }
-  };
+        <!-- Sample Posts (Hold to trigger Menu) -->
+        <div class="post-card" id="post1" onmousedown="startHold(this)" onmouseup="endHold()" onmouseleave="endHold()" ontouchstart="startHold(this)" ontouchend="endHold()">
+            <div class="pin-badge">📌 Pinned Message</div>
+            <div class="post-header">Krishna</div>
+            <div class="post-content">Press and HOLD on this box to see React, Pin, or Delete options!</div>
+            <div class="active-reaction" id="react1"></div>
+        </div>
 
-  /* DELETE MESSAGE */
-  window.openDeleteMessageModal = function(messageId) {
-    if (!messageId || !currentUser) return;
-    messageToDelete = messageId;
-    document.getElementById("deleteMessageModal").classList.remove("hidden");
-  };
-  window.closeDeleteMessageModal = function() {
-    messageToDelete = null;
-    document.getElementById("deleteMessageModal").classList.add("hidden");
-  };
-  window.confirmDeleteMessage = async function() {
-    if (!messageToDelete || !currentUser || !currentGroupId) return;
-    const messageId = messageToDelete;
-    const btn = document.querySelector("#deleteMessageModal .danger-btn");
-    btn.disabled = true; btn.innerText = "Deleting...";
-    try {
-      const messageRef = doc(db, "groups", currentGroupId, "messages", messageId);
-      const messageSnap = await getDoc(messageRef);
-      if (!messageSnap.exists()) { closeDeleteMessageModal(); alert("Message no longer exists."); return; }
-      const messageData = messageSnap.data();
-      if (messageData.senderId !== currentUser.uid) { closeDeleteMessageModal(); alert("You can only delete your own messages."); return; }
-      await deleteDoc(messageRef);
-      closeDeleteMessageModal();
-    } catch (error) {
-      alert("Could not delete message: " + error.message);
-    } finally {
-      btn.disabled = false; btn.innerText = "Delete Message";
-    }
-  };
+        <div class="post-card" id="post2" onmousedown="startHold(this)" onmouseup="endHold()" onmouseleave="endHold()" ontouchstart="startHold(this)" ontouchend="endHold()">
+            <div class="pin-badge">📌 Pinned Message</div>
+            <div class="post-header">Venzi Group</div>
+            <div class="post-content">Welcome to the new group features! Try long-pressing me too.</div>
+            <div class="active-reaction" id="react2"></div>
+        </div>
 
-  /* GROUP MENU */
-  window.showGroupMenu = function() {
-    if (!currentGroupData || !currentUser) return;
-    if (currentGroupData.ownerId === currentUser.uid) {
-      document.getElementById("deleteModal").classList.remove("hidden");
-    } else {
-      document.getElementById("leaveModal").classList.remove("hidden");
-    }
-  };
-  window.closeDeleteModal = function() { document.getElementById("deleteModal").classList.add("hidden"); };
-  window.closeLeaveModal = function() { document.getElementById("leaveModal").classList.add("hidden"); };
+        <!-- Auth Section -->
+        <div id="authPage" class="auth-card">
+            <img src="1787225529289.png" class="logo" alt="Venzi Logo" onerror="this.style.display='none'">
+            <h2>Venzi Account</h2>
+            <input id="emailInput" class="input" type="email" placeholder="Email">
+            <input id="passwordInput" class="input" type="password" placeholder="Password">
+            <button class="primary-btn">Log In</button>
+            <button class="secondary-btn">Create Account</button>
+        </div>
+    </div>
 
-  window.confirmLeaveGroup = async function() {
-    if (!currentGroupData || !currentGroupId || !currentUser) return;
-    const btn = document.querySelector("#leaveModal .danger-btn");
-    btn.disabled = true; btn.innerText = "Leaving...";
-    try {
-      await updateDoc(doc(db, "groups", currentGroupId), {
-        members: arrayRemove(currentUser.uid), memberEmails: arrayRemove(currentUser.email)
-      });
-      closeLeaveModal(); closeGroupPage(); await showMyGroups();
-    } catch (error) {
-      alert("Could not leave group: " + error.message);
-      btn.disabled = false; btn.innerText = "Leave Group";
-    }
-  };
+    <!-- Hold-Tap Action Popup Modal -->
+    <div class="action-overlay" id="actionOverlay" onclick="closeOverlay(event)">
+        <div class="action-popup">
+            <div class="popup-reactions">
+                <button class="emoji-btn" onclick="addReaction('👍')">👍</button>
+                <button class="emoji-btn" onclick="addReaction('❤️')">❤️</button>
+                <button class="emoji-btn" onclick="addReaction('😂')">😂</button>
+                <button class="emoji-btn" onclick="addReaction('🔥')">🔥</button>
+                <button class="emoji-btn" onclick="addReaction('🎉')">🎉</button>
+            </div>
+            <div class="menu-options">
+                <button class="menu-btn" onclick="togglePin()">📌 Pin / Unpin Post</button>
+                <button class="menu-btn delete" onclick="deletePost()">🗑️ Delete Post</button>
+            </div>
+        </div>
+    </div>
 
-  window.confirmDeleteGroup = async function() {
-    if (!currentGroupData || !currentGroupId || !currentUser) return;
-    if (currentGroupData.ownerId !== currentUser.uid) return alert("Only the owner can delete this group.");
-    const btn = document.querySelector("#deleteModal .danger-btn");
-    btn.disabled = true; btn.innerText = "Deleting...";
-    try {
-      const msgs = await getDocs(collection(db, "groups", currentGroupId, "messages"));
-      for (const m of msgs.docs) await deleteDoc(m.ref);
-      await deleteDoc(doc(db, "groups", currentGroupId));
-      closeDeleteModal(); closeGroupPage();
-      alert(`"${currentGroupData.name}" deleted.`);
-      await showMyGroups();
-    } catch (error) {
-      alert("Delete failed: " + error.message);
-      btn.disabled = false; btn.innerText = "Delete Group";
-    }
-  };
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <a href="#home" class="nav-item active">
+        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="#explore" class="nav-item">
+        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <span>Explore</span>
+      </a>
+      <a href="#groups" class="nav-item">
+        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Groups</span>
+      </a>
+      <a href="#vault" class="nav-item">
+        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L8.6 3.3A2 2 0 0 0 6.93 2.5H4a2 2 0 0 0-2 2v13.5a2 2 0 0 0 2 2z"/></svg>
+        <span>Vault</span>
+      </a>
+    </nav>
 
-  window.closeGroupPage = function() {
-    if (chatUnsubscribe) { chatUnsubscribe(); chatUnsubscribe = null; }
-    currentGroupId = null; currentGroupData = null;
-    document.getElementById("groupPage").classList.add("hidden");
-  };
+    <!-- JavaScript Logic for Long-Press and Popup Actions -->
+    <script>
+        let holdTimer;
+        let selectedPost = null;
 
-  /* INVITE LINK */
-  window.showInviteLink = function() {
-    if (!currentGroupId) return;
-    const link = window.location.origin + window.location.pathname + "?invite=" + currentGroupId;
-    document.getElementById("inviteLinkBox").innerText = link;
-    document.getElementById("inviteLinkModal").classList.remove("hidden");
-  };
-  window.closeInviteLink = function() { document.getElementById("inviteLinkModal").classList.add("hidden"); };
-  window.copyInviteLink = function() {
-    const text = document.getElementById("inviteLinkBox").innerText;
-    navigator.clipboard.writeText(text).then(() => alert("Link copied!")).catch(() => alert("Could not copy. Please select and copy manually."));
-  };
+        function startHold(element) {
+            selectedPost = element;
+            holdTimer = setTimeout(() => {
+                document.getElementById('actionOverlay').classList.add('active');
+            }, 500); // 500ms long press delay
+        }
 
-  async function handleInviteFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    const inviteId = params.get("invite");
-    if (!inviteId || !currentUser) return;
-    try {
-      const snap = await getDoc(doc(db, "groups", inviteId));
-      if (!snap.exists()) return;
-      const data = snap.data();
-      if (Array.isArray(data.members) && data.members.includes(currentUser.uid)) {
-        openGroupPage(inviteId);
-        return;
-      }
-      if (data.isPublic) {
-        await joinPublicGroup(inviteId);
-        openGroupPage(inviteId);
-      } else {
-        await requestJoinGroup(inviteId);
-        alert("This is a private group. Your join request has been sent to the owner.");
-      }
-    } catch (e) { console.error(e); }
-  }
+        function endHold() {
+            clearTimeout(holdTimer);
+        }
 
-  /* AUTH STATE */
-  onAuthStateChanged(auth, async user => {
-    currentUser = user;
-    const authPage = document.getElementById("authPage");
-    const appElement = document.getElementById("app");
-    if (user) {
-      await ensureOwnProfile(user);
-      authPage.classList.add("hidden");
-      appElement.classList.remove("hidden");
-      document.getElementById("welcomeNickname").innerText = myNickname;
-      document.getElementById("welcomeEmail").innerText = user.email;
-      goHome();
-      loadStories();
-      handleInviteFromURL();
-    } else {
-      authPage.classList.remove("hidden");
-      appElement.classList.add("hidden");
-      document.getElementById("groupPage").classList.add("hidden");
-    }
-  });
+        function closeOverlay(event) {
+            if (event.target.id === 'actionOverlay') {
+                document.getElementById('actionOverlay').classList.remove('active');
+            }
+        }
 
-</script>
+        function addReaction(emoji) {
+            if (selectedPost) {
+                let reactDiv = selectedPost.querySelector('.active-reaction');
+                reactDiv.innerText = emoji;
+            }
+            document.getElementById('actionOverlay').classList.remove('active');
+        }
 
+        function togglePin() {
+            if (selectedPost) {
+                selectedPost.classList.toggle('pinned');
+            }
+            document.getElementById('actionOverlay').classList.remove('active');
+        }
+
+        function deletePost() {
+            if (selectedPost) {
+                selectedPost.style.display = 'none';
+            }
+            document.getElementById('actionOverlay').classList.remove('active');
+        }
+    </script>
 </body>
 </html>
+
 
 
