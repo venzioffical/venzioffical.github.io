@@ -229,7 +229,6 @@
       font-weight: bold; font-size: 11px; flex-shrink: 0;
     }
 
-    /* UPDATED: Emojis ko sahi jagah dikhane ke liye position: relative lagaya hai */
     .message { display: flex; flex-direction: column; max-width: 72%; position: relative; }
     .message.mine { align-items: flex-end; }
     .message.other { align-items: flex-start; }
@@ -237,13 +236,12 @@
     .message-bubble {
       background: #efefef; color: #111; padding: 9px 14px; border-radius: 20px;
       font-size: 14.5px; line-height: 1.35; word-break: break-word; cursor: pointer;
-      user-select: none; /* Long press par text select na ho iske liye */
+      user-select: none;
     }
     .message.mine .message-bubble { background: #3897f0; color: #fff; }
     .message-time { font-size: 10px; color: #b0b0b0; margin: 3px 4px 2px; }
     .message.mine .message-time { text-align: right; }
 
-    /* UPDATED: Hold karne par hi dikhega, default hide kar diya hai */
     .message-actions { 
       display: none; align-items: center; gap: 8px; margin: 4px; 
       background: #fff; padding: 8px 12px; border-radius: 10px; 
@@ -368,7 +366,6 @@
         <div id="welcomeNickname" class="welcome-email" style="font-weight:bold; color:inherit; margin-bottom:2px;"></div>
         <div id="welcomeEmail" class="welcome-email"></div>
         <button class="primary-btn" onclick="showCreateGroup()">＋ Create Group</button>
-        <button class="secondary-btn" onclick="logOut()">Logout</button>
       </div>
     </section>
 
@@ -383,6 +380,7 @@
         <label class="label">Email (only visible to you)</label>
         <input id="profileEmailDisplay" class="input" type="text" disabled>
         <button class="primary-btn" onclick="saveProfile()">Save</button>
+        <button class="secondary-btn" onclick="logOut()">Logout</button>
         <button class="secondary-btn" onclick="goHome()">Back</button>
       </div>
     </section>
@@ -622,26 +620,21 @@
     return String(value || "").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
   }
 
-  /* UPDATED: Hold (Long press) detect karne ka code */
   window.pressTimer = null;
 
   window.handlePressStart = function(msgId) {
     window.pressTimer = setTimeout(() => {
-      // Pehle se khule huye options hide karo
       document.querySelectorAll('.message-actions').forEach(el => el.classList.remove('show'));
-      // Jis message par hold kiya hai, uske options show karo
       const actions = document.getElementById('actions_' + msgId);
       if (actions) actions.classList.add('show');
-      // Mobile mein vibration feel ke liye
       if (navigator.vibrate) navigator.vibrate(50);
-    }, 500); // 500 milliseconds hold
+    }, 500);
   };
 
   window.handlePressEnd = function() {
     clearTimeout(window.pressTimer);
   };
 
-  /* DARK MODE */
   window.toggleDarkMode = function() {
     document.body.classList.toggle("dark");
     localStorage.setItem("venziDarkMode", document.body.classList.contains("dark") ? "on" : "off");
@@ -650,7 +643,6 @@
     document.body.classList.add("dark");
   }
 
-  /* PROFILES */
   async function ensureOwnProfile(user) {
     try {
       const ref = doc(db, "profiles", user.uid);
@@ -706,7 +698,6 @@
     }
   };
 
-  /* NAVIGATION */
   function hideAllPages() {
     ["homePage","createPage","browsePage","myGroupsPage","vaultPage","profilePage"].forEach(id => {
       document.getElementById(id).classList.add("hidden");
@@ -714,7 +705,6 @@
   }
   window.goHome = function() { hideAllPages(); document.getElementById("homePage").classList.remove("hidden"); };
 
-  /* AUTH */
   window.signUp = async function() {
     const email = document.getElementById("emailInput").value.trim();
     const password = document.getElementById("passwordInput").value;
@@ -749,7 +739,6 @@
     await signOut(auth);
   };
 
-  /* CREATE GROUP */
   window.showCreateGroup = function() {
     hideAllPages();
     document.getElementById("createPage").classList.remove("hidden");
@@ -787,7 +776,6 @@
     } catch (error) { status.style.color = "#d93025"; status.innerText = "Error: " + error.message; }
   };
 
-  /* EXPLORE */
   window.showJoinGroup = async function() {
     hideAllPages();
     document.getElementById("browsePage").classList.remove("hidden");
@@ -862,7 +850,6 @@
     } catch (error) { alert("Unable to send request: " + error.message); }
   };
 
-  /* MY GROUPS (with star sorting) */
   window.showMyGroups = async function() {
     hideAllPages();
     document.getElementById("myGroupsPage").classList.remove("hidden");
@@ -953,7 +940,6 @@
     } catch (error) { alert("Error: " + error.message); }
   };
 
-  /* VAULT */
   window.showVault = function() {
     hideAllPages();
     document.getElementById("vaultPage").classList.remove("hidden");
@@ -1036,7 +1022,6 @@
     } catch (error) { alert("Error deleting file: " + error.message); }
   };
 
-  /* VAULT PICKER */
   window.openVaultPicker = async function() {
     document.getElementById("vaultPickerModal").classList.remove("hidden");
     const container = document.getElementById("vaultPickerContainer");
@@ -1083,7 +1068,6 @@
     } catch(err) { alert("Failed to send file: " + err.message); }
   };
 
-  /* OPEN GROUP */
   window.openGroupPage = async function(groupId) {
     if (!currentUser) return;
     currentGroupId = groupId;
@@ -1128,7 +1112,6 @@
     } catch (error) { alert("Error: " + error.message); closeGroupPage(); }
   };
 
-  /* PIN / UNPIN */
   window.pinMessage = async function(messageId, text) {
     if (!currentGroupId) return;
     try {
@@ -1145,7 +1128,6 @@
     } catch (e) { alert("Could not unpin: " + e.message); }
   };
 
-  /* REACTIONS */
   window.toggleReactionPicker = function(messageId, event) {
     event.stopPropagation();
     const existing = document.getElementById("reactionPicker_" + messageId);
@@ -1178,7 +1160,6 @@
     } catch (e) { console.error(e); }
   };
 
-  /* REAL-TIME CHAT */
   function listenToChat(groupId) {
     if (chatUnsubscribe) { chatUnsubscribe(); chatUnsubscribe = null; }
     const q = query(collection(db, "groups", groupId, "messages"), orderBy("createdAt", "asc"));
@@ -1215,7 +1196,6 @@
 
         const msgTextEscaped = escapeAttribute((msg.text || "").substring(0, 80));
 
-        /* UPDATED: Options (Delete/Pin/React) default hidden, hold par pop honga */
         const actionsHtml = `<div id="actions_${d.id}" class="message-actions">
           <button class="message-react-btn" onclick="toggleReactionPicker('${escapeAttribute(d.id)}', event)">😊 React</button>
           <button class="message-pin-btn" onclick="pinMessage('${escapeAttribute(d.id)}', '${msgTextEscaped}'); document.getElementById('actions_${d.id}').classList.remove('show');">📌 Pin</button>
@@ -1223,7 +1203,6 @@
           <button style="border:0; background:transparent; font-size:11px; cursor:pointer;" onclick="document.getElementById('actions_${d.id}').classList.remove('show')">❌</button>
         </div>`;
 
-        /* UPDATED: Message bubble me mouse aur touch hold ke events lagaye gaye hain */
         row.innerHTML = `${avatarHtml}
           <div class="message ${mine ? "mine" : "other"}">
             ${showSenderLabel ? `<div class="message-sender">${escapeHTML(senderName)}</div>` : ""}
@@ -1256,7 +1235,6 @@
     } catch (error) { alert("Error: " + error.message); input.value = text; }
   };
 
-  /* DELETE MESSAGE */
   window.openDeleteMessageModal = function(messageId) {
     if (!messageId || !currentUser) return;
     messageToDelete = messageId;
@@ -1286,7 +1264,6 @@
     }
   };
 
-  /* GROUP MENU */
   window.showGroupMenu = function() {
     if (!currentGroupData || !currentUser) return;
     if (currentGroupData.ownerId === currentUser.uid) {
@@ -1337,7 +1314,6 @@
     document.getElementById("groupPage").classList.add("hidden");
   };
 
-  /* INVITE LINK */
   window.showInviteLink = function() {
     if (!currentGroupId) return;
     const link = window.location.origin + window.location.pathname + "?invite=" + currentGroupId;
@@ -1372,7 +1348,6 @@
     } catch (e) { console.error(e); }
   }
 
-  /* AUTH STATE */
   onAuthStateChanged(auth, async user => {
     currentUser = user;
     const authPage = document.getElementById("authPage");
@@ -1396,6 +1371,9 @@
 
 </body>
 </html>
+
+
+
 
 
 
