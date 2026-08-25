@@ -103,7 +103,7 @@
     .page-title { font-size: 25px; margin: 5px 0 4px; }
     .page-subtitle { color: #777; font-size: 14px; margin: 0 0 20px; }
 
-    /* STORIES SECTION (NEW) */
+    /* STORIES SECTION */
     .stories-wrapper {
       display: flex; gap: 14px; overflow-x: auto;
       padding: 4px 4px 16px; margin-bottom: 5px;
@@ -308,7 +308,7 @@
       display: flex; align-items: center; gap: 6px; padding: 8px 10px;
       border-top: 1px solid #efefef; background: #fff; flex-shrink: 0;
     }
-    .attach-btn { border: 0; background: transparent; font-size: 22px; padding: 5px; color: inherit; }
+    .attach-btn { border: 0; background: transparent; font-size: 20px; padding: 5px; color: inherit; }
     .chat-input {
       flex: 1; border: 1px solid #dbdbdb; border-radius: 22px; padding: 10px 16px;
       outline: none; font-size: 14px; background: #fafafa;
@@ -352,7 +352,7 @@
     /* BOTTOM NAV */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0; height: 64px; background: #fff;
-      border-top: 1px solid #ddd; display: flex; justify-content: space-around;
+      border-top: 1px solid #ddd; display: flex; justify-style: space-around;
       align-items: center; z-index: 80;
     }
     .nav-btn { border: 0; background: transparent; color: #555; font-size: 11px; text-align: center; padding: 7px 15px; }
@@ -399,15 +399,13 @@
       <h1 class="page-title">Home</h1>
       <p class="page-subtitle">Manage your groups and conversations.</p>
       
-      <!-- STORIES SECTION (NEW) -->
+      <!-- STORIES SECTION -->
       <div class="stories-wrapper">
-        <!-- Your Story Button -->
         <div class="story-item" onclick="document.getElementById('storyFileInput').click()">
           <div class="story-avatar add-story-btn">＋</div>
           <span class="story-username">Your Story</span>
           <input type="file" id="storyFileInput" class="hidden" accept="image/*,video/*" onchange="uploadStory(event)">
         </div>
-        <!-- Active Stories Container -->
         <div id="storiesContainer" style="display:flex; gap:14px;"></div>
       </div>
 
@@ -540,8 +538,11 @@
   <div id="groupPageMembers" class="members-area"></div>
   <div id="chatMessages" class="chat-messages"></div>
 
+  <!-- ENHANCED CHAT INPUT WITH DIRECT ATTACHMENT UPLOAD -->
   <div class="chat-input-area">
-    <button class="attach-btn" onclick="openVaultPicker()">📎</button>
+    <button class="attach-btn" onclick="openVaultPicker()" title="Send from Vault">📁</button>
+    <button class="attach-btn" onclick="document.getElementById('chatFileInput').click()" title="Send Photo/File">📷</button>
+    <input type="file" id="chatFileInput" class="hidden" accept="image/*,video/*,application/*" onchange="uploadDirectChatFile(event)">
     <input id="chatInput" class="chat-input" type="text" placeholder="Message..." onkeydown="if(event.key === 'Enter') sendChatMessage()">
     <button class="send-btn" onclick="sendChatMessage()">➤</button>
   </div>
@@ -659,7 +660,6 @@
   let messageToDelete = null;
   let myNickname = "";
   let myStarredGroups = [];
-  let pendingInviteGroupId = null;
   let storyTimer = null;
 
   const profileCache = {};
@@ -714,9 +714,7 @@
     document.body.classList.add("dark");
   }
 
-  /* ==========================================
-     STORY SYSTEM LOGIC (UPLOAD, RENDER, CLEANUP)
-     ========================================== */
+  /* STORY SYSTEM */
   function compressImage(file) {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -877,14 +875,14 @@
   /* PROFILES */
   async function ensureOwnProfile(user) {
     try {
-      const ref = doc(db, "profiles", user.uid);
-      const snap = await getDoc(ref);
+      const refDoc = doc(db, "profiles", user.uid);
+      const snap = await getDoc(refDoc);
       if (snap.exists() && snap.data().nickname) {
         myNickname = snap.data().nickname;
         myStarredGroups = snap.data().starredGroups || [];
       } else {
         myNickname = user.email.split("@")[0];
-        await setDoc(ref, { nickname: myNickname, starredGroups: [] }, { merge: true });
+        await setDoc(refDoc, { nickname: myNickname, starredGroups: [] }, { merge: true });
         myStarredGroups = [];
       }
     } catch (e) {
@@ -1311,6 +1309,56 @@
     } catch(err) { alert("Failed to send file: " + err.message); }
   };
 
+  /* DIRECT CHAT FILE ATTACHMENT UPLOAD */
+  window.uploadDirectChatFile = async function(e) {
+    const file = e.target.files[0];
+    e.target.value = "";
+    if (!file || !currentGroupId || !currentUser) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File size limit: Please select files under 5MB!");
+      return;
+    }
+
+    const chatInput = document.getElementById("chatInput");
+    const oldPlaceholder = chatInput.placeholder;
+    chatInput.placeholder = "Uploading attachment...";
+    chatInput.disabled = true;
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const storagePath = `chat_attachments/${currentGroupId}/${currentUser.uid}_${Date.now()}.${fileExt}`;
+      const storageRef = ref(storage, storagePath);
+
+      let downloadURL = "";
+      if (file.type.startsWith("image/")) {
+        const compressedBase64 = await compressImage(file);
+        await uploadString(storageRef, compressedBase64, 'data_url');
+        downloadURL = await getDownloadURL(storageRef);
+      } else {
+        await uploadBytes(storageRef, file);
+        downloadURL = await getDownloadURL(storageRef);
+      }
+
+      await addDoc(collection(db, "groups", currentGroupId, "messages"), {
+        text: "",
+        fileData: downloadURL,
+        fileName: file.name,
+        fileType: file.type || "application/octet-stream",
+        senderId: currentUser.uid,
+        senderEmail: currentUser.email,
+        senderName: myNickname,
+        reactions: {},
+        createdAt: serverTimestamp()
+      });
+    } catch (err) {
+      alert("Attachment Upload Failed: " + err.message);
+    } finally {
+      chatInput.placeholder = oldPlaceholder;
+      chatInput.disabled = false;
+    }
+  };
+
   /* OPEN GROUP */
   window.openGroupPage = async function(groupId) {
     if (!currentUser) return;
@@ -1424,9 +1472,15 @@
         let attachmentHtml = "";
         if (msg.fileData) {
           const isImage = msg.fileType && msg.fileType.startsWith("image/");
-          attachmentHtml = isImage
-            ? `<img src="${msg.fileData}" class="chat-img-attachment" alt="Image">`
-            : `<a href="${msg.fileData}" download="${escapeAttribute(msg.fileName)}" target="_blank" class="chat-file-attachment">📄 ${escapeHTML(msg.fileName)}</a>`;
+          const isVideo = msg.fileType && msg.fileType.startsWith("video/");
+          
+          if (isImage) {
+            attachmentHtml = `<img src="${msg.fileData}" class="chat-img-attachment" alt="Image">`;
+          } else if (isVideo) {
+            attachmentHtml = `<video src="${msg.fileData}" controls class="chat-img-attachment"></video>`;
+          } else {
+            attachmentHtml = `<a href="${msg.fileData}" download="${escapeAttribute(msg.fileName)}" target="_blank" class="chat-file-attachment">📄 ${escapeHTML(msg.fileName)}</a>`;
+          }
         }
 
         let reactionsHtml = "";
@@ -1623,3 +1677,4 @@
 
 </body>
 </html>
+
